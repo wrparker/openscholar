@@ -10,27 +10,27 @@
  */
 function os_orcid_cp_settings() {
 
-    // Settings variable to be used for form elements.
-    $settings = array();
+  // Settings variable to be used for form elements.
+  $settings = array();
 
-    // Get the current space.
-    $space = spaces_get_space();
+  // Get the current space.
+  $space = spaces_get_space();
 
-    $settings['orcid_id'] = array(
-        'group' => array(
-            '#title' => t('ORCID Integration'),
-            '#id' => 'orcid-integration',
-        ),
-        'form' => array(
-            '#id' => 'orcid_id',
-            '#type' => 'textfield',
-            '#default_value' => variable_get('orcidId'),
-            '#title' => t('ORCID ID'),
-            '#description' => t('Enter your ORCID ID, It is in the format XXXX-XXXX-XXXX-XXXX and is available at <a href="http://orcid.org">http://orcid.org</a>.  When this is set, your publication information will be imported to your site.'),
-        ),
-		'rest_submit' => '_os_orcid_manage_orcid_submit',
-    );
-    return $settings;
+  $settings['orcid_id'] = array(
+    'group' => array(
+      '#title' => t('ORCID Integration'),
+      '#id' => 'orcid-integration',
+    ),
+    'form' => array(
+      '#id' => 'orcid_id',
+      '#type' => 'textfield',
+      '#default_value' => variable_get('orcidId'),
+      '#title' => t('ORCID ID'),
+      '#description' => t('Enter your ORCID ID, It is in the format XXXX-XXXX-XXXX-XXXX and is available at <a href="http://orcid.org">http://orcid.org</a>.  When this is set, your publication information will be imported to your site.'),
+    ),
+    'rest_submit' => '_os_orcid_manage_orcid_submit',
+  );
+  return $settings;
 }
 
 /***** SUBMIT FUNCTIONS ******/
@@ -39,167 +39,254 @@ function os_orcid_cp_settings() {
  * Submit callback to import/update from orcid.
  */
 function _os_orcid_manage_orcid_submit($var, $value) {
-	
-    // Set variable to store the orcid_id from the form.
-    $orcid_id = trim($var);
-	
-    if($orcid_id == "") {
-		drupal_set_message(t('You must enter an orcid id.'), 'error');
-		return false;
-    }
-    else if(!preg_match('/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9A-Z]{4}$/', $orcid_id)) {
-        drupal_set_message(t('Your orcid id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
-		return false;
+
+  // Set variable to store the orcid_id from the form.
+  $orcid_id = trim($var);
+  if($orcid_id != ""){
+    if(!preg_match('/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9A-Z]{4}$/', $orcid_id)) {
+      drupal_set_message(t('Your orcid id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
+      return false;
     }
     else {
-		// Update the orcid_id for the user space.
-        variable_set('orcidId', $orcid_id);
-		
-		// Function to import orcid data.
-        _os_orcid_import_data($orcid_id);
+      // Get the current space.
+      $space = spaces_get_space();
+
+      // Update the orcid_id for the user space.
+      $space->controllers->variable->set('orcidId', $orcid_id);
     }
+  }
 }
 
-/***** BATCHING FUNCTIONS ******/
+/***** BATCH PROCESS ON CRON EXECUTION ******/
 
-/*
- * The batch handler for importing orcid data.
+/**
+ * Implements hook_cron()
  */
-function _os_orcid_import_data($orcid_id) {
-	
-    // Getting the data into an array from the URL.
-    $works = _os_orcid_get_orcid_from_api($orcid_id);
-    $biblio_types = _os_orcid_get_biblio_types();
-	$results = array('exists' => 0, 'imported' => 0);
-	
-    // Step through each array element of the data, based on the starting and ending record.
-    for($i = 0; $i < count($works); $i++) {
-        foreach($biblio_types as $key => $value) {
-            if($biblio_types[$key]->name == str_replace('-', ' ', $works[$i]['work-type'])) {
-                $biblio_type = $biblio_types[$key]->tid;
-                break;
-            }
-        }
+function os_orcid_cron(){
 
-        if(!isset($biblio_type)) {
-            $biblio_type = 102;
-        }
-		
-        $insert = true;
-		
-		// If there is a journal-title, set the node title, otherwise use the title.
-		if(isset($works[$i]['journal-title'])) {
-			$journaltitle = $works[$i]['journal-title'];
-		}
-		else {
-			$journaltitle = $works[$i]['work-title']['title'];
-		}
-		
-        $biblios = db_select('biblio', 'b')
-            ->fields('b', array('nid'))
-            ->condition('b.biblio_type', $biblio_type)
-            ->condition('b.biblio_secondary_title', $journaltitle)
-            ->condition('b.biblio_year', $works[$i]['publication-date']['year'])
-            ->condition('b.biblio_url_title', $works[$i]['source']['source-orcid']['uri'])
-            ->execute()
-            ->fetchAll();
-			
-        if(count($biblios) > 0) {
-            foreach($biblios as $biblio) {
-                $nodes = db_select('node', 'n')
-                    ->fields('n', array('nid'))
-                    ->condition('n.nid', $biblio->nid)
-                    ->condition('n.uid', _os_orcid_get_vsite_user_id())
-                    ->execute()
-                    ->fetchAll();
-                if(count($nodes) > 0) {
-                    $insert = false;
-                }
-            }
-        }
+  // start is for what record to start from, these will be 0, unless extreme circumstances.
+  // limit is how many records we would like to process at a time, 10 looks about right to give users good feedback.
+  $settings['orcid_id'] = variable_get('orcidId');
+  $settings['limit'] = 10;
 
-        if($insert) {
+  // This is the batch array from drupal core.
+  $batch = array(
+    'operations' => array(),
+    'title' => t('Batch import ORCID works'),
+    'init_message' => t('Import is starting ...'),
+    'progress_message' => t('Processed @current out of @total.'),
+    'error_message' => t('Import has encountered an error.'),
+    'finished' => '_os_orcid_batch_import_orcid_finish',
+  );
 
-            // Setup the new node.
-            $node = new stdClass();
-			
-			$node->title = $journaltitle;
+  // Set which function we want to batch and send it the settings to use.
+  $batch['operations'][] = array('_os_orcid_batch_import_orcid', array($settings));
 
-            $node->type = 'biblio';
+  // Start the batch process.
+  batch_set($batch);
+  batch_process();
+}
 
-            // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
-            node_object_prepare($node);
+/**
+ * Worker callback defined in hook_cron_queue_info()
+ */
+function _os_orcid_batch_import_orcid($settings, &$context) {
 
-            // Set the language.
-            $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
+  $orcid_id = $settings['orcid_id'];
+  // Getting the data into an array from the URL.
+  $works = _os_orcid_get_orcid_from_api($orcid_id);
+  $biblio_types = _os_orcid_get_biblio_types();
 
-            // Turn off comments.
-            $node->comment = 0;
-
-            // Set the biblio title.
-            if(isset($works[$i]['journal-title'])) {
-                $node->biblio_sort_title = $journaltitle;
-            }
-            else {
-                $node->biblio_sort_title = $journaltitle;
-            }
-
-            // Set the title field.
-            $node->title_field[LANGUAGE_NONE][0]['value'] = $journaltitle;
-            $node->title_field[LANGUAGE_NONE][0]['format'] = 'title_filter';
-            $node->title_field[LANGUAGE_NONE][0]['safe_value'] = $journaltitle;
-
-            // Set the secondary title, which is the full title.
-            $node->biblio_secondary_title = $works[$i]['work-title']['title'];
-
-            // Set the year of the publication.
-            $node->biblio_year = $works[$i]['publication-date']['year'];
-
-            // Set the URL of the publication.
-            $node->biblio_url_title = $works[$i]['source']['source-orcid']['uri'];
-
-			$counter = 0;
-            // Step through each of the contributors and setup the insertion of contributors.
-			if(array_key_exists('work-contributors',$works[$i])){
-				foreach($works[$i]['work-contributors']['contributor'] as $key => $value) {
-					$node->biblio_contributors[$counter]['name'] = $works[$i]['work-contributors']['contributor'][$key]['credit-name'];
-					$node->biblio_contributors[$counter]['auth_type'] = 1;
-					$node->biblio_contributors[$counter]['auth_category'] = 1;
-					$counter++;
-				}
-			}else{
-				$node->biblio_contributors[$counter]['name'] = $works[$i]['source']['source-name'];
-				$node->biblio_contributors[$counter]['auth_type'] = 1;
-				$node->biblio_contributors[$counter]['auth_category'] = 1;
-			}
-
-            // Step through each biblio type and if it is a match to the orcid type, set it.
-            foreach($biblio_types as $type => $biblio_type) {
-                if(strtolower($biblio_types[$type]->name) == strtolower(str_replace('-', ' ', $works[$i]['work-type']))) {
-                    $node->biblio_type = $biblio_types[$type]->tid;
-                }
-            }
-
-            // If there was no biblio type found, set the it to default to journal article.
-            if(!isset($node->biblio_type)) {
-                $node->biblio_type = 102;
-            }
-			
-			$results['imported']++;
-            // Save the node.
-            node_save($node);
-
-        }
-        else {
-			
-            // Increment the exists counter, used in displaying the results.
-            $results['exists']++;
-        }
-
+  // If there is no progress set in the batch, setup the batch variables.
+  if (!isset($context['sandbox']['progress'])) {
+    // These are sandboxes settings that only we are going to be used, mainly for display purposes.
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['starting_record'] = 0;
+    if($settings['limit'] < count($works)){
+      $context['sandbox']['ending_record'] = $context['sandbox']['starting_record'] + $settings['limit'];
+      $context['sandbox']['limit'] = $settings['limit'];
+    }else{
+      $context['sandbox']['ending_record'] = count($works);
+      $context['sandbox']['limit'] = count($works);
     }
-	$message = $results['exists'].' results already exists, '.$results['imported'].' imported';
-	drupal_set_message($message, 'status');
-	
+    $context['sandbox']['max'] = count($works);
+
+    // Set the max that we can delete for displaying on resutls.
+    $context['results']['max'] = $context['sandbox']['max'];
+    $context['results']['imported'] = 0;
+    $context['results']['exists'] = 0;
+  }
+
+  // Step through each array element of the data, based on the starting and ending record.
+  for($i = $context['sandbox']['starting_record']; $i < $context['sandbox']['ending_record']; $i++) {
+    foreach($biblio_types as $key => $value) {
+      if($biblio_types[$key]->name == str_replace('-', ' ', $works[$i]['work-type'])) {
+        $biblio_type = $biblio_types[$key]->tid;
+        break;
+      }
+    }
+
+    if(!isset($biblio_type)) {
+      $biblio_type = 102;
+    }
+
+    $insert = true;
+
+    // If there is a journal-title, set the node title, otherwise use the title.
+    if(isset($works[$i]['journal-title'])) {
+      $journaltitle = $works[$i]['journal-title'];
+    }
+    else {
+      $journaltitle = $works[$i]['work-title']['title'];
+    }
+
+    $biblios = db_select('biblio', 'b')
+      ->fields('b', array('nid'))
+      ->condition('b.biblio_type', $biblio_type)
+      ->condition('b.biblio_secondary_title', $journaltitle)
+      ->condition('b.biblio_year', $works[$i]['publication-date']['year'])
+      ->condition('b.biblio_url_title', $works[$i]['source']['source-orcid']['uri'])
+      ->execute()
+      ->fetchAll();
+
+    if(count($biblios) > 0) {
+      foreach($biblios as $biblio) {
+        $nodes = db_select('node', 'n')
+          ->fields('n', array('nid'))
+          ->condition('n.nid', $biblio->nid)
+          ->condition('n.uid', _os_orcid_get_vsite_user_id())
+          ->execute()
+          ->fetchAll();
+        if(count($nodes) > 0) {
+          $insert = false;
+        }
+      }
+    }
+
+    if($insert) {
+
+      // Setup the new node.
+      $node = new stdClass();
+
+      $node->title = $journaltitle;
+
+      $node->type = 'biblio';
+
+      // Sets some defaults. Invokes hook_prepare() and hook_node_prepare().
+      node_object_prepare($node);
+
+      // Set the language.
+      $node->language = LANGUAGE_NONE; // Or e.g. 'en' if locale is enabled
+
+      // Turn off comments.
+      $node->comment = 0;
+
+      // Set the biblio title.
+      if(isset($works[$i]['journal-title'])) {
+        $node->biblio_sort_title = $journaltitle;
+      }
+      else {
+        $node->biblio_sort_title = $journaltitle;
+      }
+
+      // Set the title field.
+      $node->title_field[LANGUAGE_NONE][0]['value'] = $journaltitle;
+      $node->title_field[LANGUAGE_NONE][0]['format'] = 'title_filter';
+      $node->title_field[LANGUAGE_NONE][0]['safe_value'] = $journaltitle;
+
+      // Set the secondary title, which is the full title.
+      $node->biblio_secondary_title = $works[$i]['work-title']['title'];
+
+      // Set the year of the publication.
+      $node->biblio_year = $works[$i]['publication-date']['year'];
+
+      // Set the URL of the publication.
+      $node->biblio_url_title = $works[$i]['source']['source-orcid']['uri'];
+
+      // Counter used in for loop.
+      $counter = 0;
+
+      // Step through each of the contributors and setup the insertion of contributors.
+      if(array_key_exists('work-contributors',$works[$i])){
+        foreach($works[$i]['work-contributors']['contributor'] as $key => $value) {
+          $node->biblio_contributors[$counter]['name'] = $works[$i]['work-contributors']['contributor'][$key]['credit-name'];
+          $node->biblio_contributors[$counter]['auth_type'] = 1;
+          $node->biblio_contributors[$counter]['auth_category'] = 1;
+          $counter++;
+        }
+      }else{
+        $node->biblio_contributors[$counter]['name'] = $works[$i]['source']['source-name'];
+        $node->biblio_contributors[$counter]['auth_type'] = 1;
+        $node->biblio_contributors[$counter]['auth_category'] = 1;
+      }
+
+      // Step through each biblio type and if it is a match to the orcid type, set it.
+      foreach($biblio_types as $type => $biblio_type) {
+        if(strtolower($biblio_types[$type]->name) == strtolower(str_replace('-', ' ', $works[$i]['work-type']))) {
+          $node->biblio_type = $biblio_types[$type]->tid;
+        }
+      }
+
+      // If there was no biblio type found, set the it to default to journal article.
+      if(!isset($node->biblio_type)) {
+        $node->biblio_type = 102;
+      }
+
+      // Save the node.
+      node_save($node);
+
+      // Increment the imported counter, used in displaying the results.
+      $context['results']['imported']++;
+    }
+    else {
+
+      // Increment the exists counter, used in displaying the results.
+      $context['results']['exists']++;
+    }
+
+    // Increment the progress counter, used in the progress bar.
+    $context['sandbox']['progress']++;
+
+    // Move the progress bar.
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+
+  }
+
+  // Set the message to be shown to the user on the progress of the delete.
+  $context['message'] = "Now processing record(s) " . $context['sandbox']['starting_record']+1 . " - " . $context['sandbox']['ending_record'] . " of " . $context['sandbox']['max'];
+
+  // If we are not at the end, update the progress bar.
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+
+  // Update the count so that we use in calculation of the starting and ending records.
+  $context['sandbox']['starting_record'] += $context['sandbox']['limit'];
+  $context['sandbox']['ending_record'] += $context['sandbox']['limit'];
+
+  // If the ending record is larger than the max, set the ending record to the max.
+  if($context['sandbox']['ending_record'] > $context['sandbox']['max']) {
+    $context['sandbox']['ending_record'] = $context['sandbox']['max'];
+  }
+}
+
+/**
+ * The batch finish handler for importing orcid data.
+ */
+function _os_orcid_batch_import_orcid_finish($success, $results, $operations) {
+  // If there was a successfully batch deletion, display appropriate messages.
+  if ($success) {
+    drupal_set_message(t('There were ' . $results['max'] . ' to import, ' . $results['exists'] . ' already existed and ' . $results['imported'] . ' were successfully imported.'), 'status');
+  }
+  else {
+    // An error occurred.
+    // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
+    drupal_set_message($message, 'error');
+  }
 }
 
 /****** HELPER FUNCTIONS ******/
@@ -209,71 +296,70 @@ function _os_orcid_import_data($orcid_id) {
  */
 function _os_orcid_get_orcid_from_api($orcid_id) {
 
-    // The URL that gets the orcid data from the API.
-    $url = 'https://pub.orcid.org/v1.2/' . $orcid_id . '/orcid-works/';
-    // Setting the default request options for getting info from the API.
-    $default_request_options = array(
-        'headers' => array(
-            'Accept' => 'application/orcid+xml',
-        ),
-    );
+  // The URL that gets the orcid data from the API.
+  $url = 'https://pub.orcid.org/v1.2/' . $orcid_id . '/orcid-works/';
+  // Setting the default request options for getting info from the API.
+  $default_request_options = array(
+    'headers' => array(
+      'Accept' => 'application/orcid+xml',
+    ),
+  );
 
-    // The response from the API.
-    $response = drupal_http_request(url($url, array()), $default_request_options);
+  // The response from the API.
+  $response = drupal_http_request(url($url, array()), $default_request_options);
 
-    // If there is data, process it.
-    if ($response->code == "200") {
+  // If there is data, process it.
+  if ($response->code == "200") {
 
-        // Get the response data into simple XML format.
-        $data = new SimpleXMLElement($response->data);
+    // Get the response data into simple XML format.
+    $data = new SimpleXMLElement($response->data);
 
-        // Convert the data to json and decode.
-        $data = drupal_json_decode(drupal_json_encode($data));
+    // Convert the data to json and decode.
+    $data = drupal_json_decode(drupal_json_encode($data));
 
-        // Set the variable works to the actual works from ORCID API.
-        $works[] = $data['orcid-profile']['orcid-activities']['orcid-works']['orcid-work'];
-    }
-	
-    return $works;
+    // Set the variable works to the actual works from ORCID API.
+    $works[] = $data['orcid-profile']['orcid-activities']['orcid-works']['orcid-work'];
+  }
+
+  return $works;
 }
 
 /**
  * Helper function to get orcid data from a given url.
  */
 function _os_orcid_get_biblio_types() {
-    $biblio_types = db_select('biblio_types', 'bt')
-        ->fields('bt', array('tid', 'name'))
-        ->execute()
-        ->fetchAll();
+  $biblio_types = db_select('biblio_types', 'bt')
+    ->fields('bt', array('tid', 'name'))
+    ->execute()
+    ->fetchAll();
 
-    foreach($biblio_types as $key => $value) {
-        $biblio_types[$key]->name = strtolower($biblio_types[$key]->name);
-    }
-
-    return $biblio_types;
+  foreach($biblio_types as $key => $value) {
+    $biblio_types[$key]->name = strtolower($biblio_types[$key]->name);
+  }
+  return $biblio_types;
 }
 
 /**
  * Helper function to get user id from url.
  */
 function _os_orcid_get_vsite_user_id() {
-    //Pull from cas_user uid if CAS cas module exists.
-	if (module_exists('cas')) {
-		// Set the user_id based on whether they are loaded from function or pulled from table.
-		if (!$user_loaded) {
-			$get_cas_user = db_select('cas_user', 'c')
-				->fields('c', array('uid'))
-				->condition('c.cas_name', $username);
+  //Pull from cas_user uid if CAS cas module exists.
+  if (module_exists('cas')) {
+    // Set the user_id based on whether they are loaded from function or pulled from table.
+    if (!$user_loaded) {
+      $get_cas_user = db_select('cas_user', 'c')
+        ->fields('c', array('uid'))
+        ->condition('c.cas_name', $username);
 
-			$cas_user = $get_cas_user->execute()->fetchAll();
-			$user_id = FALSE;
-			if ($cas_user) {
-				$user_id = $cas_user[0]->uid;
-			}
-		}
-	}else {
-		global $user;
-		$user_id = $user->uid;
-	}
-    return $user_id;
+      $cas_user = $get_cas_user->execute()->fetchAll();
+      $user_id = FALSE;
+      if ($cas_user) {
+        $user_id = $cas_user[0]->uid;
+      }
+    }
+  }else {
+    global $user;
+    $user_id = $user->uid;
+  }
+  return $user_id;
 }
