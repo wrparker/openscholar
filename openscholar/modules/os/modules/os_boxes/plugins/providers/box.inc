@@ -20,7 +20,7 @@ function os_boxes_box_provider($plugin, $url, $matches, $parameters) {
     $m = array();
     $result = preg_match('/\/box(\/([a-zA-Z0-9_-]*))?\/([a-zA-Z0-9_-]*)(#([a-zA-Z0-9_-]*))?$/', $matches[0], $m);
     if ($result === 0) {
-      throw new Exception('URL did not match box embed pattern.');
+      throw new Exception('URL did not match box embed pattern. url: '.$matches[0]);
     }
     elseif ($result === FALSE) {
       throw new Exception('Error running regex on url: '.$matches[0]);
@@ -39,10 +39,6 @@ function os_boxes_box_provider($plugin, $url, $matches, $parameters) {
     $defaults = array('view_mode' => 'full', 'langcode' => NULL);
     $parameters = array_merge($defaults, $parameters);
     $box = boxes_box_load($delta);
-
-    if (is_array($box)) {
-
-    }
 
     if ($box) {
 
