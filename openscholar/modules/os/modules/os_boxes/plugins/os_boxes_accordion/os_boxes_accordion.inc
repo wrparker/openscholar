@@ -39,6 +39,8 @@ class os_boxes_accordion extends os_boxes_widget_collection {
       $os_accordion_boxes[$this->delta] = 2;
     }
 
+    // Disable embeddable link.
+    $output['embed_link'] = FALSE;
     // disable caching for this block for now
     // if (($output['content'] = $this->get_cache()) === FALSE) {
       $content = array(
