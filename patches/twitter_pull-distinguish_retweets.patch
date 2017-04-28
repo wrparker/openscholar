@@ -4,7 +4,7 @@
   */
  function twitter_pull_render($twitkey, $title = NULL, $num_items = NULL, $themekey = NULL, $lazy_load = FALSE, $exclude_retweets = 0) {
    drupal_add_css(drupal_get_path('module', 'twitter_pull') . '/twitter-pull-listing.css');
-+  drupal_add_css(drupal_get_path('module', 'fontawesome') . '/css/font-awesome.css');
++  drupal_add_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', array('type' => 'external'));
  
    //-- Set the lazy load id. Encode the twitkey and title to make sure the they don't contain dashes.
    $lazy_id = rtrim(base64_encode($twitkey) .'-'. base64_encode($title) .'-'. (int)$num_items . '-' . $themekey, '-');
