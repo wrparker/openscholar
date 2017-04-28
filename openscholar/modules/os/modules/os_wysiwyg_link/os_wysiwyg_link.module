@@ -199,11 +199,11 @@ function _os_wysiwyg_link_find_links($str) {
  */
 function _os_wysiwyg_fix_path($url) {
     $base = base_path();
-    $space = spaces_get_space();
-
-    if ($space) {
-      $vsite = $space->group->purl;
-    }
+//    $space = spaces_get_space();
+//
+//    if ($space) {
+//      $vsite = $space->group->purl;
+//    }
 
     // Return base if no url
     if (! $url) {
@@ -233,7 +233,7 @@ function _os_wysiwyg_fix_path($url) {
     if ($url[0] == '/') $path = '';
 
     // Dirty absolute URL
-    $abs = "/$vsite/$url";
+    $abs = "/$url";
 
     // Replace '//' or '/./' or '/foo/../' with '/'
     $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
