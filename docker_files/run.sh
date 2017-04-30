@@ -33,17 +33,17 @@ bash docker.install.sh
 chmod -R 777 /var/www/html/openscholar/www/sites/default/files/
 
 # Install custom domains
-echo -e "\n # Add lincoln virtual domain."
-service apache2 restart
-sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
-sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.conf"
-a2ensite lincoln
-service apache2 restart
+#echo -e "\n # Add lincoln virtual domain."
+#service apache2 restart
+#sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
+#sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.conf"
+#a2ensite lincoln
+#service apache2 restart
 
 # Download and install Apache solr.
 echo -e "\n # Install apache solr."
 wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.zip
-unzip -o apache-solr-3.6.2.zip
+unzip -oq apache-solr-3.6.2.zip
 cd apache-solr-3.6.2/example/solr/conf
 
 # Copy the solr config files from the apache solr module
@@ -57,10 +57,13 @@ sleep 10
 cd /var/www/html/openscholar
 
 # Index site using Apache solr
+echo -e "\n Installing Apache solr integration."
+cd www
 drush en os_search_solr -y
 drush solr-mark-all
 drush solr-index
 drush vset oembedembedly_api_key $EMBEDLYAPIKEY
+cd -
 
 # Install Firefox (iceweasel).
 echo -e "\n${BGCYAN}[RUN] Install firefox. ${RESTORE}"
