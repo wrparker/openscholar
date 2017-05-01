@@ -45,7 +45,7 @@ Feature:
      When I press "edit-submit"
      Then I verify the alias of node "John Second Custom Alias" is "john/jfk-duplicate-purl"
 
-  @api @misc_second
+  @wip
   Scenario: Testing shared domain with two different vsite and the same node
   title are working properly.
     Given I am logging in as "admin"
