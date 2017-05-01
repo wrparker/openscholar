@@ -81,7 +81,7 @@ Feature: User functionality testing.
      Then I should see "Peter has been added to the website: John"
       And I should verify that the user "Peter" has a role of "vsite user" in the group "john"
 
-  @wip
+  @api @misc_second
   Scenario: Test adding a new member by creating a new user on the site when
             using a shared domain.
     Given I am logging in as "admin"
