@@ -14,7 +14,7 @@ Drupal.behaviors.osBoxesFeedReader = {
         YUI().use('yql', function (Y) {
           //Load Feed
           var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
-          var q = Y.YQL(query, function (r) {
+          var q = new Y.YQLRequest(query, function (r) {
             // check for results, if there are none, hide the whole feed reader widget
             if (r.query.results != null && r.query.results.item != null && r.query.results.item.length) {
               for (var i = 0; i < r.query.results.item.length; i++) {
@@ -63,7 +63,12 @@ Drupal.behaviors.osBoxesFeedReader = {
             else {
               $('div#' + div_id).append('<p class="feed-message">There are currently no items in this feed. Please check again soon.</p>');
             }
+          }, {}, // empty optional parameters
+          {
+            base: '://query.yahooapis.com/v1/public/yql?', //Different base URL for private data
+            proto: 'https' //Connect using SSL
           });
+          q.send();
         });
       });
     });
@@ -108,7 +113,7 @@ function formalDate(time){
 
 function getDateFromEntry(entry){
   if (entry.pubDate != null) {
-    if (typeof entry.pubDate === 'string') {
+    if (typeof entry.pubDate === 'string' && entry.pubDate != 'Thu, 01 Jan 1970 00:00:00 +0000') {
       return entry.pubDate;
     }
     else if (typeof entry.pubDate === 'object') {
@@ -116,14 +121,14 @@ function getDateFromEntry(entry){
         return entry.pubDate.content;
       }
       else if (entry.pubDate.time != null && typeof entry.pubDate.time == 'object') {
-        if (entry.pubDate.time.content != null && typeof entry.pubDate.time.content == 'string') {
+        if (entry.pubDate.time.content != null && typeof entry.pubDate.time.content == 'string' && entry.pubDate.time.content != 'Thu, 01 Jan 1970 00:00:00 +0000') {
           return entry.pubDate.time.content;
         }
       }
     }
   }
   else if (entry.publicationDate != null) {
-    if (typeof entry.publicationDate === 'string') {
+    if (typeof entry.publicationDate === 'string' && entry.publicationDate != 'Thu, 01 Jan 1970 00:00:00 +0000') {
       return entry.publicationDate;
     }
     else if (typeof entry.publicationDate === 'object') {
@@ -131,7 +136,7 @@ function getDateFromEntry(entry){
         return entry.publicationDate.content;
       }
       else if (entry.publicationDate.time != null && typeof entry.publicationDate.time == 'object') {
-        if (entry.publicationDate.time.content != null && typeof entry.publicationDate.time.content == 'string') {
+        if (entry.publicationDate.time.content != null && typeof entry.publicationDate.time.content == 'string' && entry.publicationDate.time.content != 'Thu, 01 Jan 1970 00:00:00 +0000') {
           return entry.publicationDate.time.content;
         }
       }
