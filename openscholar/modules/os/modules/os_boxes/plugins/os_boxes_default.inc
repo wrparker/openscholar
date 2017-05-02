@@ -79,20 +79,15 @@ abstract class os_boxes_default extends boxes_box {
   public function options_form(&$form_state) {
     $form = array();
 
-    // The below widget will not have make embeddable settings.
-    $make_embeddable_not_allowed_plugins = array(
-      'os_boxes_accordion'
+    $form['make_embeddable'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Make Embeddable'),
+      '#description' => t('Allow this widget to be embedded on other websites.'),
+      '#default_value' => (isset($this->options['make_embeddable'])) ? $this->options['make_embeddable'] : FALSE,
+      '#access' => !empty($this->embed_as),
+      '#weight' => 9001,
     );
-    if (!in_array($this->plugin_key, $make_embeddable_not_allowed_plugins)) {
-      $form['make_embeddable'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Make Embeddable'),
-        '#description' => t('Allow this widget to be embedded on other websites.'),
-        '#default_value' => (isset($this->options['make_embeddable'])) ? $this->options['make_embeddable'] : FALSE,
-        '#access' => !empty($this->embed_as),
-        '#weight' => 9001,
-      );
-    }
+
     // The below widgets will have the settings for custom class addition is outermost wrapper div/section tag.
     $additional_class_allowed_plugins = array(
       'os_sv_list_box',
