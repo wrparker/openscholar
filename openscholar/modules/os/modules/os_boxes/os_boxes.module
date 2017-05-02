@@ -419,7 +419,7 @@ function os_boxes_preprocess_boxes_box(&$variables) {
           '#prefix' => '<div id="'.$delta.'-iframe">',
           '#suffix' => '</div>',
           '#markup' => web_widgets_render_embed_code('iframe', array(
-            'path' => url(trim($base, '/').'/iframe', array('absolute' => true)),
+            'path' => str_replace(array('http:', 'https:'), '', url(trim($base, '/').'/iframe', array('absolute' => true))),
           )),
           '#access' => in_array('iframe', $box->embed_as)
         ),
@@ -454,7 +454,7 @@ function os_boxes_preprocess_web_widgets_inline(&$vars) {
  */
 function os_boxes_preprocess_web_widgets_iframe(&$vars) {
   $vars['content_url'] = $vars['path'];
-  $vars['script_url'] = $GLOBALS['base_url'].'/'.drupal_get_path('module', 'os_boxes').'/misc/os_boxes.resize_parent.js';
+  $vars['script_url'] = str_replace(array('http:', 'https:'), '', $GLOBALS['base_url'].'/'.drupal_get_path('module', 'os_boxes').'/misc/os_boxes.resize_parent.js');
 }
 
 /**
