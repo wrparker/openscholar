@@ -119,8 +119,8 @@ function media_embed_check_src($html) {
       $domain = array();
       $this_pass = false;
 
-      // Check for http entry
-      if (strpos($url, 'http://') !== FALSE) {
+      // Do not allow secure websites to embed insecure content
+      if ($GLOBALS['is_https'] && strpos($url, 'http://') !== FALSE) {
         return FALSE;
       }
 
