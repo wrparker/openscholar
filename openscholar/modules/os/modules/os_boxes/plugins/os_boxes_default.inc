@@ -87,7 +87,6 @@ abstract class os_boxes_default extends boxes_box {
       '#access' => !empty($this->embed_as),
       '#weight' => 9001,
     );
-
     // The below widgets will have the settings for custom class addition is outermost wrapper div/section tag.
     $additional_class_allowed_plugins = array(
       'os_sv_list_box',

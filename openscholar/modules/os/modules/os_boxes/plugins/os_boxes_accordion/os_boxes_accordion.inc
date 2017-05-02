@@ -93,6 +93,7 @@ class os_boxes_accordion extends os_boxes_widget_collection {
           );
         }
       }
+
       $output['content'] = drupal_render($content);
     //   $this->set_cache($output['content'], $content['#attached']);
     // }
