@@ -172,6 +172,7 @@ class os_boxes_follow extends os_boxes_default {
         'attributes' => array(
           'class' => 'follow-icon',
           'style' => 'background-position: -'.$domains[$n['domain']]['offset'].'px 0px',
+          'target' => '_blank',
         ))
       );
       // Build the service name link.
