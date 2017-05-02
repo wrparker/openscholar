@@ -8,7 +8,7 @@
  
    //-- Set the lazy load id. Encode the twitkey and title to make sure the they don't contain dashes.
    $lazy_id = rtrim(base64_encode($twitkey) .'-'. base64_encode($title) .'-'. (int)$num_items . '-' . $themekey, '-');
-@@ -184,6 +185,19 @@
+@@ -184,6 +185,21 @@
      }
    }
  
@@ -18,10 +18,12 @@
 +  }
 +
 +  # If the tweet is not ours, flag it as a retweet
-+  foreach ($tweets as $i => $tweet) {
-+    $tweets[$i]->is_retweet = false;
-+    if ($tweets[$i]->username != $twitkey_username) {
-+      $tweets[$i]->is_retweet = true;
++  if (isset($twitkey_username)) {
++    foreach ($tweets as $i => $tweet) {
++      $tweets[$i]->is_retweet = false;
++      if ($tweets[$i]->username != $twitkey_username) {
++        $tweets[$i]->is_retweet = true;
++      }
 +    }
 +  }
 +
