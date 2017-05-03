@@ -150,6 +150,7 @@ class os_boxes_follow extends os_boxes_default {
       $l = l($image, 'rss', array(
         'attributes' => array(
           'class' => array('rss-follow-icon'),
+          'target' => '_blank',
         ),
         'html' => TRUE,
       ));
@@ -157,7 +158,8 @@ class os_boxes_follow extends os_boxes_default {
         $service_name = '<span class="service-name-span">'.l('RSS', 'rss', array('attributes' => array(
             'class' => array(
               'follow-icon-service-name',
-            )
+            ),
+            'target' => '_blank',
           ))).'</span>';
         $links[0] = $l . $service_name;
       }
@@ -178,7 +180,8 @@ class os_boxes_follow extends os_boxes_default {
       // Build the service name link.
       $b = "<span class='service-name-span'>" . l(($this->options['display_service_name'] == 0) ? $domains[$n['domain']]['title'] : $n['title'], $n['title'], array(
         'attributes' => array(
-          'class' => 'follow-icon-service-name'
+          'class' => 'follow-icon-service-name',
+          'target' => '_blank',
         ))
       ) . "</span>";
       // If the option is selected to show the service name, concatenate the two.
