@@ -731,6 +731,7 @@ table.biblio-contributors td {
     width: 20px;
     display: inline-block;
 }
+#owl-file-messages:empty,
 table.biblio-contributors tr:first-child input.form-submit {
     display: none;
 }
@@ -1325,6 +1326,8 @@ div.warning {
     font-size: 0.923em !important;
     color: #666 !important;
 }
+.form-help:hover .description,
+.form-help .desscription:hover,
 form#os-maintenance #edit-os-search-solr,
 form#os-maintenance #edit-cp-clear-cache {
 display:block;
