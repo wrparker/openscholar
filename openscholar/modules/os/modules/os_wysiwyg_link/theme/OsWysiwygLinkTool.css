@@ -11,10 +11,6 @@
   padding: 5px;
 }
 
-#owl-file-messages:empty {
-  display: none;
-}
-
 .form-help .description {
   position: absolute;
   width: 300px;
@@ -27,7 +23,3 @@
 box-shadow: 10px 10px 15px -5px rgba(204,204,204,1);
 }
 
-.form-help:hover .description,
-.form-help .desscription:hover {
-  display: block;
-}
