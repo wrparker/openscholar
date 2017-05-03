@@ -36,9 +36,8 @@ chmod -R 777 /var/www/html/openscholar/www/sites/default/files/
 echo -e "\n # Add lincoln virtual domain."
 service apache2 restart
 sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
-sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.conf"
-a2ensite lincoln
-#service apache2 restart
+sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.local.conf"
+a2ensite lincoln.local
 
 # Download and install Apache solr.
 echo -e "\n # Install apache solr."
