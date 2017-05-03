@@ -151,6 +151,7 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+    $this->user = user_load_by_name($username);
     sleep(3);
   }
 
@@ -213,6 +214,197 @@ class FeatureContext extends DrupalContext {
           throw new Exception("Unable to log in as a user who $can $permission.");
         }
       }
+    }
+  }
+
+  /**
+   * @Given /^I create a new "([^"]*)" with title "([^"]*)" in the "([^"]*)" site$/
+   */
+  public function iCreateANewWithTitleInTheSite ($content_type, $title, $vsite_name) {
+    $content_type = str_replace(" ", "_", $content_type);
+    $query = new EntityFieldQuery();
+    $results = $query->entityCondition('entity_type', 'node')
+                    ->propertyCondition('title', $title)
+                    ->propertyCondition('type', str_replace('-', '_', $content_type))
+                    ->execute();
+
+    if (!empty($results['node'])) {
+      FeatureHelp::deleteNode($title);
+    }
+    $entity = $this->createEntity($content_type, $title);
+
+    // Set the group ref
+    $vid = FeatureHelp::getNodeId($vsite_name);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($vid));
+    entity_save('node', $entity);
+  }
+
+  /**
+   * @Given /^I create a revision of "([^"]*)" where I change the "([^"]*)" to "([^"]*)"$/
+   */
+  public function iCreateARevisionOfWhereIChangeTheTo ($node_title, $field_name, $new_field_value) {
+    // grab first row returns when querying DB for node with the passed title
+    $query = db_select('node', 'n')
+            ->fields('n', array('nid', 'vid'))
+            ->condition('n.title', $node_title, '=');
+    $results = $query->execute()->fetchAllAssoc('nid');
+    $row = array_pop($results);
+
+    $node = node_load($row->nid, $row->vid);
+
+    $node->revision = TRUE;
+    $node->is_current = TRUE;
+    $node->status = 1;
+    $node->log = "setting $field_name to '$new_field_value'";
+    $node->revision_moderation = FALSE;
+    $node->{$field_name} = $new_field_value;
+    $node = node_submit($node);
+    node_save($node);
+  }
+
+  /**
+   * @Then /^I should not be permitted to "([^"]*)" revisions for "([^"]*)"$/
+   */
+  public function iShouldNotBePermittedToRevisionsFor($action, $node_title) {
+    if (!in_array($action, ['Delete', 'Revert'])) {
+      throw new Exception('The action ' . $action . ' does not supported by the step.');
+    }
+
+    if (node_access('update', FeatureHelp::getNodeId($node_title), $this->user)) {
+      throw new Exception('The user is not forbidden from revision page of the node');
+    }
+  }
+
+  /**
+   * @Given /^I revert "([^"]*)" to revision "(\d+)"$/
+   */
+  public function iRevertToRevision($node_title, $revision_num) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Given /^I delete revision "(\d+)" of "([^"]*)"$/
+   */
+  public function iDeleteRevisionof($revision_num, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Delete']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Then /^I should not be able to see the "([^"]*)" contextual link for "([^"]*)"$/
+   */
+  public function iShouldNotBeAbleToSeeTheContextualLink($linktext, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='$linktext']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (count($elements)) {
+      throw new Exception(sprintf("%s node page contains the '%s' contextual link.", $node_title, $linktext));
+    }
+  }
+
+  /**
+   * @Then /^I should be able to see "(\d+)" revisions for "([^"]*)"$/
+   */
+  public function iShouldBeAbleToSeeRevisionsFor($number_of_revisions, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+
+    // check to make sure the "revisions" link is available on the node view page
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $revisions_url = $url . "/revisions";
+
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='Revisions']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (!count($elements)) {
+      throw new Exception(sprintf("%s node page does not contain the 'revisions' contextual link.", $node_title, $url));
+    }
+
+    // check to see if the proper number of revision rows show up on the revisions page
+    $this->visit($revisions_url);
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
+    $revert_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
+    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid']))) - 1;
+
+    if ((count($revert_elements) != $actual_number_of_revisions) || ($number_of_revisions != $actual_number_of_revisions)) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, $number_of_revisions));
     }
   }
 
@@ -1651,17 +1843,6 @@ class FeatureContext extends DrupalContext {
       print_r('An error: ' . $e->getMessage());
       print_r('page: ' . $page);
     }
-  }
-
-  /**
-   * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
-   */
-  public function iEditTheMetaTags($title, $group) {
-    $nid = FeatureHelp::GetNodeId($title);
-
-    return array(
-      new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
-    );
   }
 
   /**

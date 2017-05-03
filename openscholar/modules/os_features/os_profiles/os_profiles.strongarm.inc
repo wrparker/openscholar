@@ -302,6 +302,7 @@ function os_profiles_strongarm() {
   $strongarm->name = 'node_options_person';
   $strongarm->value = array(
     0 => 'status',
+    1 => 'revision',
   );
   $export['node_options_person'] = $strongarm;
 
@@ -325,6 +326,20 @@ function os_profiles_strongarm() {
   $strongarm->name = 'pathauto_node_person_pattern';
   $strongarm->value = 'people/[node:title]';
   $export['pathauto_node_person_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'enable_revisions_person';
+  $strongarm->value = TRUE;
+  $export['enable_revisions_person'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'restrict_node_revision_number_for_person';
+  $strongarm->value = 10;
+  $export['restrict_node_revision_number_for_person'] = $strongarm;
 
   return $export;
 }
