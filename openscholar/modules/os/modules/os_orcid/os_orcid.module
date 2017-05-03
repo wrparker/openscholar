@@ -42,17 +42,43 @@ function _os_orcid_manage_orcid_submit($var, $value) {
 
   // Set variable to store the orcid_id from the form.
   $orcid_id = trim($var);
-  if($orcid_id != ""){
+
+  // Get vsite id
+  $vsite = vsite_get_vsite();
+
+  if($orcid_id == ""){
+    // Get the current space.
+    $space = spaces_get_space();
+    if (is_object($space)) {
+      // Update the orcid_id for the user space.
+      $space->controllers->variable->del('orcidId', $orcid_id);
+    }
+    else{
+      variable_del('orcidId', $orcid_id);
+    }
+  }
+  else {
     if(!preg_match('/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9A-Z]{4}$/', $orcid_id)) {
-      drupal_set_message(t('Your orcid id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
+      drupal_set_message(t('Your ORCID id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
       return false;
     }
     else {
       // Get the current space.
       $space = spaces_get_space();
 
-      // Update the orcid_id for the user space.
-      $space->controllers->variable->set('orcidId', $orcid_id);
+      if (is_object($space)) {
+        // Update the orcid_id for the user space.
+        $space->controllers->variable->set('orcidId', $orcid_id);
+      }
+      else{
+        variable_set('orcidId', $orcid_id);
+      }
+
+      drupal_set_message(t('Your ORCID id has been updated. Your orcid data will be imported soon.'), 'status');
+
+      $orcidIdtoProcess = variable_get('orcidIdtoProcess');
+      $orcidIdtoProcess[$vsite->group->vid] = $orcid_id;
+	    variable_set('orcidIdtoProcess', $orcidIdtoProcess);
     }
   }
 }
@@ -64,27 +90,40 @@ function _os_orcid_manage_orcid_submit($var, $value) {
  */
 function os_orcid_cron(){
 
-  // start is for what record to start from, these will be 0, unless extreme circumstances.
-  // limit is how many records we would like to process at a time, 10 looks about right to give users good feedback.
-  $settings['orcid_id'] = variable_get('orcidId');
-  $settings['limit'] = 10;
+  $getStack = variable_get('orcidIdtoProcess');
 
-  // This is the batch array from drupal core.
-  $batch = array(
-    'operations' => array(),
-    'title' => t('Batch import ORCID works'),
-    'init_message' => t('Import is starting ...'),
-    'progress_message' => t('Processed @current out of @total.'),
-    'error_message' => t('Import has encountered an error.'),
-    'finished' => '_os_orcid_batch_import_orcid_finish',
-  );
+  if(count($getStack) > 0){
 
-  // Set which function we want to batch and send it the settings to use.
-  $batch['operations'][] = array('_os_orcid_batch_import_orcid', array($settings));
+    $arrayToProcess = array_slice($getStack, -1, 1, TRUE);
+    array_pop($getStack);
+    variable_set('orcidIdtoProcess', $getStack);
 
-  // Start the batch process.
-  batch_set($batch);
-  batch_process();
+    foreach($arrayToProcess as $vsite => $orcidId){
+      $settings['orcid_id'] = $orcidId;
+      $settings['vsite'] = $vsite;
+    }
+
+    // start is for what record to start from, these will be 0, unless extreme circumstances.
+    // limit is how many records we would like to process at a time, 10 looks about right to give users good feedback.
+    $settings['limit'] = 10;
+
+    // This is the batch array from drupal core.
+    $batch = array(
+      'operations' => array(),
+      'title' => t('Batch import ORCID works'),
+      'init_message' => t('Import is starting ...'),
+      'progress_message' => t('Processed @current out of @total.'),
+      'error_message' => t('Import has encountered an error.'),
+      'finished' => '_os_orcid_batch_import_orcid_finish',
+    );
+
+    // Set which function we want to batch and send it the settings to use.
+    $batch['operations'][] = array('_os_orcid_batch_import_orcid', array($settings));
+
+    // Start the batch process.
+    batch_set($batch);
+    batch_process();
+  }
 }
 
 /**
@@ -93,6 +132,7 @@ function os_orcid_cron(){
 function _os_orcid_batch_import_orcid($settings, &$context) {
 
   $orcid_id = $settings['orcid_id'];
+
   // Getting the data into an array from the URL.
   $works = _os_orcid_get_orcid_from_api($orcid_id);
   $biblio_types = _os_orcid_get_biblio_types();
@@ -231,6 +271,8 @@ function _os_orcid_batch_import_orcid($settings, &$context) {
       if(!isset($node->biblio_type)) {
         $node->biblio_type = 102;
       }
+
+      $node->og_group_ref['und'][0]['target_id'] = $settings['vsite'];
 
       // Save the node.
       node_save($node);
