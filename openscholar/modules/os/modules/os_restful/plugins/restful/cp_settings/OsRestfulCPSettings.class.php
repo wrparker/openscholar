@@ -26,11 +26,8 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
   }
 
   public function getAllForms() {
-    if ($this->activateSpace()) {
-      return $this->processForms(cp_get_setting_forms());
-    }
-
-    throw new RestfulForbiddenException("Vsite ID is required.");
+    $this->activateSpace();
+    return $this->processForms(cp_get_setting_forms());
   }
 
   public function getForms($args) {

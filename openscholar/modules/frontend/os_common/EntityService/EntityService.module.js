@@ -522,6 +522,11 @@
       }
 
       function fetchUpdates(type, keys, timestamp, nextUrl) {
+        if (Drupal.settings.spaces == undefined) {
+          // We are not in a vsite context so we need to return early.
+          return;
+        }
+
         var url;
         if (nextUrl == undefined) {
           url = urlBase.replace(':type', type).replace(':time', timestamp)
