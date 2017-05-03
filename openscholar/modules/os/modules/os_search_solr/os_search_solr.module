@@ -1325,3 +1325,12 @@ function os_search_solr_form_boxes_box_form_alter(&$form, &$form_state) {
 
   $form['description']['#prefix'] = '<span class="os-search-solr-widget-description">' . t('Display results based on content type and/or taxonomy.') . '</span>';
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function os_search_solr_os_layout_get_alter($context, &$blocks) {
+
+  // Legacy block replaced with os_search_solr-solr_search_box
+  unset($blocks['boxes-solr_search_box']);
+}

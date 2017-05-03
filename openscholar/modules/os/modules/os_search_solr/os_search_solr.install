@@ -190,13 +190,3 @@ function os_search_solr_update_7004() {
   features_revert(array('os' => array('context',  'spaces_presets')));
 }
 
-/**
- * Removing os_search_solr-site-search instances.
- */
-function os_search_solr_update_7005() {
-  os_set_update_batch($sandbox, array(
-    'batch' => 250,
-    'entity' => 'node',
-    'path' => drupal_get_path('module', 'os_search_solr') . '/updates/update7005.php',
-  ));
-}
