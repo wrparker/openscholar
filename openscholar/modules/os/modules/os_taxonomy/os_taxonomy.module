@@ -1885,7 +1885,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   $form['#attached']['js'][] = drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'os_common') . '/modules/standard-form.js';
   $form['#attached']['js'][] = array(
-    'data' => '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML',
+    'data' => '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML',
     'type' => 'external',
   );
   $form['#attached']['library'][] = array('media', 'media_browser');
