@@ -148,6 +148,7 @@ class os_boxes_feedreader extends os_boxes_default {
     if (isset($node->field_url['und']['query'])){
       $url_options['query'] = $node->field_url['und']['query'];
     }
+    $url_options['https'] = variable_get('https', FALSE);
 
     $content = array(
       '#prefix' => '<div id="' . $feed_div_id . '">',
