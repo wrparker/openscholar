@@ -38,6 +38,7 @@ service apache2 restart
 sh -c "echo 127.0.0.1	lincoln.local >> /etc/hosts"
 sh -c "cat openscholar/behat/lincoln-vhost.txt > /etc/apache2/sites-available/lincoln.local.conf"
 a2ensite lincoln.local
+service apache2 reload
 
 # Download and install Apache solr.
 echo -e "\n # Install apache solr."
