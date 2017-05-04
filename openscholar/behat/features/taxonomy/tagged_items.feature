@@ -45,7 +45,7 @@ Feature: Testing the tagged items.
         | Type                  | Upcoming event      | select list |
         | Show number of posts  | check               | checkbox    |
       And I visit "john/calendar"
-      And I should see "Stephen William Hawking (2)"
+      And I should see "Stephen William Hawking (3)"
      When I change the date of "Future event" in "john"
      Then I visit "john/calendar"
-      And I should see "Stephen William Hawking (1)"
+      And I should see "Stephen William Hawking (2)"
