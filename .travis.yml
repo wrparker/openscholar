@@ -19,10 +19,10 @@ env:
 #    - TEST_SUITE=harvard
 #    - TEST_SUITE=javscript
 #    - TEST_SUITE=misc_first
-    - TEST_SUITE=misc_second
+#    - TEST_SUITE=misc_second
 #    - TEST_SUITE=solr
 #    - TEST_SUITE=taxonomy
-#    - TEST_SUITE=vsite
+    - TEST_SUITE=vsite
 #    - TEST_SUITE=widgets
 #    - TEST_SUITE=media_browser
 
