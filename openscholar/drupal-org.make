@@ -540,6 +540,7 @@ libraries[mathjax][type] = "libraries"
 libraries[mathjax][subdir] = "ckeditor/plugins"
 libraries[mathjax][download][type] = "git"
 libraries[mathjax][download][url] = "https://github.com/RoySegall/mathjax.git"
+libraries[mathjax][patch][] = https://raw.githubusercontent.com/openscholar/openscholar/b050f814816656c44db1490c4ff4d3295e960cb6/patches/mathjax-9530-cdn-path-update.patch
 
 libraries[justify][type] = "libraries"
 libraries[justify][subdir] = "ckeditor/plugins"
