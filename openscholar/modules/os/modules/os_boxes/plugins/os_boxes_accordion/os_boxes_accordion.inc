@@ -15,6 +15,9 @@ class os_boxes_accordion extends os_boxes_widget_collection {
   function options_form(&$form_state) {
     $form = parent::options_form($form_state);
 
+    // Remove embeddable option.
+    unset($form['make_embeddable']);
+
     $form['collapsed'] = array(
       '#type' => 'checkbox',
       '#default_value' => $this->options['collapsed'],
@@ -39,6 +42,8 @@ class os_boxes_accordion extends os_boxes_widget_collection {
       $os_accordion_boxes[$this->delta] = 2;
     }
 
+    // Disable embeddable link.
+    $output['embed_link'] = FALSE;
     // disable caching for this block for now
     // if (($output['content'] = $this->get_cache()) === FALSE) {
       $content = array(
