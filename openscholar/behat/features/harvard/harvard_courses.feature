@@ -1,7 +1,7 @@
 Feature:
   Testing the harvard courses import mechanism.
 
-  @javascript @harvard
+  @_javascript @harvard
   Scenario: Importing courses and test their grouping to the correct sites.
     Given I am logging in as "admin"
 
@@ -24,7 +24,7 @@ Feature:
       And I visit "john/courses"
      Then I should see "(Re)fabricating Tectonic Prototypes"
 
-  @javascript @harvard
+  @_javascript @harvard
     Scenario: Testing the hvarvard courses bread crumb.
       Given I visit "john/courses"
        When I click "(Re)fabricating Tectonic Prototypes"

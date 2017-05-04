@@ -3344,7 +3344,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-<<<<<<< HEAD
    * @Given /^I make sure admin panel is open$/
    */
   public function adminPanelOpen() {
