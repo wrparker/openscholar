@@ -18,7 +18,7 @@ body:not(.overlay) .node-form {
 #cp-appearance-theme-picker-form select,
 .wysiwyg-link-tool-wrapper .results div,
 #branding,
-.wysiwyg-link-tool-wrapper .ui-dialog .ui-dialog-content  {
+.wysiwyg-link-tool-wrapper.ui-dialog .ui-dialog-content  {
     overflow: hidden;
 }
 
