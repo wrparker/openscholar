@@ -1904,6 +1904,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
     $form['actions']['cancel']['#value'] = 'Cancel';
   }
 
+  $form['#validate'][] = '_os_taxonomy_validate_unicode_charset';
   $form['#submit'][] = '_os_taxonomy_operations';
   $form['actions']['cancel']['#submit'][] = '_os_taxonomy_custom_form_cancel';
 }
@@ -1937,6 +1938,19 @@ function _os_taxonomy_custom_form_cancel(&$form, &$form_state) {
   $path_term = 'taxonomy/term/' . $tid;
   //Redirection to the term page after cancellation.
   $form_state['redirect'] = url($path_term);
+}
+
+/**
+ * Callback for custom validation.
+ */
+function _os_taxonomy_validate_unicode_charset(&$form, &$form_state) {
+  $termName = $form_state['values']['name'];
+  $exp = '/^[\x{0000}-\x{04FF}]+$/u';
+
+  if (!preg_match($exp,$termName)) {
+    form_set_error('name', t("Sorry, this format is not supported."));
+    return $form;
+  }
 }
 
 /**
