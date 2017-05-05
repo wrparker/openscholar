@@ -1948,7 +1948,7 @@ function _os_taxonomy_validate_unicode_charset(&$form, &$form_state) {
   $exp = '/^[\x{0000}-\x{04FF}]+$/u';
 
   if (!preg_match($exp,$termName)) {
-    form_set_error('name', t("Sorry, this format is not supported."));
+    form_set_error('name', t("Sorry, the character you entered is not supported."));
     return $form;
   }
 }
