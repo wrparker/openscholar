@@ -582,7 +582,7 @@ function media_format_form($form, $form_state, $file) {
       '#type' => 'textfield',
       '#title' => t('Alternate text'),
       '#description' => t('Appears when the image is loading or fails to load, important for accessibility.'),
-      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
+      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? html_entity_decode($file->field_file_image_alt_text['und'][0]['safe_value'], ENT_QUOTES | ENT_HTML5) : '',
     );
 
     $form['options']['title'] = array(
