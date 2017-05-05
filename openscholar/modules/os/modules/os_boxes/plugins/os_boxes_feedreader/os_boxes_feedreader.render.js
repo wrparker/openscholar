@@ -15,8 +15,11 @@ Drupal.behaviors.osBoxesFeedReader = {
           //Load Feed
           var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
           var q = new Y.YQLRequest(query, function (r) {
-            // check for results, if there are none, hide the whole feed reader widget
-            if (r.query.results != null && r.query.results.item != null && r.query.results.item.length) {
+            // check for results, if there are none, display a message
+            if (r.query.results != null && r.query.results.item != null) {
+              if (!r.query.results.item.length) {
+                r.query.results.item = new Array(r.query.results.item);
+              }
               for (var i = 0; i < r.query.results.item.length; i++) {
                 var entry = r.query.results.item[i];
                 var date = "";
