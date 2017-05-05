@@ -32,8 +32,8 @@ env:
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:8.0.5
-  - rvm 2.2.5 do gem install net-ssh -v 2.9.2
-  - rvm 2.2.5 do gem install mime-types -v 2.6.2
+  - rvm all do gem install net-ssh -v 2.9.2
+  - rvm all do gem install mime-types -v 2.6.2
   - "gem install travis-artifacts"
 
   # Install apache
