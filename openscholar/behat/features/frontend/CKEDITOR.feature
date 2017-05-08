@@ -1,7 +1,7 @@
 Feature:
   Testing the CKEDITOR is enabled.
 
-  @javascript @roy2
+  @javascript @frontend
   Scenario: Verify the tiny CKEDITOR is enabled.
     Given I am logging in as "admin"
      When I visit "john/node/add/blog"

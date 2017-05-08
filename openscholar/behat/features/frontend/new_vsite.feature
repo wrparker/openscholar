@@ -1,7 +1,7 @@
 Feature:
   Testing the creation of the a new site.
 
-  @api @javascript
+  @javascript  @frontend
   Scenario: Test the creation of a new site and verify that we don't get JS alert.
     Given I am logging in as "admin"
       And I wait for page actions to complete
