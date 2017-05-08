@@ -11,8 +11,8 @@ function os_pages_os_app_info() {
 
   $apps['os_pages'] = array(
     'path' => '',
-  	'nodetypes' => array(
-  	  'page',
+    'nodetypes' => array(
+      'page',
     ),
     'importers' => array(
       'page' => array(
@@ -50,16 +50,6 @@ function os_pages_menu() {
     'weight' => 2,
     'file' => 'book.admin.inc',
     'file path' => drupal_get_path('module', 'book'),
-  );
-
-  $items['os/pages/%node/body'] =
-  $items['os/pages/%node/meta'] = array(
-    'title' => 'Edit Page',
-    'page callback' => 'os_pages_edit_form',
-    'page arguments' => array(2, 3),
-    'type' => MENU_CALLBACK,
-    'access callback' => 'spaces_menu_access',
-    'access arguments' => array('update', 2, 'node_access'),
   );
 
   $items['os/pages/%node/subpage'] = array(
@@ -192,7 +182,14 @@ function os_pages_menu_contextual_links_alter(&$links, $router_item, $root_path)
       return;
     }
 
-    $links['os_pages-edit'] = menu_get_item('os/pages/'.$node->nid.'/body');
+    // add revisions link if user has permissions and the node has them
+    $item = menu_get_item('node/' . $node->nid . '/revisions');
+    if ((count(node_revision_list($node)) > 1) && $item['access']) {
+      $links['page-revisions'] = $item;
+    }
+
+    $links['os_pages-edit'] = menu_get_item('node/'.$node->nid.'/edit');
+
     $links = array_reverse($links, true);
   }
   // vsite users skip to here because they don't have access to any of the widget contextual links
@@ -205,12 +202,16 @@ function os_pages_menu_contextual_links_alter(&$links, $router_item, $root_path)
     $node = $router_item['page_arguments'][2];
 
     // we don't want to mess with the links for other content types by accident
-    // only pages are editted at the os/pages/ paths.
+    // only pages are edited at the node/nid/edit paths.
     if ($node->type == 'page') {
       $links = array();
-      $link = menu_get_item('os/pages/'.$node->nid.'/body');
+      $link = menu_get_item('node/'.$node->nid.'/edit');
       if ($link['access']) {
         $links['os_pages-edit'] = $link;
+      }
+      $link = menu_get_item('node/' . $node->nid . '/revisions');
+      if ((count(node_revision_list($node)) > 1) && $link['access']) {
+        $links['page-revisions'] = $link;
       }
     }
   }
@@ -341,7 +342,8 @@ function os_pages_context_custom($name) {
  */
 function os_pages_node_view($node, $view_mode) {
   if ($node->type == 'page' && $view_mode == 'full') {
-    if (node_is_page($node)) {
+    // We are on a node page in the public part of the site.
+    if (node_is_page($node) && !path_is_admin(current_path())) {
       $ctx = context_load('os_pages-page-'.$node->nid);
       if ($ctx) {
         context_set('context', $ctx->name, $ctx);
@@ -480,6 +482,12 @@ function _os_pages_get_link_children($link, $can_access = false) {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form.
  */
 function os_pages_form_page_node_form_alter(&$form, &$form_state) {
+  // if page content widget has been removed, do not display body field
+  $page_context = context_load('os_pages-page-' . $form_state['node']->nid);
+  if(!isset($page_context->reactions['block']['blocks']['os_pages-main_content'])) {
+    $form['body']['#access'] = FALSE;
+  }
+
   // Adds a custom fieldset for the right-hand column to hold meta description.
   $path = drupal_get_path('module', 'os_pages');
   $form['os_seo'] = array(
@@ -877,11 +885,11 @@ function os_pages_preprocess_page(&$page) {
     unset($section_links['section-layout'], $section_links['section-header'], $section_links['page-header']);
   }
 
-  $item = menu_get_item('os/pages/' . $node->nid . '/meta');
+  $item = menu_get_item('node/' . $node->nid . '/edit');
   if ($item['access']) {
     $section_links['page-edit'] = array(
       'title' => t('Edit'),
-      'href' => 'os/pages/' . $node->nid . '/meta',
+      'href' => 'node/' . $node->nid . '/edit',
       'query' => drupal_get_destination(),
     );
   }
@@ -923,14 +931,6 @@ function os_pages_os_add_new_links_alter(&$links) {
       );
     }
   }
-}
-
-/**
- * Page callback for 'os/pages/%node/body' and 'os/pages/%node/meta'.
- */
-function os_pages_edit_form($node, $mode) {
-  module_load_include('inc', 'node', 'node.pages');
-  return drupal_get_form('page_node_form', $node, $mode);
 }
 
 /**
@@ -1334,7 +1334,7 @@ function os_pages_widget_submit($form, $form_state) {
     // Get the relationship between blocks and contexts.
     $context_blocks = vsite_layout_get_block_contexts('boxes',$form_state['box']->delta);
     foreach ($context_blocks as $info) {
-    	_os_pages_reindex_context($info->context);
+      _os_pages_reindex_context($info->context);
     }
   }
 }

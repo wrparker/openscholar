@@ -192,6 +192,7 @@ function os_blog_strongarm() {
   $strongarm->name = 'node_options_blog';
   $strongarm->value = array(
     0 => 'status',
+    1 => 'revision',
   );
   $export['node_options_blog'] = $strongarm;
 
@@ -215,6 +216,20 @@ function os_blog_strongarm() {
   $strongarm->name = 'pathauto_node_blog_pattern';
   $strongarm->value = 'blog/[node:original:created:custom:Y]/[node:original:created:custom:m]/[node:title]';
   $export['pathauto_node_blog_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'enable_revisions_blog';
+  $strongarm->value = TRUE;
+  $export['enable_revisions_blog'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'restrict_node_revision_number_for_blog';
+  $strongarm->value = 10;
+  $export['restrict_node_revision_number_for_blog'] = $strongarm;
 
   return $export;
 }

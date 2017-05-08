@@ -166,11 +166,21 @@ function os_news_field_attach_load($entity_type, $entities, $view_mode) {
  * Implements hook_media_token_to_markup_alter()
  */
 function os_news_media_token_to_markup_alter(&$element, &$tag_info, &$settings) {
+
   $img_markup = isset($element['content']['file']) ? drupal_render($element['content']['file']) : '';
   $output = '';
   $output .= $img_markup;
+
+  // Adding extra span around embed media iframe.
+  if (isset($element['content']['file']['#file']->override['attributes']['style'])) {
+    $style = 'style="' . $element['content']['file']['#file']->override['attributes']['style'] . '"';
+  }
+  if (strpos($output, 'iframe') !== FALSE) {
+    $output = '<span ' . ($style!='' ? $style : '') . '>' . $output . '</span>';
+  }
+
   // If image description is present, then figcaption tag will be displayed.
-  if(isset($element['content']['os_file_description'][0]['#markup'])) {
+  if (isset($element['content']['os_file_description'][0]['#markup'])) {
     $output .= '<figcaption>';
     $output .= strip_tags($element['content']['os_file_description'][0]['#markup']);
     $output .= '</figcaption>';

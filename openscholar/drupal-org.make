@@ -66,9 +66,6 @@ projects[date_ical][version] = 2.7
 projects[devel][subdir] = "contrib"
 projects[devel][version] = 1.3
 
-projects[diff][subdir] = "contrib"
-projects[diff][version] = 3.2
-
 projects[disqus][subdir] = "contrib"
 projects[disqus][version] = 1.9
 projects[disqus][patch][] = "http://drupal.org/files/comment_sources-disqus-2120703-1.patch"
@@ -162,6 +159,7 @@ projects[hierarchical_taxonomy][patch][] = "http://drupal.org/files/2034713-hs-c
 
 projects[html_title][subdir] = "contrib"
 projects[html_title][version] = 1.1
+projects[html_title][patch][] = "https://www.drupal.org/files/issues/fix_for_other_titles-2783297.patch"
 
 projects[imageapi_optimize][subdir] = "contrib"
 projects[imageapi_optimize][download][type] = git
@@ -265,6 +263,9 @@ projects[nice_menus][patch][] = "https://gist.githubusercontent.com/RoySegall/61
 projects[nodeformcols][subdir] = "contrib"
 projects[nodeformcols][version] = 1.0
 
+projects[node_revision_restrict][subdir] = "contrib"
+projects[node_revision_restrict][version] = 1.4
+
 projects[entity_validator][subdir] = "contrib"
 projects[entity_validator][download][type] = git
 projects[entity_validator][download][url] = "https://github.com/Gizra/entity_validator.git"
@@ -282,6 +283,7 @@ projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/opens
 projects[oembed][patch][] = "http://drupal.org/files/issues/split-up-regex-2739023-1.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/61b4675841580356481463f4780627bab619f197/patches/oembed.8762.uri_fragments.patch"
 projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6d4ccf7f26124a57a3483b2e1197017a95d4b026/patches/oembed.backup_providers.patch"
+projects[oembed][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/56c5f68a45a6ce8d49be722bf7dfdb10da5cf60f/patches/oembed.9433.youtube_https_schema.patch"
 
 projects[og][subdir] = "contrib"
 projects[og][version] = 2.6
