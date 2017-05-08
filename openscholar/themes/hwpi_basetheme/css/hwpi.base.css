@@ -866,3 +866,7 @@ body.cke_editable {
     background:#fff;
     background-color:#fff;
 }
+img.file-icon {
+    width: 16px;
+    margin-right: 4px;
+}
