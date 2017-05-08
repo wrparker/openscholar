@@ -10,9 +10,8 @@
  * Set variable default if not exist.
  */
 function os_orcid_uninstall() {
-
-    // Delete the orcid id from each users space.
-    _os_orcid_delete_orcid_id();
+  // Delete the orcid id from each users space.
+  _os_orcid_delete_orcid_id();
 }
 
 /**
@@ -21,5 +20,16 @@ function os_orcid_uninstall() {
  * Delete the orcid id.
  */
 function _os_orcid_delete_orcid_id() {
+  if(module_exists('spaces')) {
+    //Delete from space is spaces module exists
+    db_delete('spaces_overrides')
+      ->condition('type', 'og')
+      ->condition('object_type', 'variable')
+      ->condition('object_id', 'orcidId')
+      ->execute();
+  }
+  else {
+    //Else delete from variable table
     variable_del('orcidId');
+  }
 }
