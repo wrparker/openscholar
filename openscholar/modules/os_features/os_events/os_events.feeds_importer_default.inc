@@ -97,7 +97,7 @@ function os_events_feeds_importer_default() {
     'import_period' => 1800,
     'expire_period' => 3600,
     'import_on_create' => TRUE,
-    'process_in_background' => FALSE,
+    'process_in_background' => 1,
   );
   $export['os_events_csv'] = $feeds_importer;
 
@@ -169,7 +169,7 @@ function os_events_feeds_importer_default() {
     'import_period' => '-1',
     'expire_period' => 3600,
     'import_on_create' => 1,
-    'process_in_background' => 0,
+    'process_in_background' => 1,
   );
   $export['os_ical'] = $feeds_importer;
 

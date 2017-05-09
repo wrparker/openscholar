@@ -69,7 +69,7 @@ function vsite_access_cp_settings_save($val) {
   $node = node_load($space->id);
   $node->{VSITE_ACCESS_FIELD}[LANGUAGE_NONE][0]['value'] = $val;
   node_save($node);
-  $cid = "field:node:$id";
+  $cid = "field:node:" . $space->group->nid;
   cache_clear_all($cid, 'cache_field');
   // Restful by default doesn't allow sessions to be saved
   drupal_save_session(true);

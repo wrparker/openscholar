@@ -91,7 +91,7 @@ function os_image_gallery_feeds_importer_default() {
     'import_period' => 1800,
     'expire_period' => 3600,
     'import_on_create' => TRUE,
-    'process_in_background' => FALSE,
+    'process_in_background' => 1,
   );
   $export['os_gallery'] = $feeds_importer;
 

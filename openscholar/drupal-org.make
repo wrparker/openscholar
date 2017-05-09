@@ -116,6 +116,7 @@ projects[features][version] = 2.0
 
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
+projects[feeds][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/8e532e05ef206421f0b2e259223ee12afdcff877/patches/feeds-fid_9097_resubmitting.patch"
 
 projects[feeds_tamper][subdir] = "contrib"
 projects[feeds_tamper][version] = 1.1

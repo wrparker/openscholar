@@ -126,8 +126,8 @@ function os_faq_views_query_alter(&$view, &$query) {
  * Implements hook_cp_settings().
  */
 function os_faq_cp_settings() {
-  $settings = array();
 
+  $settings = array();
   $spaces_features = variable_get('spaces_features');
 
   // The app won't appear in CP menu if not enabled.

@@ -2392,6 +2392,11 @@ function _os_files_extensions_from_type($type) {
       'wwtfig',
       'csv',
       'sas',
+      'ics',
+      'bib',
+      'enw',
+      'mrc',
+      'ris',
     );
 
     $types['executable'] = array(
