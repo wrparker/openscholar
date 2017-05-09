@@ -155,6 +155,10 @@ class os_boxes_feedreader extends os_boxes_default {
       '#attached' => array(
         'js' => array(
           libraries_get_path('yui') . '/yui-min.js',
+          libraries_get_path('oop') . '/oop-min.js',
+          libraries_get_path('jsonp') . '/jsonp-min.js',
+          libraries_get_path('jsonp-url') . '/jsonp-url-min.js',
+          libraries_get_path('yql') . '/yql-min.js',
           drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_feedreader/os_boxes_feedreader.render.js',
           array(
             'type' => 'setting',
