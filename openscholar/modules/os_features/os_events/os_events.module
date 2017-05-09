@@ -2326,25 +2326,42 @@ function os_events_mail($key, &$message, $params) {
  * Implements hook_mail_alter().
  */
 function os_events_mail_alter(&$message) {
-  if (!in_array($message['id'], array('registration_broadcast', 'os_events_registration_confirmation'))) {
-    return;
-  }
 
-  // Get event default email address.
-  $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
-  $event_author_email = $wrapper->author->mail->value();
+  //Array for event mails
+  $eventEmailArr = array("registration_broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification");
 
-  // Default value of the "From" field should be the author of the event's e-mail
-  // in case it hasn't been changed yet (if it hasn't been changed yet, the email
-  // will be set by default to be as defined in the field instance).
-  $info = field_info_instance('node', 'field_event_registration', 'event');
-  $default_email = $info['settings']['default_registration_settings']['settings']['from_address'];
-  if ($message['headers']['From'] == $default_email) {
+  //Check if it is an event related mail
+  if(in_array($message['key'],$eventEmailArr)) {
+
+    // Get event author event's author email address.
+    $event_author_email = check_plain(trim($message['params']['@event-creator-mail']));
+
+    // Set unsubscribe link pointing to author of the event's e-mail
+    $message['body'][] = '';
+    watchdog('event_author_email','<pre>'.print_r($event_author_email,TRUE).'</pre>');
+    $message['body'][] = t("Click here to ").l(t('Unsubscribe'), 'mailto:'.$event_author_email);
+
+    // Set default value of the "From" field to author of the event's e-mail
     $message['headers']['From'] = $message['from'] = $event_author_email;
+
+    // Set the sender and return-path headers.
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+  }
+  else {
+
+    // Set unsubscribe link pointing hwp@harvard.edu
+    $message['body'][] = '';
+    $message['body'][] = t("Click here to ").l(t('Unsubscribe'), 'mailto:hwp@harvard.edu');
+
+    // Set default value of the "From" field to hwp@harvard.edu
+    $message['headers']['From'] = $message['from'] = 'hwp@harvard.edu';
+
+    //Set the sender and return-path headers.
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
 
-  // Set the sender and return-path headers.
-  $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+  //Set the physical address at below the unsubscribe link
+  $message['body'][] = "Massachusetts Hall, Cambridge, MA 02138";
 }
 
 /**
@@ -3113,9 +3130,8 @@ function os_events_field_create_field($field) {
 */
 function os_events_cp_settings() {
 
-  $settings = array();
   $spaces_features = variable_get('spaces_features');
-  // The app won't appear in CP menu if not enabled.
+  // Event settings link won't appear in CP menu if event app is not enabled.
   if (empty($spaces_features['os_events'])) {
     return $settings;
   }
