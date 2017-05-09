@@ -8,7 +8,7 @@ Feature:
      When I consume "api/group" as "admin"
       And I should not get empty json
 
-  @api @restful @now
+  @api @restful
   Scenario: Create a new group via restful.
     Given I "create" a group as "admin":
       | label                     | purl    | type        |

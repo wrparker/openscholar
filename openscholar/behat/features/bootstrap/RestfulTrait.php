@@ -495,7 +495,6 @@ trait RestfulTrait {
   public function iAGroup($operation, $account, TableNode $table) {
     list($groups, $token, $path) = $this->getVariables('group', $account, $table);
     $op = $this->operations[$operation];
-    var_dump($path);
 
     if ($operation == 'create') {
       foreach ($groups as $group) {
@@ -514,7 +513,6 @@ trait RestfulTrait {
     $values = $this->getValues($table);
 
     foreach ($values as $value) {
-      var_dump($this->locatePath($value['purl']));
       $this->visit($value['purl']);
       $this->assertPageContainsText($value['text']);
     }
