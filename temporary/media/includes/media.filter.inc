@@ -584,14 +584,14 @@ function media_format_form($form, $form_state, $file) {
       '#type' => 'textfield',
       '#title' => t('Alternate text'),
       '#description' => t('Appears when the image is loading or fails to load, important for accessibility.'),
-      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? html_entity_decode($file->field_file_image_alt_text['und'][0]['safe_value'], ENT_QUOTES | ENT_HTML5) : '',
+      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? decode_entities($file->field_file_image_alt_text['und'][0]['safe_value']) : '',
     );
 
     $form['options']['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
-      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? $file->field_file_image_title_text['und'][0]['safe_value'] : '',
+      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? decode_entities($file->field_file_image_title_text['und'][0]['safe_value']) : '',
     );
   }
 
