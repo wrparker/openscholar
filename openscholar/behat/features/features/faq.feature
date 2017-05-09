@@ -1,7 +1,7 @@
 Feature:
   Testing the faq app.
 
-  @api @features
+  @api @features_first
   Scenario: Testing the migration of FAQ
     Given I am logging in as "john"
       And I visit "john/faq"
@@ -9,7 +9,7 @@ Feature:
      When I click "What does JFK stands for?"
      Then I should see "JFK stands for: John Fitzgerald Kennedy."
 
-  @api @features
+  @api @features_first
   Scenario: Testing the migration of FAQ
     Given I am logging in as "john"
       And I visit "john/node/add/faq"
@@ -17,7 +17,7 @@ Feature:
       And I press "Save"
      Then I should see the random string
 
-  @api @features
+  @api @features_first
   Scenario: Verify that the FAQ's body in the LOP is collapsed by default.
     Given I am logging in as "john"
       And the widget "List of posts" is set in the "FAQ" page with the following <settings>:
@@ -27,7 +27,7 @@ Feature:
      Then I should see that the "faq" in the "LOP" are collapsed
 
 
-  @api @features
+  @api @features_first
   Scenario: Verify that body length limits are respected
     Given I am logging in as "john"
       And I set the variable "os_wysiwyg_maximum_length_body" to "50"

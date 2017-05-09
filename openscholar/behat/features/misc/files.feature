@@ -1,7 +1,7 @@
 Feature:
   Testing the file deletion behavior.
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify that the when removing a file from a node, the file is not deleted.
     Given I am logging in as "john"
       And I visit "john/cp/content/files"
@@ -10,7 +10,7 @@ Feature:
       And I visit "john/cp/content/files"
      Then I should not see "Example gallery" in the "used in" column for the row "slideshow7.jpg"
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify that when using file_delete() on a used file, the file stays.
     Given I am logging in as "john"
       And I am deleting the file "slideshow7.jpg"
@@ -18,7 +18,7 @@ Feature:
      Then I should see "slideshow7.jpg"
       And I should verify the file "slideshow7.jpg" exists
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify that the when deleting a node with attached files, the files
             are not being deleted.
     Given I am logging in as "john"

@@ -1,7 +1,7 @@
 Feature:
   Testing the cp content views.
 
-  @api @misc
+  @api @misc_first
   Scenario: Verify that the "Used in" column is populated correctly in the
             "cp_files" view.
     Given I am logging in as "john"

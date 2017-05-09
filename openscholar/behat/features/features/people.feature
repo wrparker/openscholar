@@ -1,14 +1,14 @@
 Feature:
   Testing the people tab.
 
-  @api @features
+  @api @features_second
   Scenario: Test the People tab
     Given I visit "john"
      When I click "People"
       And I click "John Fitzgerald Kennedy"
      Then I should see "often referred to by his initials JFK"
 
-  @api @features
+  @api @features_second
   Scenario: Testing the autocomplete field or profile syncing.
     Given I am logging in as "john"
       And I visit "john/cp/people/sync-profiles"
@@ -21,7 +21,7 @@ Feature:
     # Verify the user is in john's vsite and the source node vsite.
       And I should see "John"
 
-  @api @features
+  @api @features_second
   Scenario: When syncing the same node we need to check we updated the copied
   node and create a new one.
 #    Given I am logging in as "john"
@@ -42,7 +42,7 @@ Feature:
       And I should see "John"
       And I should see "White house"
 
-  @api @features
+  @api @features_second
   Scenario: When syncing the same node we need to check we updated the copied
             node and create a new one.
 #    Given I am logging in as "john"
@@ -63,7 +63,7 @@ Feature:
       And I should see "John"
       And I should see "White house"
 
-  @api @features
+  @api @features_second
   Scenario: Empty the value of a field from the original node and check the
             listener node updated.
     Given I am logging in as "john"
@@ -74,7 +74,7 @@ Feature:
       And I visit "john/people/hillary-diane-rodham-clinton"
      Then I should not see "new address"
 
-  @api @features
+  @api @features_second
   Scenario: Make sure that when a source node is deleted the copied node becomes
             editable.
     Given I am logging in as "john"
@@ -86,7 +86,7 @@ Feature:
       And I edit the node "Hillary Diane Rodham Clinton" in the group "john"
      Then I should see "Professional Titles/Affiliations"
 
-  @api @features
+  @api @features_second
   Scenario: Test changing the owner of a VSite.
     Given I am logging in as "admin"
       And I give the user "john" the role "vsite admin" in the group "obama"
@@ -124,7 +124,7 @@ Feature:
           # Reassign michelle to be a basic user.
       And I give the user "michelle" the role "vsite user" in the group "obama"
 
-  @api @features
+  @api @features_second
   Scenario: Testing the order of the people.
     Given I visit "john/people"
      Then I verify "Charles Anderson" comes before "Kristen Anderson"

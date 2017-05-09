@@ -1,13 +1,13 @@
 Feature:
   Testing the OS reader functionality.
 
-  @api @features
+  @api @features_second
   Scenario: Test the Reader tab
     Given I visit "john"
      When I click "Reader"
      Then I should see "Engadget rss"
 
-  @api @features
+  @api @features_second
   Scenario: Test the OS reader feed importer.
     Given I am logging in as "admin"
       And I import feed items for "john"
@@ -17,14 +17,14 @@ Feature:
      Then I should see the feed item "JFK was murdered" was imported
       And I should see "JFK was murdered"
 
-  @api @features
+  @api @features_second
   Scenario: Verify the anonymous user is being redirected to the feed item
             source page.
     Given I visit "john/news"
      When I click "JFK was murdered"
      Then I should see "Assassination of John F. Kennedy"
 
-  @api @features 
+  @api @features_second 
   Scenario: Feed items are displayed for each site
     Given I am logging in as "admin"
       And I import feed items for "obama"
@@ -36,14 +36,14 @@ Feature:
      Then I should see the feed item "Four more years is the most re-tweeted tweet" was imported
       And I should see "Four more years is the most re-tweeted tweet"
 
-  @api @features
+  @api @features_second
   Scenario: Verify images in feed item description are imported as images.
     Given I am logging in as "admin"
      When I visit "john/cp/os-importer/news/manage"
       And I should see the feed item "JFK was murdered" was imported
      Then I should see the news photo "Harvard_shield-College"
 
-  @api @features
+  @api @features_second
   Scenario: Test the Contains filter on OS feed import page.
     Given I am logging in as "admin"
       And I visit "john/cp/os-importer/news/manage?feed_by_text=president"
@@ -51,20 +51,20 @@ Feature:
      When I visit "john/cp/os-importer/news/manage?feed_by_text=pancakes"
      Then I should not see "JFK was murdered"
 
-  @api @features
+  @api @features_second
   Scenario: Test the Status filter on OS feed import page.
     Given I am logging in as "admin"
      When I visit "john/cp/os-importer/news/manage?feed_is_imported=All"
      Then I should see "JFK was murdered"
 
-  @api @features
+  @api @features_second
   Scenario: Test the Importer filter on OS feed import page.
     Given I am logging in as "admin"
       And I visit "john/cp/os-importer/news/manage"
      When I click "John news importer"
      Then I should see "JFK was murdered"
 
-  @api @features
+  @api @features_second
   Scenario: Verify the imported news date is the original feed item date.
     Given I am logging in as "admin"
       And I visit "john/cp/os-importer/news/manage"
@@ -73,14 +73,14 @@ Feature:
       And I click "Lee Harvey Oswald"
      Then I should see "November 22, 1963"
 
-  @api @features
+  @api @features_second
   Scenario: Verify a the same feed can be imported to two different vsites.
     Given I am logging in as "john"
       And I import "john" feed items for "obama"
      When I visit "obama/cp/os-importer/news/manage"
      Then I should see "JFK was murdered"
 
-  @js @features
+  @js @features_second
   Scenario: Verify a feed item can be imported only once to the site.
     Given I am logging in as "admin"
      When I re import feed item "John news importer"
