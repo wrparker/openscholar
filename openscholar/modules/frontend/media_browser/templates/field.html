@@ -6,9 +6,10 @@
          hide-on-drop-not-available="true" ng-accept="validate($file)" ng-hide="fieldIsFull()">
         <span id="drag-text">{{droppable_text}}<span class="help_icon" ng-mouseenter="showHelp = true" ng-mouseleave="showHelp = false" ng-hide="hideHelpicon">?</span></span>
 
-        <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
-        <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
-               <strong>Max file size:</strong> {{maxFilesize}}.
+            <a href="#" mb-open-modal panes="{{panes.join(',')}}" types="{{types}}" on-select="addFile($inserted)">{{upload_text}}</a>
+            <div class="help" ng-show="showHelp"><strong>Allowed file types:</strong><br /> {{extensionsFull.join(' ')}}<br /><br />
+                   <strong>Max file size:</strong> {{maxFilesize}}.
+            </div>
         </div>
     </div>
     <div ui-sortable="sortableOptions" ng-model="selectedFiles">
