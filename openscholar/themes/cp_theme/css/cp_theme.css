@@ -429,21 +429,25 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     top:10% !important;
 }
 
-.ui-dialog .profiles-display-types .first {
+.ui-dialog #features_os_profiles span[name="os_profiles_display_type"] {
+    display: inline-block;
+}
+
+.ui-dialog #edit-os-profiles-display-type {
     float: left;
 }
 
-.ui-dialog .profiles-display-types .second {
+.ui-dialog #os-profiles-preview {
     float: right;
     width: 60%;
 }
 
-.ui-dialog .profiles-display-types .second .dummy-person-photo {
+.ui-dialog #os-profiles-preview .dummy-person-photo {
     float: left;
     padding-right: 20px;
 }
 
-.ui-dialog .profiles-display-types .second .preview {
+.ui-dialog #os-profiles-preview .preview {
     height: 200px;
 }
 
