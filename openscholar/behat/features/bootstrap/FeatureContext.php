@@ -23,7 +23,7 @@ class FeatureContext extends DrupalContext {
     // Set up the browser width.
 
     if ($this->getSession() instanceof Selenium2Driver) {
-      $this->getSession()->resizeWindow(1440, 1200, 'current');
+      $this->getSession()->resizeWindow(1440, 3000, 'current');
     }
 
     parent::beforeScenario($event);
@@ -3849,4 +3849,5 @@ JS;
       );
     }
   }
+
 }

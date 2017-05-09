@@ -663,4 +663,5 @@ trait RestfulTrait {
       throw new \Exception('The json is empty.');
     }
   }
+
 }
