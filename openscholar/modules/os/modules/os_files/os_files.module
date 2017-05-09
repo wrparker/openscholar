@@ -27,7 +27,7 @@ function os_files_init() {
     $info = ctools_plugin_get_plugin_type_info();
 
     // If the ctools plugin data is not present do not clear the cache.
-    if (isset($info['oembed']['providers']['cache table'])) {
+    if (isset($info['oembed']) && isset($info['oembed']['providers']['cache table'])) {
       cache_clear_all('plugins:oembed:providers', $info['oembed']['providers']['cache table']);
       ctools_get_plugins_reset();
     }
@@ -133,35 +133,32 @@ function os_files_theme() {
 function theme_os_file_gallery_carousal_icon($variables) {
   $file = $variables['file'];
   $file_icon = $file->icon;
-  return '<img class="media-gallery-carousal file-icon" alt="' . $file->filename . '" title="' . $file->filename . '" src="' . $file_icon . '" />';
+  return '<img class="media-gallery-carousal file-icon" alt="" src="' . $file_icon . '" />';
 }
 
 /**
- * Returns HTML for an image with an appropriate icon for the given file.
- *
- * @param $variables
- *   An associative array containing:
- *   - file: A file object for which to make an icon.
- *   - icon_directory: (optional) A path to a directory of icons to be used for
- *     files. Defaults to the value of the "file_icon_directory" variable.
- *
- * @ingroup themeable
+ * Overriding theme_file_icon
  */
-function theme_os_file_icon($variables) {
+function os_file_icon($variables) {
   $file = $variables['file'];
+  $alt = $variables['alt'];
   $icon_directory = $variables['icon_directory'];
 
-  $mime = check_plain($file->filemime);
-  if ($icon_url = file_icon_url($file, $icon_directory)) {
-    // Replacing png icons with svg
-    $svg_url = str_replace('.png', '.svg', $icon_url );
-    return '<img class="file-icon" alt="" title="' . $mime . '" src="' . $svg_url . '" />';
-  }
+  // Setting icon directory for svg files
+  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
+  $icon_url = file_icon_url($file, $icon_directory);
+
+  // Replacing png icons with svg
+  $svg_url = str_replace('.png', '.svg', $icon_url );
+  return '<img class="file-icon" alt="" src="' . $svg_url . '" />';
 }
 
 function os_files_theme_registry_alter(&$reg) {
   unset($reg['oembed']['template']);
   $reg['oembed']['function'] = 'theme_os_files_oembed';
+  if (!empty($reg['file_icon'])) {
+    $reg['file_icon']['function'] = 'os_file_icon';
+  }
 }
 
 function theme_os_files_oembed($vars){
@@ -205,8 +202,8 @@ function os_files_ctools_plugin_post_alter(&$plugin) {
       'node' => 0,
       'file' => 1,
       'box' => 2,
-      'embedly' => 3,
-      'default' => 4
+      'default' => 4,
+      'embedly'=> 5
     );
     if (isset($weights[$plugin['name']])) {
       $plugin['weight'] = $weights[$plugin['name']];
@@ -2395,6 +2392,11 @@ function _os_files_extensions_from_type($type) {
       'wwtfig',
       'csv',
       'sas',
+      'ics',
+      'bib',
+      'enw',
+      'mrc',
+      'ris',
     );
 
     $types['executable'] = array(

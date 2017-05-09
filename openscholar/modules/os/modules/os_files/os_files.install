@@ -892,7 +892,11 @@ function os_files_update_7025() {
   foreach ($results as $result) {
     $output = str_replace('http://', '//', $result->field_html_code_value);
     if (strcmp($output, $result->field_html_code_value) !== 0) {
-      db_query("UPDATE field_data_field_html_code SET field_html_code_value = '" . addslashes($output) . "' WHERE entity_id = '" . $result->entity_id . "' AND revision_id = '" . $result->revision_id . "'");
+      db_update('field_data_field_html_code')
+        ->fields(array('field_html_code_value' => $output))
+        ->condition('entity_id', $result->entity_id, '=')
+        ->condition('revision_id', $result->revision_id, '=')
+        ->execute();
     }
   }
 }

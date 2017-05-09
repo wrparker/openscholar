@@ -14,8 +14,10 @@
 
     var queryArgs = {};
 
-    if (Drupal.settings.spaces.id) {
-      queryArgs.vsite = Drupal.settings.spaces.id;
+    if (Drupal.settings.spaces != undefined) {
+      if (Drupal.settings.spaces.id) {
+        queryArgs.vsite = Drupal.settings.spaces.id;
+      }
     }
 
     var baseUrl = Drupal.settings.paths.api;
@@ -95,7 +97,7 @@
     function link(scope, elem, attrs) {
       apSettings.SettingsReady().then(function () {
         scope.title = apSettings.GetFormTitle(scope.form);
-      })
+      });
 
       elem.bind('click', function (e) {
         e.preventDefault();
@@ -105,8 +107,8 @@
           controller: 'apSettingsFormController',
           template: '<form id="{{formId}}" name="settingsForm" ng-submit="submitForm($event)">' +
             '<div class="messages" ng-show="status.length || errors.length"><div class="dismiss" ng-click="status.length = 0; errors.length = 0;">X</div>' +
-              '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status">{{m}}</div></div>' +
-              '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors">{{m}}</div></div></div>' +
+              '<div class="status" ng-show="status.length > 0"><div ng-repeat="m in status track by $index"><span ng-bind-html="m"></span></div></div>' +
+              '<div class="error" ng-show="errors.length > 0"><div ng-repeat="m in errors track by $index"><span ng-bind-html="m"></span></div></div></div>' +
             '</div>' +
             '<div class="form-column-wrapper column-count-{{columnCount}}" ng-if="columnCount > 1">' +
               '<div class="form-column column-{{column_key}}" ng-repeat="(column_key, elements) in columns">' +
@@ -121,7 +123,7 @@
               '</div>' +
             '</div>' +
             '<div class="help-link" ng-bind-html="help_link"></div>' +
-          '<div class="actions"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
+          '<div class="actions" ng-show="showSaveButton"><button type="submit" button-spinner="settings_form" spinning-text="Saving">Save</button><input type="button" value="Close" ng-click="close(false)"></div></form>',
           inputs: {
             form: scope.form
           }
@@ -148,6 +150,21 @@
       }
     };
   }]);
+  
+  /**
+   * The filter for the optgroup select dropdowns.
+   */
+  m.filter("filterWithItems", function() {
+    return function(categories, present) {
+      return jQuery.grep(categories, function(category) {
+        if (present) {
+         return category.items != undefined
+        } else {
+            return category.items == undefined
+        }
+      });
+    }
+  });
 
   /**
    * The controller for the forms themselves
@@ -162,6 +179,7 @@
     $s.errors = [];
     $s.columns = {};
     $s.columnCount = 0;
+    $s.showSaveButton = true;
 
     apSettings.SettingsReady().then(function () {
       var settingsRaw = apSettings.GetFormDefinitions(form);
@@ -192,6 +210,10 @@
         }
 
         $s.formElements[k] = $s.columns[col][k] = attributes;
+
+        if ($s.formElements[k].type == 'submit') {
+          $s.showSaveButton = false;
+        }
       }
     });
 
@@ -223,8 +245,24 @@
                 $s[body.data[i].message_type].push(body.data[i].message)
             }
           }
-          if (close) {
-            $s.close(reload);
+
+          if (body.messages.status) {
+            for (var i = 0; i < body.messages.status.length; i++) {
+              if (body.messages.status[i] == 'Your updates will go live within the next 15 minutes.') {
+                $s.close(reload);
+              }
+            }
+          } else {
+            if (close && !body.messages.error) {
+              $s.close(reload);
+            } else if (body.messages.error) {
+              $s.errors = [];
+              angular.forEach(body.messages.error, function(value , key) {
+                $s.errors.push($sce.trustAsHtml(value));
+              });
+
+              bss.SetState('settings_form', false);
+            }
           }
         }, function (error) {
           $s.errors = [];

@@ -16,7 +16,6 @@ function vsite_cp_settings() {
 
   // Builds the "Site favicon" file field widget.
   // Renders a fieldset with a managed file widget.
-
   $subsite_parents = variable_get('subsite_parents', array('department', 'project'));
   $inherit_theme = variable_get('vsite_subsite_inherit_theme', 0);
   if (in_array($vsite->group->type, $subsite_parents)) {

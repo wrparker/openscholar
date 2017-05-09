@@ -1,7 +1,7 @@
 
 Automated Testing [![Travis Build Status](https://secure.travis-ci.org/openscholar/openscholar.png?branch=SCHOLAR-3.x)](https://travis-ci.org/openscholar/openscholar)
 
-QA Builds [ ![Codeship Status for openscholar](https://app.codeship.com/projects/6e604f40-c3b4-0134-5376-0a2f93ab4c55/status?branch=SCHOLAR-3.x)](https://app.codeship.com/projects/197702)
+Automated Builds [ ![Codeship Status for openscholar](https://app.codeship.com/projects/6e604f40-c3b4-0134-5376-0a2f93ab4c55/status?branch=SCHOLAR-3.x)](https://app.codeship.com/projects/197702)
 
 ## OpenScholar: web site-creation package
 * full-featured

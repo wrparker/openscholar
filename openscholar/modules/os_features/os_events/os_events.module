@@ -3113,8 +3113,9 @@ function os_events_field_create_field($field) {
 */
 function os_events_cp_settings() {
 
+  $settings = array();
   $spaces_features = variable_get('spaces_features');
-  // Event settings link won't appear in CP menu if event app is not enabled.
+  // The app won't appear in CP menu if not enabled.
   if (empty($spaces_features['os_events'])) {
     return $settings;
   }
