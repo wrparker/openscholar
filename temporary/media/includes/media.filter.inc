@@ -111,6 +111,7 @@ function media_filter_parse_from_fields($entity_type, $entity) {
         preg_match_all(MEDIA_TOKEN_REGEX, $field_item['value'], $matches);
         foreach ($matches[0] as $tag) {
           $tag = str_replace(array('[[', ']]'), '', $tag);
+          $tag = str_replace('&amp;', '&', $tag);
           $tag_info = drupal_json_decode($tag);
           if (isset($tag_info['fid']) && $tag_info['type'] == 'media') {
             $file_references[] = $tag_info;
@@ -251,6 +252,7 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
   $settings = array();
   $match = str_replace("[[", "", $match);
   $match = str_replace("]]", "", $match);
+  $match = str_replace("&amp;", "&", $match);
   $tag = $match[0];
 
   try {
