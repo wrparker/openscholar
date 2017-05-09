@@ -3694,6 +3694,20 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
       foreach ($items as $delta => $item) {
         $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
 
+        // When the first paragraph is a huge paragraph without any breaks the
+        // text_summary function return a <p></p> with an html entity of a
+        // space. We need to remove any html entity and strip the tags.
+        $clean_text = preg_replace('/&#?[a-z0-9]+;/i', '', strip_tags($text));
+
+        if (empty($clean_text)) {
+          // The text is empty. Using views trim text to get the correct text.
+          $alter = array(
+            'html' => TRUE,
+            'max_length' => $display['settings']['trim_length'],
+          );
+          $text = views_trim_text($alter, $item['value']);
+        }
+
         // Remove the ellipsis we got from the text summary.
         if (strpos($text, '…') !== 0) {
           $text = str_replace('…', '', $text);
