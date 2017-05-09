@@ -1,7 +1,7 @@
 Feature:
   Testing the comment publishing for a blog entry.
 
-  @api @misc_first
+  @api @misc
   Scenario: Check that a user can create a new blog post with Private comments setting
     Given I am logging in as "john"
       And I set the variable "comment_blog" to "2" in the vsite "john"

@@ -1,12 +1,12 @@
 Feature:
   Testing the metatags.
 
-  @api @misc_second
+  @api @misc
   Scenario: Testing default metatags.
     Given I visit "john/about"
      Then I should see the meta tag "description" with value "Page about john"
 
-  @api @misc_second
+  @api @misc
   Scenario: Testing custom metatags.
     Given I am logging in as "john"
       And I edit the node "about" in the group "john"
@@ -15,7 +15,7 @@ Feature:
      Then I visit "john/about"
       And I should see the meta tag "og:description" with value "custom tag value"
 
-  @api @misc_second
+  @api @misc
   Scenario: Testing metatags settings form in a personal site.
     Given I am logging in as "john"
      When I go to "john/cp/settings"
@@ -25,7 +25,7 @@ Feature:
       And I should see "Publisher URL"
       And I should see "Author URL"
 
-  @javascript @misc_second
+  @javascript @misc
   Scenario: Testing metatags settings functionality in a personal site.
     Given I am logging in as "john"
       And I visit "john"
@@ -44,7 +44,7 @@ Feature:
           # Change site title back to "John"
       And I change site title to "John" in the site "john"
 
-  @javascript @misc_second
+  @javascript @misc
   Scenario: Does the favicon form open?
     Given I am logging in as "john"
       And I visit "john"
@@ -52,7 +52,7 @@ Feature:
       And I click on the "Favicon" control
      Then I should see "A 16x16 .ico file to be displayed in browser shortcut icons"
 
-  @api @misc_second
+  @api @misc
   Scenario: Testing metatags settings form in a department site.
     Given I am logging in as "alexander"
      When I go to "edison/cp/settings"

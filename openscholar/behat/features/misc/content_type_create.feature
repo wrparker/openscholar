@@ -1,7 +1,7 @@
 Feature:
   Testing node type creating.
 
-  @api @misc_first
+  @api @misc
   Scenario: Verify we can create node type.
     Given I am logging in as "admin"
       And I visit "admin/structure/types/add"

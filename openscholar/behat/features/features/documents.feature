@@ -1,7 +1,7 @@
 Feature:
   Testing the documents tab.
 
-  @api @features_first
+  @api @features
   Scenario: Test the Documents tab
     Given I visit "john"
      When I click "Documents"

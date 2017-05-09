@@ -1,7 +1,7 @@
 Feature:
   Testing ability to add links to the primary menu.
 
-  @api @misc_second
+  @api @misc
   Scenario Outline: Test adding a link.
     Given I am logging in as "john"
      When I visit "john/cp/build/menu/link/new/primary-menu"

@@ -2,7 +2,7 @@ Feature:
   Testing the managing of OpenScholar
 
 
-  @api @features_first @javascript
+  @api @features @javascript
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"
       And I visit "john"
@@ -26,21 +26,21 @@ Feature:
       | Reader        | Public |
       | Software      | Public |
 
-  @api @features_first @javascript
+  @api @features @javascript
     Scenario: Check site owner can't manage permissions of disabled app.
       Given I am logging in as "john"
         And I set feature "edit-os-booklets" to "Disabled" on "john"
        When I visit "john/cp/users/permissions"
        Then I should not see "Create book page content"
 
-  @api @features_first @javascript
+  @api @features @javascript
     Scenario: Check enabling app brings back its permissions.
       Given I am logging in as "john"
         And I set feature "edit-os-booklets" to "Public" on "john"
        When I visit "john/cp/users/permissions"
        Then I should see "Create book page content"
 
-  @api @features_first @javascript
+  @api @features @javascript
     Scenario: Check content editor can edit widgets by default
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -50,7 +50,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should see "AddThis" in an "h1" element
 
-  @api @features_first @javascript
+  @api @features @javascript
     Scenario: Check content editor without edit widgets permission can't edit
       Given I am logging in as "john"
        When I give the user "klark" the role "content editor" in the group "john"
@@ -67,7 +67,7 @@ Feature:
         And I go to "john/os/widget/boxes/os_addthis/edit"
        Then I should not see the text "AddThis"
 
-  @api @features_first @javascript
+  @api @features @javascript
     Scenario: Check rolling back permissions to re-enable widget permissions
       Given I am logging in as "john"
        #When I give the user "klark" the role "content editor" in the group "john"

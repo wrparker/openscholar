@@ -26,7 +26,7 @@ Feature:
       And I should see "Sign up for Halleys Comet"
      Then I delete "john" registration
 
-  @api @misc_second
+  @api @misc
   Scenario: Test adding event.
     Given I am logging in as "john"
       And I visit "john/node/add/event"
@@ -55,7 +55,7 @@ Feature:
       And I am logging in as "admin"
       And I make registration to event without javascript unavailable
       
-  @api @misc_second
+  @api @misc
   Scenario: Verify that registration shows correctly for repeated events and the option
             to switch to another date is present.
     Given I am logging in as "john"
@@ -67,7 +67,7 @@ Feature:
       And I should see "Sign up for this event"
       And I should see "another date"
       
-  @api @misc_second
+  @api @misc
   Scenario: Verify that registration shows correctly for non-repeated events and the option
             to switch to another date is not present.
     Given I am logging in as "john"
