@@ -131,3 +131,10 @@ function os_wysiwyg_update_7013() {
 function os_wysiwyg_update_7014() {
   os_wysiwyg_update_7012();
 }
+
+/**
+ * Add paste from word plugin.
+ */
+function os_wysiwyg_update_7015() {
+  os_wysiwyg_update_7012();
+}

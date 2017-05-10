@@ -585,6 +585,11 @@ libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
 libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
 
+libraries[pastefromword][type] = "libraries"
+libraries[pastefromword][subdir] = "ckeditor/plugins"
+libraries[pastefromword][download][type] = "git"
+libraries[pastefromword][download][url] = "http://download.ckeditor.com/pastefromword/releases/pastefromword_4.6.2.zip"
+
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"
 libraries[angular_select2][download][type] = "get"
