@@ -2336,11 +2336,6 @@ function os_events_mail_alter(&$message) {
     // Get event author event's author email address.
     $event_author_email = check_plain(trim($message['params']['@event-creator-mail']));
 
-    // Set unsubscribe link pointing to author of the event's e-mail
-    $message['body'][] = '';
-    watchdog('event_author_email','<pre>'.print_r($event_author_email,TRUE).'</pre>');
-    $message['body'][] = t("Click here to ").l(t('Unsubscribe'), 'mailto:'.$event_author_email);
-
     // Set default value of the "From" field to author of the event's e-mail
     $message['headers']['From'] = $message['from'] = $event_author_email;
 
@@ -2348,10 +2343,6 @@ function os_events_mail_alter(&$message) {
     $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
   else {
-
-    // Set unsubscribe link pointing hwp@harvard.edu
-    $message['body'][] = '';
-    $message['body'][] = t("Click here to ").l(t('Unsubscribe'), 'mailto:hwp@harvard.edu');
 
     // Set default value of the "From" field to hwp@harvard.edu
     $message['headers']['From'] = $message['from'] = 'hwp@harvard.edu';
@@ -2361,6 +2352,7 @@ function os_events_mail_alter(&$message) {
   }
 
   //Set the physical address at below the unsubscribe link
+  $message['body'][] = '';
   $message['body'][] = "Massachusetts Hall, Cambridge, MA 02138";
 }
 
