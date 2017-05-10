@@ -11,7 +11,10 @@ Drupal.behaviors.osBoxesFeedReader = {
       // run only once for each feed
       $('div#' + div_id, context).once('osBoxesFeedReader', function () {
         //Run the feed processing only once per feed
-        YUI().use('yql', function (Y) {
+        YUI({
+          debug: true,
+          combine: false,
+        }).use('yql', function (Y) {
           //Load Feed
           var query = 'select * from rss(0,' + feed_settings.num_feeds + ') where url = "' + feed_settings.url + '"';
           var q = new Y.YQLRequest(query, function (r) {
