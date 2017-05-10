@@ -155,13 +155,14 @@ function os_importer_os_add_new_links_alter(&$links) {
   if (!$current_app || empty($current_app['importers'])) {
     return;
   }
-
   foreach ($current_app['importers'] as $type => $importers) {
     if (os_importer_import_access($type) || os_importer_import_access($type, FALSE)) {
       $title = count($current_app['importers']) > 1 ? t('Import @type', array('@type' => node_type_get_name($type))) : $title = t('Import');
       $links['cp/os-importer-' . $type] = array(
         'title' => $title,
-        'href' => 'cp/os-importer/' . $type,
+        'attributes' => array(
+          'id' => 'os-importer-content-' . $type,
+        ),
       );
     }
   }
@@ -193,8 +194,11 @@ function os_importer_importable_content($type = '') {
       $types[$bundle] = $info;
     }
   }
-
-  return $type ? $types[$type] : $types;
+  if ($type == '') {
+    return $types;
+  } else if ($type && isset($types[$type])) {
+    return $types[$type];
+  }
 }
 
 /**
@@ -561,78 +565,6 @@ function os_importer_import($form, &$form_state, $type) {
  * RSS address and a title for the node importer..
  */
 function os_importer_import_validate($form, $form_state) {
-
-  // Checking uploaded csv files for person.
-  if ($form_state['values']['format'] == 'csv' && $form_state['type'] == 'person') {
-    $file = file_load($form_state['values']['file']);
-    feeds_include_library('ParserCSV.inc', 'ParserCSV');
-    ini_set("auto_detect_line_endings", TRUE);
-    $parser = new ParserCSV();
-    $parser->setDelimiter(',');
-    $iterator = new ParserCSVIterator($file->uri);
-    $rows = $parser->parse($iterator);
-    // Iterate over the rows for field_website validation.
-    $valid = TRUE;
-    foreach ($rows as $key => $row) {
-      if ($key == 0) {
-        continue;
-      }
-
-      // If title is not empty but url is empty.
-      if (!empty($row[11]) && empty($row[12])) {
-        $valid = FALSE;        
-        break;
-      }
-      else if (!empty($row[13]) && empty($row[14])) {
-        $valid = FALSE;        
-        break;
-      }
-      else if (!empty($row[15]) && empty($row[16])) {
-        $valid = FALSE;        
-        break;
-      }
-    }
-
-    if (!$valid) {
-      form_set_error('url', t("The field Websites URL cannot be empty."));
-    }
-  }
-
-
-  // Checking uploaded csv files for events.
-  if ($form_state['values']['format'] == 'csv' && $form_state['type'] == 'event') {
-  	// Load the uploaded csv file and parse its content with ParserCSV class.
-    $file = file_load($form_state['values']['file']);
-
-    $file_content = file_get_contents($file->uri);
-    $file_content = str_replace("\r", "\n", $file_content);
-    file_put_contents($file->uri, $file_content);
-
-    feeds_include_library('ParserCSV.inc', 'ParserCSV');
-    $parser = new ParserCSV();
-    $parser->setDelimiter(',');
-    $iterator = new ParserCSVIterator($file->uri);
-    $rows = $parser->parse($iterator);
-    if (count($rows) < 2) {
-      form_set_error('file', t('The import file does not contain any events.'));
-    }
-  }
-
-  // Checking uploaded ics files for events.
-  if ($form_state['values']['format'] == 'ical') {
-    // Load the uploaded ics file and parse its content with iCalcreator class.
-    $file = file_load($form_state['values']['file']);
-    $file_content = file_get_contents($file->uri);
-    $config = array(
-      'unique_id' => '',
-      'filename' => $file->uri,
-    );
-    module_load_include('php', 'os_events', 'iCalcreator/iCalcreator.class');
-    $calendar = new vcalendar($config);
-    if (!$calendar->parse($file_content)) {
-      form_set_error('file', t('The import file does not contain any events.'));
-    }
-  }
 
   if ($form_state['values']['format'] == 'rss') {
     if (empty($form_state['values']['title'])) {
@@ -1140,11 +1072,9 @@ function os_importer_entity_property_info_alter(&$info) {
 /**
  * round up the hour. If the hour is 15:53 the return value will be 15:55.
  * If the hour is 15:56 the hour will be 16:00.
- *
  * @param $hour
  *   The hour in a time format of HH:MM
- *
- * @return
+ * @return $hour
  *   The new hour.
  */
 function os_importer_round_hour($hour) {

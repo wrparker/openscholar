@@ -3112,8 +3112,8 @@ function os_events_field_create_field($field) {
 * Implements hook_cp_settings().
 */
 function os_events_cp_settings() {
-  $settings = array();
 
+  $settings = array();
   $spaces_features = variable_get('spaces_features');
   // The app won't appear in CP menu if not enabled.
   if (empty($spaces_features['os_events'])) {

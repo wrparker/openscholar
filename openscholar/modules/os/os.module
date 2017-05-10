@@ -188,9 +188,6 @@ function os_menu_alter(&$items) {
   $items['user/autocomplete']['access arguments'] = array(
     'access user autocomplete',
   );
-
-  // Apply CP theme for book revision page.
-  $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
 }
 
 function os_in_readonly_mode($page) {
@@ -1103,10 +1100,6 @@ function os_form_node_form_alter(&$form, $form_state) {
   // Removes "Promoted to front page" checkbox.
   unset($form['options']['promote']);
 
-  // Removes "Revision information" fieldset.
-  $form['revision_information']['#access'] = FALSE;
-
-
   $form['path']['pathauto']['#description'] = t('Uncheck this to create a custom alias below.');
   if (isset($form['field_upload']['und']['add_more']['#value'])) {
     $form['field_upload']['und']['add_more']['#value'] = t('Add media');
@@ -1118,7 +1111,10 @@ function os_form_node_form_alter(&$form, $form_state) {
   unset($form['additional_settings']);
   foreach (element_children($form) as $c) {
     if (isset($form[$c]['#type']) && $form[$c]['#type'] == 'fieldset' && isset($form[$c]['#group'])) {
-      $form[$c]['#collapsed'] = true;
+      // exception to collapsed settings for fieldsets
+      if ($c != "revision_information") {
+        $form[$c]['#collapsed'] = true;
+      }
     }
     unset($form[$c]['#group']);
   }
@@ -1835,21 +1831,16 @@ function os_contextual_links_view_alter(&$element, $items) {
     $link['query']['destination'] = $redirect;
   }
 
-  if (!user_access('view revisions')) {
-    // User can't view revisions.
+  $node = $element['#element']['#node'];
+
+  if (!node_access('update', $node)) {
+    // User doesn't have access to revisions.
     return;
   }
-
-  $node = $element['#element']['#node'];
 
   if (count(node_revision_list($node)) == 1) {
     // Do not display the revisions tab if the node doesn't have any revisions.
     return FALSE;
-  }
-
-  if (!og_moderation_node_revision_access($node)) {
-    // User has no access to the revisions.
-    return;
   }
 
   $element['#links']['node-revisions'] = array(
@@ -3702,6 +3693,20 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
 
       foreach ($items as $delta => $item) {
         $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
+
+        // When the first paragraph is a huge paragraph without any breaks the
+        // text_summary function return a <p></p> with an html entity of a
+        // space. We need to remove any html entity and strip the tags.
+        $clean_text = preg_replace('/&#?[a-z0-9]+;/i', '', strip_tags($text));
+
+        if (empty($clean_text)) {
+          // The text is empty. Using views trim text to get the correct text.
+          $alter = array(
+            'html' => TRUE,
+            'max_length' => $display['settings']['trim_length'],
+          );
+          $text = views_trim_text($alter, $item['value']);
+        }
 
         // Remove the ellipsis we got from the text summary.
         if (strpos($text, '…') !== 0) {

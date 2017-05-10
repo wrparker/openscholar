@@ -232,12 +232,12 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'alt' => $type_info[$bundle]->description,
       );
 
-      if (os_importer_importable_content($bundle)) {
-          $import_links["{$bundle}"] = array(
-          'label' => os_importer_importer_title($bundle),
-          'type' => 'link',
-          'href' => 'cp/os-importer/' . $bundle,
-          'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
+      if (os_importer_importable_content($bundle) && in_array($bundle, array('news', 'blog'))) {
+        $import_links["{$bundle}"] = array(
+         'label' => os_importer_importer_title($bundle),
+         'type' => 'link',
+         'href' => 'cp/os-importer/' . $bundle,
+         'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
         );
       }
     }
@@ -312,7 +312,6 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         return strnatcmp($a['label'], $b['label']);
     };
     uasort($add_links, $labelcmp);
-    uasort($import_links, $labelcmp);
     uasort($feature_settings, $labelcmp);
 
     $structure = array(
