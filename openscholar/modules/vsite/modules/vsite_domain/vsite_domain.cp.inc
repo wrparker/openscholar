@@ -41,7 +41,7 @@ function vsite_domain_cp_settings() {
   ));
   $domain = variable_get('vsite_domain_name', '');
   $shared = variable_get('vsite_domain_shared', '');
-  $purl = preg_replace('~https?://~', '', variable_get('purl_base_domain', ''));
+  $purl = str_replace('http://', '', variable_get('purl_base_domain', ''));
   ctools_include('form', 'vsite_domain');
 
   // Get purl form and modify it
