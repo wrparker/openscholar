@@ -30,7 +30,7 @@ if (!class_exists('purl_vsite_path')) {
       $valid_values = array_diff_key($valid_values, _vsite_domain_processed_purls());
       // Match case insensitive to lowercase.
       $parsed = parent::parse($valid_values, strtolower($q));
-
+      watchdog(WATCHDOG_NOTICE, "PARSED: " . print_r($parsed, TRUE));
       $space_found = FALSE;
       // Does not return spaces without the correct domain
       foreach ($parsed as $site => $settings) {
@@ -44,7 +44,7 @@ if (!class_exists('purl_vsite_path')) {
           if (!is_string($vsite_domain)) {
             $vsite_domain = FALSE;
           }
-
+watchdog(WATCHDOG_NOTICE, "HOST: " . $_SERVER['HTTP_HOST']);
           global $base_url;
           $on_base_domain = preg_replace('~https?://~', '', $_SERVER['HTTP_HOST']) == parse_url(variable_get('purl_base_domain', $base_url),PHP_URL_HOST);
           if ($space_found || in_array($settings->value, self::$disabled) ||
@@ -61,6 +61,7 @@ if (!class_exists('purl_vsite_path')) {
               ));
             }
           }else{
+            watchdog(WATCHDOG_NOTICE, "SPACE FOUND: " . $site);
             //We have a valid OG Space
             $space_found = TRUE;
           }
