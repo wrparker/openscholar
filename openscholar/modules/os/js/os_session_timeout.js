@@ -2,10 +2,16 @@
   Drupal.behaviors.osSessionTimeout = {
     attach: function (context) {
       Drupal.settings.os.current_timestamp = Math.round(new Date().getTime()/1000);
-      // On page load, saving the localStorage key values, according to these values, other tabs will update their clocks.
-      localStorage.setItem('last_hit_timestamp', Drupal.settings.os.current_timestamp);
-      localStorage.setItem('session_expire_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
-      localStorage.setItem('warning_display_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      if (ChkLocalStorage()) {
+        // On page load, saving the localStorage key values, according to these values, other tabs will update their clocks.
+        localStorage.setItem('last_hit_timestamp', Drupal.settings.os.current_timestamp);
+        localStorage.setItem('session_expire_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+        localStorage.setItem('warning_display_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      } else {
+        $.cookie('last_hit_timestamp', Drupal.settings.os.current_timestamp);
+        $.cookie('session_expire_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+        $.cookie('session_expire_timestamp', Drupal.settings.os.current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      }
       // Starting the timer to determine when to display warning message and refresh the the after session timeout.
       // Every 1 sec interval, values of the above variables will be compared so that timing in all tabs are synced +/-3 secs 
       setInterval(checkSessionStatus, 1000);
@@ -14,10 +20,16 @@
 
   // Every 1 sec of interval, this function is called to determine the eligibilty of displaying timeout warning message and redirect user after session timeout.
   function checkSessionStatus() {
-    // Obtaining values from browser local storage.
-    last_hit_timestamp = localStorage.getItem('last_hit_timestamp');
-    session_expire_timestamp = localStorage.getItem('session_expire_timestamp');
-    warning_display_timestamp = localStorage.getItem('warning_display_timestamp');
+    if (ChkLocalStorage()) {
+      // Obtaining values from browser local storage.
+      last_hit_timestamp = localStorage.getItem('last_hit_timestamp');
+      session_expire_timestamp = localStorage.getItem('session_expire_timestamp');
+      warning_display_timestamp = localStorage.getItem('warning_display_timestamp');
+    } else {
+      last_hit_timestamp = $.cookie('last_hit_timestamp');
+      session_expire_timestamp = $.cookie('session_expire_timestamp');
+      warning_display_timestamp = $.cookie('warning_display_timestamp');
+    }
     // Incrementing timestamp counter by 1 sec.
     Drupal.settings.os.current_timestamp++;
     // Checking if current timestamp value meets the criteria to display warning message or not.
@@ -70,9 +82,26 @@ function extend_os_session() {
       // Hiding warning message div.
       jQuery('#timeout-warning-wrapper').slideUp('slow', function(){jQuery('#timeout-warning-wrapper').remove();});
       var current_timestamp = Math.round(new Date().getTime()/1000);
-      localStorage.setItem('last_hit_timestamp', current_timestamp);
-      localStorage.setItem('session_expire_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
-      localStorage.setItem('warning_display_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      if (ChkLocalStorage()) {
+        localStorage.setItem('last_hit_timestamp', current_timestamp);
+        localStorage.setItem('session_expire_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+        localStorage.setItem('warning_display_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      } else {
+        $.cookie('last_hit_timestamp', current_timestamp);
+        $.cookie('session_expire_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime));
+        $.cookie('warning_display_timestamp', current_timestamp + parseInt(Drupal.settings.os.session_lifetime) - parseInt(Drupal.settings.os.warning_interval_before_timeout));
+      }
     }
   });
+}
+
+// Check for localStorage
+function ChkLocalStorage() {
+  try {
+    localStorage.setItem('testLocalStorage', 'test');
+    localStorage.removeItem('testLocalStorage');
+    return true;
+  } catch(e) {
+    return false;
+  }
 }
