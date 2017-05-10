@@ -3,6 +3,54 @@
   var m = angular.module('basicFormElements', ['osHelpers', 'ngSanitize']);
 
   /**
+   * SelectOptGroup directive.
+   */
+  m.directive('feOptgroup', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+        '<div class="form-item form-type-select">' +
+        '<select class="form-select" id="{{id}}" name="{{name}}" ng-model="value">' +
+        '<option ng-repeat="category in categories | filterWithItems:false" value="{{category.id}}">{{category.name}}</option>' +
+        '<optgroup ng-repeat="category in categories | filterWithItems:true" label="{{category.name}}">' +
+        '<option ng-repeat="subCat in category.items" value="{{subCat.id}}">{{subCat.name}}</option>' +
+        '</optgroup>' +
+        '</select>' +
+        '</div>',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.title = scope.element.title;
+        var items = [];
+        angular.forEach(scope.element.options, function(value, key) {
+          if (angular.isObject(value)) {
+            var data = {};        
+            data.id = key;
+            data.name = key;
+            data.items = [];
+            angular.forEach(value, function(childOption, childKey) {
+              var subcat = {};
+              subcat.id = childKey;
+              subcat.name = childOption;
+              data.items.push(subcat);
+            });
+            items.push(data);
+          } else {
+            var data = {};
+            data.id = key;
+            data.name = value;
+            items.push(data);
+          }
+        });
+        scope.categories = items;
+      }
+    }
+  }]);
+
+  /**
    * Select directive.
    */
   m.directive('feSelect', ['$sce', function ($sce) {
@@ -21,6 +69,52 @@
         scope.id = attr['inputId'];
         scope.options = scope.element.options;
         scope.title = scope.element.title;
+      }
+    }
+  }]);
+
+  /**
+   * Checkboxes directive.
+   */
+  m.directive('feCheckboxes', ['$sce', function ($sce) {
+    return {
+      require: 'ngModel',
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '='
+      },
+      template: '<label for="{{id}}">{{title}}</label>' +
+      '<div id="{{id}}" class="form-checkboxes">' +
+        '<div ng-show="element.select_all">' +          
+          '<input ng-model="selectAll" type="checkbox" class="form-checkbox" ng-disabled="element.disabled" ng-change="masterChange()">' + 
+          '&nbsp;<label class="option bold">Select All</label>' +
+        '</div>' +
+        '<div ng-if="element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options | orderBy: \'label\'">' +
+          '<input ng-model="value[option.key]" ng-checked="value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
+        '</div>' +
+        '<div ng-if="!element.sorted_options" class="form-item form-type-checkbox" ng-repeat="option in options">' +
+          '<input ng-model="value[option.key]" ng-checked="value[option.key]" type="checkbox" id="{{id}}-{{option.key}}" name="{{name}}" value="{{option.key}}" class="form-checkbox" ng-disabled="element.disabled">' + 
+          '&nbsp;<label class="option" for="{{id}}-{{option.key}}" ng-bind-html="option.label"></label>' +
+        '</div>' +
+      '</div> ',
+      link: function (scope, elem, attr) {
+        scope.id = attr['inputId'];
+        scope.options = scope.element.options;       
+        scope.title = scope.element.title;
+
+        scope.masterChange = function () {
+          if (scope.selectAll) {
+            angular.forEach(scope.options, function (cb) {
+              scope.value[cb.key] = true;
+            });
+          } else {   
+            angular.forEach(scope.options, function (cb) {
+              scope.value[cb.key] = false;
+            });
+          }
+        };
       }
     }
   }]);
@@ -121,15 +215,10 @@
         value: '=ngModel',
         element: '='
       },
-      template: '<label for="{{id}}">{{title}}<input type="submit" id="{{id}}" name="{{name}}" value="{{label}}" class="form-submit" ng-disabled="element.disabled">',
+      template: '<label for="{{id}}">{{title}}<button type="submit" button-spinner="settings_form" spinning-text="Saving" id="{{id}}" name="{{name}}">Save</button>',
       link: function (scope, elem, attr) {
         scope.id = attr['inputId'];
-        scope.label = scope.element.value;
         scope.title = scope.element.title;
-
-        elem.click(function (click) {
-          scope.value = (scope.value + 1)%2;
-        });
       }
     }
   }]);
@@ -156,6 +245,26 @@
   }]);
 
   /**
+   * Container directive.
+   *
+   * Just markup along with a container id.
+   */
+  m.directive('feContainer', ['$sce', function ($sce) {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup" id="{{cid}}"></div>',
+      link: function (scope, elem, attr) {
+        scope.markup = $sce.trustAsHtml(scope.element.markup);
+        scope.cid = scope.element.cid;
+      }
+    }
+  }]);
+
+/**
    * Help directive.
    *
    * Just markup that doesn't do anything.
@@ -181,4 +290,37 @@
       }
     }
   }]);
+
+  /**
+   * Publication cititation js directive.
+   *
+   * .
+   */
+  m.directive('fePubjsevent', [function () {
+    return {
+      scope: {
+        name: '@',
+        value: '=ngModel',
+        element: '=',
+      },
+      template: '<div ng-bind-html="markup"></div>',
+      link: function (scope, elem, attr) {
+        angular.element(document.querySelectorAll(scope.element.mouseover_element)).find('div').on(scope.element.mouseover_event, function (e) {
+          e.stopPropagation();
+          if (scope.element.hide_element) {
+            angular.element(document.querySelectorAll(scope.element.hide_element)).hide();
+          }
+          if (scope.element.show_element) {
+            if (scope.element.show_element == 'this.id') {
+              var pop_id = angular.element(this).find('input').attr('value').replace('.','');
+              angular.element(document.querySelectorAll('#' + pop_id)).show();
+            } else {
+              angular.element(document.querySelectorAll(scope.element.show_element)).show();
+            }
+          }
+        });
+      }
+    }
+  }])
+
 })();

@@ -4,14 +4,19 @@
  * Implements hook_cp_settings().
  */
 function vsite_domain_cp_settings() {
-  $vsite = vsite_get_vsite();
 
-  //ensure we're in a vsite and it can take domains
-  if (!($vsite && in_array('vsite_domain', array_keys(variable_get('purl_types', array()))))){
+  if (!$vsite = vsite_get_vsite()) {
     return;
   }
 
-  //ensure we have access to change domains or we're in a subsite whose parent provides domains
+  // Ensure we're in a vsite and it can take domains.
+  $purl_types = array_keys(variable_get('purl_types', array()));
+  if (!in_array('vsite_domain', $purl_types)) {
+    return;
+  }
+
+  // Ensure we have access to change domains or we're in a subsite whose parent
+  // provides domains
   $parent = (!empty($vsite->group->field_group_parent)) ? vsite_get_vsite($vsite->group->field_group_parent[LANGUAGE_NONE][0]['target_id']) : FALSE;
   if (!(($parent && $parent->group->field_subsite_domains) || user_access('change vsite domain'))) {
     return;
@@ -36,7 +41,7 @@ function vsite_domain_cp_settings() {
   ));
   $domain = variable_get('vsite_domain_name', '');
   $shared = variable_get('vsite_domain_shared', '');
-  $purl = str_replace('http://', '', variable_get('purl_base_domain', ''));
+  $purl = preg_replace('~https?://~', '', variable_get('purl_base_domain', ''));
   ctools_include('form', 'vsite_domain');
 
   // Get purl form and modify it

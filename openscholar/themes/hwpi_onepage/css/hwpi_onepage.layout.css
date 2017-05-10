@@ -46,7 +46,7 @@
 .front .block.block-boxes-os_slideshow_box #layout_3_1_overlay img {
     max-width: 1520px;
 }
-.front .block-boxes-os_boxes_html {
+.front #columns .block-boxes-os_boxes_html {
     width: 85%;
 }
 .front .block-boxes-os_boxes_accordion .block-boxes-os_boxes_html,

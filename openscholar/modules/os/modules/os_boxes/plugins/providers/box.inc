@@ -17,7 +17,15 @@ function os_boxes_box_provider($plugin, $url, $matches, $parameters) {
 
   $result = FALSE;
   if ($matches[1] == $GLOBALS['base_url']) {
-    list($purl, $delta) = explode('/', $matches[2]);
+    $m = array();
+    $result = preg_match('/\/box(\/([a-zA-Z0-9_-]*))?\/([a-zA-Z0-9_-]*)(#([a-zA-Z0-9_-]*))?$/', $matches[0], $m);
+    if ($result === 0) {
+      throw new Exception('URL did not match box embed pattern. url: '.$matches[0]);
+    }
+    elseif ($result === FALSE) {
+      throw new Exception('Error running regex on url: '.$matches[0]);
+    }
+    list(,,$purl, $delta) = $m;
     if (!$delta) {
       // single tenant site
       $delta = $purl;

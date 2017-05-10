@@ -1387,7 +1387,7 @@ function os_taxonomy_list_attached_entities($tid, $bundles = array(), $range = N
 
   // Order by weight only if "nodeorder" is on and order has been set.
   if (module_exists('nodeorder') && _os_taxonomy_noderoder_exists($tid)) {
-    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid)', array(':node_order_type' => 'node'));
+    $query->leftJoin('taxonomy_index', 't', '(ogv.entity_type = :node_order_type AND ogv.entity_id = t.nid AND t.tid = ogv.og_vocabulary_target_id)', array(':node_order_type' => 'node'));
     $query->orderBy('t.weight', 'ASC');
   }
   else {
@@ -1885,7 +1885,7 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
   $form['#attached']['js'][] = drupal_get_path('module', 'os_wysiwyg') . '/js/wrap_plugins.js';
   $form['#attached']['js'][] = drupal_get_path('module', 'os_common') . '/modules/standard-form.js';
   $form['#attached']['js'][] = array(
-    'data' => '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML',
+    'data' => '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML',
     'type' => 'external',
   );
   $form['#attached']['library'][] = array('media', 'media_browser');
@@ -1898,6 +1898,59 @@ function os_taxonomy_form_taxonomy_form_term_alter(&$form, &$form_state, $form_i
 
   $form['parent'] = $form['relations']['parent'];
   unset($form['relations']);
+
+  if ($form_state['values']['op'] == 'Delete') {
+    $form['actions']['cancel']['#type'] = 'submit';
+    $form['actions']['cancel']['#value'] = 'Cancel';
+  }
+
+  $form['#validate'][] = '_os_taxonomy_validate_unicode_charset';
+  $form['#submit'][] = '_os_taxonomy_operations';
+  $form['actions']['cancel']['#submit'][] = '_os_taxonomy_custom_form_cancel';
+}
+
+/**
+ * Callback after saving form to close overlay.
+ */
+function _os_taxonomy_operations(&$form, &$form_state) {
+  //Get the parent vocabulary name for redirect after delete operation.
+  $vocab = $form['vocabulary_machine_name']['#value'];
+  $path = 'cp/build/taxonomy/' . $vocab;
+
+  // Form API will re-render the current page and pass the redirect information to the overlay JavaScript.
+  if (($form_state['values']['op'] == 'Save') && $form['#term']['tid']) {
+    overlay_close_dialog();
+    $form_state['redirect'] = FALSE;
+  }
+
+  //Redirection after term delete.
+  if ($form_state['values']['op'] == 'Delete') {
+    $form_state['redirect'] = url($path);
+  }
+}
+
+/**
+ * Callback for custom cancel redirection.
+ */
+function _os_taxonomy_custom_form_cancel(&$form, &$form_state) {
+  //Get the term ID.
+  $tid = $form['#term']->tid;
+  $path_term = 'taxonomy/term/' . $tid;
+  //Redirection to the term page after cancellation.
+  $form_state['redirect'] = url($path_term);
+}
+
+/**
+ * Callback for custom validation.
+ */
+function _os_taxonomy_validate_unicode_charset(&$form, &$form_state) {
+  $termName = $form_state['values']['name'];
+  $exp = '/^[\x{0000}-\x{04FF}]+$/u';
+
+  if (!preg_match($exp,$termName)) {
+    form_set_error('name', t("Sorry, the character you entered is not supported."));
+    return $form;
+  }
 }
 
 /**

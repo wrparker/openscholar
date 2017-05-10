@@ -934,3 +934,49 @@ function os_update_7047() {
   $message = t('@count parent menus with no children links have been updated.', array('@count' => sizeof($mlids)));
   drupal_set_message($message);
 }
+
+/**
+ * Revert feature variables
+ */
+function os_update_7048() {
+  // Update the secure_pages settings.
+  $features = array(
+    'os' => array('variable'),
+  );
+
+  features_revert($features);
+}
+
+/**
+ * Disable the deprecated os_tours module.
+ */
+function os_update_7050() {
+  module_disable(array('os_tour'));
+}
+
+/**
+ * Install OS Revisions module
+ */
+function os_update_7051() {
+  module_enable(array('os_revisions', 'node_revision_restrict'));
+  module_disable(array('diff'));
+
+  // One time os_revisions init tasks.
+  module_load_include('install', 'os_revisions');
+
+  $features = array(
+    'os_blog' => array('variable'),
+    'os_booklets' => array('variable'),
+    'os_faq' => array('variable'),
+    'os_links' => array('variable'),
+    'os_news' => array('variable'),
+    'os_pages' => array('variable'),
+    'os_profiles' => array('variable'),
+    'os_publications' => array('variable'),
+    'os' => array('user_permission'),
+  );
+  features_revert($features);
+  variable_set('date_format_medium', 'm/d/Y - h:i a');
+
+  return t('Enabled OS content revisions module.');
+}

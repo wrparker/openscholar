@@ -323,9 +323,9 @@ class citation_distribute_service_repec extends citation_distribute_service {
     $type = db_select('biblio_types', 'bt')->condition('tid', $tid)->fields('bt', array('name'))->execute()->fetchColumn();
     if ($this->_map_biblio_type($type) != 'wpaper') {
       $wpaper = array('Conference Paper', 'Conference Proceedings','Thesis','Report','Hearing','Case','Bill','Statute', 'Patent','Personal','Map','Chart','Unpublished','Database','Government Report','Classical','Legal Ruling','Miscellaneous','Miscellaneous Section','Working Paper',);
-      form_set_error('biblio_type', t("The @type Publication type is not supported by @title. We've unselected it for you in the red highlighted area below on the right. Supported types are: @types", array('@title' => $this->title, '@types' => implode(', ', $wpaper), '@type' => $type)));
-      drupal_add_js('jQuery("#edit-citation-distribute").removeClass("collapsed")', array('type' => 'inline'));
-      drupal_add_js('jQuery("#edit-repec").attr("checked", false);', array('type' => 'inline'));
+      form_set_error('biblio_type', t("The @type Publication type is not supported by @title. We've unselected it for you in the Distribute to Academic Repositories below on the right. Supported types are: @types", array('@title' => $this->title, '@types' => implode(', ', $wpaper), '@type' => $type)));
+      drupal_add_js('jQuery(document).ready(function() {jQuery("#edit-citation-distribute").removeClass("collapsed"); });', array('type' => 'inline'));
+      drupal_add_js('jQuery(document).ready(function() {jQuery("#edit-repec").attr("checked", false); });', array('type' => 'inline'));
       drupal_add_js('jQuery("div.form-item-repec").addClass("form-select error");', array('type' => 'inline'));
       $return = false;
     }

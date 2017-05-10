@@ -112,7 +112,7 @@ class os_boxes_html extends os_boxes_default {
 
     if (($block['content'] = $this->get_cache()) === FALSE) {
       $block['content'] = check_markup($this->options['text']['value'], $this->options['text']['format']);
-      $this->set_cache($block['content'], array('js' => drupal_add_js('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML', 'external')));
+      $this->set_cache($block['content'], array('js' => drupal_add_js('//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML', 'external')));
     }
 
     return $block;

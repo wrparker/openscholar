@@ -36,3 +36,29 @@ function os_help_form_spaces_features_form_alter(&$form, &$form_state, $form_id)
     }
   }
 }
+
+/**
+ * Implements hook_library().
+ */
+function os_help_library() {
+  $libs = array();
+
+  $libs['gsfn'] = array(
+    'title' => 'getsatisfaction Support Widget',
+    'version' => '1.0',
+    'js' => array(
+      'https://loader.engage.gsfn.us/loader.js' => array(),
+    )
+  );
+
+  return $libs;
+}
+
+/**
+ * Implements hook_library_alter().
+ */
+function os_help_library_alter(&$libs) {
+  if (isset($libs['admin_panel'])) {
+    $libs['admin_panel']['dependencies'][] = array('os_help', 'gsfn');
+  }
+}

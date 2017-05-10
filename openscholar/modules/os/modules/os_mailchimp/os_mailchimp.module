@@ -50,8 +50,8 @@ function os_mailchimp_menu() {
 function os_mailchimp_user_insert(&$edit, $account, $category) {
   $api = variable_get('os_mailchimp_api', FALSE);
   $list = variable_get('os_mailchimp_list', FALSE);
-  $fn = (isset($edit['field_first_name']) && $edit['field_first_name'][LANGUAGE_NONE]) ? $edit['field_first_name'][LANGUAGE_NONE][0]['value'] : '';
-  $ln = (isset($edit['field_last_name']) && $edit['field_last_name'][LANGUAGE_NONE])  ? $edit['field_last_name'][LANGUAGE_NONE][0]['value']  : '';
+  $fn = (isset($edit['field_first_name'][LANGUAGE_NONE][0]['value'])) ? $edit['field_first_name'][LANGUAGE_NONE][0]['value'] : '';
+  $ln = (isset($edit['field_last_name'][LANGUAGE_NONE][0]['value']))  ? $edit['field_last_name'][LANGUAGE_NONE][0]['value']  : '';
   $sub = os_mailchimp_subscribe($api, $list, $edit['mail'], $fn, $ln);
 }
 

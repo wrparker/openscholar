@@ -99,9 +99,14 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
    */
   public function menuAccess(&$menuItem) {
 
+    $access = false;
+    if (isset($menuItem['access'])) {
+      // The menu item item already have an access property. Return that one.
+      $access = $menuItem['access'];
+    }
+
     $this->activateRoles();
 
-    $access = false;
     if (!empty($menuItem['children'])) {
       foreach ($menuItem['children'] as &$c) {
         $access = $this->menuAccess($c) || $access;
@@ -227,18 +232,18 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'alt' => $type_info[$bundle]->description,
       );
 
-      if (os_importer_importable_content($bundle)) {
-          $import_links["{$bundle}"] = array(
-          'label' => os_importer_importer_title($bundle),
-          'type' => 'link',
-          'href' => 'cp/os-importer/' . $bundle,
-          'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
+      if (os_importer_importable_content($bundle) && in_array($bundle, array('news', 'blog'))) {
+        $import_links["{$bundle}"] = array(
+         'label' => os_importer_importer_title($bundle),
+         'type' => 'link',
+         'href' => 'cp/os-importer/' . $bundle,
+         'alt' => t("One time bulk import of @type content.",array('@type' => $type_info[$bundle]->name)),
         );
       }
     }
 
-    # Files are a separate entity class, on the same level as nodes.
-    # Hard-code the file links in.
+    // Files are a separate entity class, on the same level as nodes. Hard-code
+    // the file links in.
     $add_links["{files}"] = array(
       'label' => "Files",
       'type' => 'link',
@@ -277,7 +282,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'label' => 'Private Files',
         'type' => 'link',
         'href' => 'cp/content/files-private'
-    )):array();
+    )) : array();
 
     $settings_forms = cp_get_setting_forms();
 
@@ -295,19 +300,18 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'type' => 'directive',
           'directive' => array(
             'ap-settings-form',
-            'form' => $f['group']['#id']
+            'form' => $f['group']['#id'],
           ),
           'parent' => !empty($f['group']['#menu_parent']) ? $f['group']['#menu_parent'] : 'advanced'
         );
       }
     }
 
-    //Order alphabetically
+    // Order alphabetically.
     $labelcmp = function ($a, $b) {
         return strnatcmp($a['label'], $b['label']);
     };
     uasort($add_links, $labelcmp);
-    uasort($import_links, $labelcmp);
     uasort($feature_settings, $labelcmp);
 
     $structure = array(
@@ -382,7 +386,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       'tagging' => array(
         'label' => 'Taxonomy',
         'type' => 'link',
-        'href' => 'cp/build/taxonomy'
+        'href' => 'cp/build/taxonomy',
       ),
       'settings' => array(
         'label' => 'Settings',
@@ -392,13 +396,13 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
           'app' => array(
             'label' => 'Enable / Disable Apps',
             'type' => 'link',
-            'href' => 'cp/apps'
+            'href' => 'cp/apps',
           ),
           'app_settings' => array(
             'label' => 'App Settings',
             'type' => 'heading',
             'default_state' => 'collapsed',
-            'children' => $feature_settings
+            'children' => $feature_settings,
           ),
           'advanced' => array(
             'label' => 'Global Settings',
@@ -410,13 +414,15 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       'users_roles' => array(
         'label' => 'Members & Roles',
         'type' => 'link',
-        'href' => 'cp/users'
+        'href' => 'cp/users',
       ),
       'help' => array(
         'label' => 'Help',
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => array(),
+        // Grant access and by pass access checking.
+        'access' => TRUE,
       ),
     );
 
@@ -427,7 +433,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
       uasort($elem['children'], $labelcmp);
     }
 
-    //Should we show this user the admin links?
+    // Should we show this user the admin links?
     if (user_access('access toolbar',$user)) {
       $admin_menu = menu_tree_all_data('management', NULL, 2);
       $admin_menu = current($admin_menu);
@@ -449,6 +455,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         'type' => 'heading',
         'default_state' => 'collapsed',
         'children' => $admin_links,
+
       );
     }
 
@@ -460,14 +467,16 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   }
 
   /**
-   * @param $menu - The menu to search
-   * @param $identifier - An array of keys in the menu array that will lead to the target element
-   * Ex.
+   * @param $menu
+   *   The menu to search
+   * @param $args
+   *   An array of keys in the menu array that will lead to the target element
+   *   Ex.
    *      findMenuParent('browse', 'content')
    *      findMenuParent('appearance')
    */
   private function &findMenuElement(&$menu, $args) {
-    $element = $args[0];//TODO::
+    $element = $args[0];
     if (isset($menu[$element])) {
       if (count($args) == 1) {
         return $menu[$element];
@@ -509,8 +518,9 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
   }
 
   /**
-   * Change the array keys so that angular does not re-order them. It automatically re-orders
-   *   keys so that they are alphabetical.
+   * Change the array keys so that angular does not re-order them. It
+   * automatically re-orders keys so that they are alphabetical.
+   *
    * @param $menu
    */
   protected function maintainOrder($menu) {

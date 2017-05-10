@@ -812,53 +812,7 @@ table.os-files-other-list {
     width: 80px;
     font-size: 12px;
 }
-/* HWPI Custom message handling */
 
-div.messages {
-    border: 0 none;
-    margin: 0 90px 0;
-    padding: 15px 0;
-}
-#modal-content div.messages {
-    margin: 0;
-}
-.messages h2 {
-    font-size: 1.1em;
-    margin: 0;
-    padding: 0;
-}
-.message-wrapper {
-    padding: 0 0 0 40px;
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    position: relative;
-}
-div.status,
-div.error,
-div.warning {
-    background-image: none;
-}
-div.messages:before {
-    content: normal;
-}
-div.messages .message-wrapper:before {
-    position: absolute;
-    content: '';
-    background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
-    height: 24px;
-    width: 24px;
-    top: 0px;
-    left: 0px;
-}
-div.status .message-wrapper:before {
-    background-position: -38px -231px;
-}
-div.error .message-wrapper:before {
-    background-position: -72px -231px;
-}
-div.warning .message-wrapper:before {
-    background-position: -38px -260px;
-}
 
 /* Pagers */
 
@@ -899,4 +853,20 @@ ul.pager li.pager-item {
 }
 .two-sidebars .sidebar .node-person.node-teaser .field-name-field-email {
     float: none;
+}
+
+.cke_editable img[style*="float: left"] {
+padding-right:15px;
+}
+
+.cke_editable img[style*="float: right"] {
+padding-left:15px;
+}
+body.cke_editable {
+    background:#fff;
+    background-color:#fff;
+}
+img.file-icon {
+    width: 16px;
+    margin-right: 4px;
 }

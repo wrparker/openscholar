@@ -220,7 +220,7 @@ function os_ga_google_translate() {
   $script .= "}";
 
   drupal_add_js($script, array('type' => 'inline'));
-  drupal_add_js('http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array('type' => 'external'));
+  drupal_add_js('//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array('type' => 'external'));
 
   return '<div id="google_translate_element"></div>';
 }
@@ -334,18 +334,7 @@ function _os_ga_search_get_keys() {
  */
 function _os_ga_set_custom_var_snippet($index) {
   $name = t('Site homepage');
-
-  // First tries to get a vsite-level home page URL.
-  if (function_exists('vsite_get_vsite') && $vsite = vsite_get_vsite()) {
-    $wrapper = entity_metadata_wrapper('node', $vsite->group);
-    $value = $wrapper->field_group_path->value();
-    $value = $value['url'];
-  }
-  // Defaults to the sitewide home page URL if none found.
-  else {
-    $value = url('<front>', array('absolute' => TRUE));
-  }
-  $value = rtrim($value, '/');
+  $value = rtrim(url('<front>', array('absolute' => TRUE), '/'));
 
   // Sets a page-level custom variable at the given index.
   return "_gaq.push(['_setCustomVar',{$index},'{$name}','{$value}',3]);";

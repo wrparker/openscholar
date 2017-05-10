@@ -111,27 +111,6 @@ function os_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'imageapi_toolkit';
-  $strongarm->value = 'imageapi_optimize';
-  $export['image_toolkit'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'imageapi_optimize_service';
-  $strongarm->value = 'smushit';
-  $export['imageapi_optimize_service'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'imageapi_optimize_toolkit';
-  $strongarm->value = 'gd';
-  $export['imageapi_optimize_toolkit'] = $strongarm;
-
-  $strongarm = new stdClass();
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_pattern';
   $strongarm->value = '';
   $export['pathauto_node_pattern'] = $strongarm;
@@ -168,10 +147,25 @@ function os_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'securepages_pages';
-  $strongarm->value = 'user
-user/login
-pinserver/auth';
+  $strongarm->value = '';
   $export['securepages_pages'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'securepages_roles';
+  $strongarm->value = array(
+    1 => 1,
+    2 => 1,
+  );
+  $export['securepages_roles'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'securepages_secure';
+  $strongarm->value = '0';
+  $export['securepages_secure'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

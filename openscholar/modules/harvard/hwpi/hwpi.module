@@ -4,7 +4,7 @@
  * Implements hook_init
  */
 function hwpi_init() {
-  global $conf;
+  global $conf, $is_https;
 
   // Is securepages enabled?
   // If we are not on a harvard domain turn it off.
@@ -23,6 +23,12 @@ function hwpi_init() {
         $conf['securepages_enable'] = 1;
         break;
       }
+    }
+
+    // We were unable to find a domain that matches our SSL cert.
+    if (!$conf['securepages_enable'] && $is_https) {
+      // Redirect to insecure.
+      securepages_goto(FALSE);
     }
   }
 }
@@ -194,11 +200,11 @@ function _hwpi_branding_footer() {
 function hwpi_cp_settings() {
   // For non-user-1, only adds the responsive setting for HWPI-themed sites.
   $theme = variable_get('theme_default');
+
   if (!_is_hwpi_theme($theme)) {
     return;
   }
 
-  $vsite = vsite_get_vsite();
   $settings = array(
     'privacy_policy' => array(
       'group' => array(
@@ -211,8 +217,8 @@ function hwpi_cp_settings() {
         '#default_value' => variable_get('privacy_policy', ''),
         '#title' => t('Privacy Policy URL'),
         '#description' => t('Enter the URL to the privacy policy you wish to use for your site. Can be a link to a post on your own site.'),
-      )
-    )
+      ),
+    ),
   );
 
   return $settings;

@@ -1,7 +1,7 @@
 Feature:
   Testing JS for the page edit.
 
-  @javascript
+  @javascript @frontend
   Scenario: Verify the page path is not changed after editing.
     Given I am logging in as "admin"
       And I visit "john/node/add/page"

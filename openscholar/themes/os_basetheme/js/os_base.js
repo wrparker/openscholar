@@ -28,4 +28,25 @@ jQuery(document).ready(function() {
             "width" : + imgwidth
         });
     });
+
+
 });
+
+
+(function ($) {
+
+Drupal.behaviors.osCpLayout = {
+    attach: function (ctx) {
+        $('[id^="os-importer-content-"]').click(function(){
+            var cp_ctrl_id = $(this).attr('id').replace(/-/g, '_');
+            $('#' + cp_ctrl_id).click();
+        });
+
+        $("div.ctools-dropdown-container span").hover(
+            function() { $(this).addClass('ctools-dropdown-hover'); },
+            function() { $(this).removeClass('ctools-dropdown-hover'); }
+        );
+    }
+};
+
+})(jQuery);
