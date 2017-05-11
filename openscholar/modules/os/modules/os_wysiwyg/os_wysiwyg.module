@@ -104,6 +104,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
 
     $new_buttons[] = 'Unlink';
     $new_buttons[] = 'os_link';
+    $new_buttons[] = 'PasteFromWord';
 
     $settings['toolbar'][0] = $new_buttons;
 

@@ -479,7 +479,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.6.2/ckeditor_4.6.2_standard.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
@@ -584,11 +584,6 @@ libraries[dragresize][type] = "libraries"
 libraries[dragresize][subdir] = "ckeditor/plugins"
 libraries[dragresize][download][type] = "git"
 libraries[dragresize][download][url] = "https://github.com/openscholar/ck-dragresize.git"
-
-libraries[pastefromword][type] = "libraries"
-libraries[pastefromword][subdir] = "ckeditor/plugins"
-libraries[pastefromword][download][type] = "git"
-libraries[pastefromword][download][url] = "http://download.ckeditor.com/pastefromword/releases/pastefromword_4.6.2.zip"
 
 ; Angular js libraries.
 libraries[angular_select2][type] = "libraries"

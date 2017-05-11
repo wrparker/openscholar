@@ -67,8 +67,6 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'break' => 1,
         ),
       ),
-      'theme' => 'advanced',
-      'language' => 'en',
       'toolbarLocation' => 'top',
       'resize_enabled' => 1,
       'default_toolbar_grouping' => 0,
