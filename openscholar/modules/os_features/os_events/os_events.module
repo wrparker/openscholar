@@ -2333,8 +2333,12 @@ function os_events_mail_alter(&$message) {
   //Check if it is an event related mail
   if(in_array($message['key'],$eventEmailArr)) {
 
-    // Get event author event's author email address.
-    $event_author_email = check_plain(trim($message['params']['@event-creator-mail']));
+    foreach($message['params'] as $param_key => $param_value){
+      if($param_key == '@event_creator_email'){
+       // Get event author event's author email address.
+       $event_author_email = check_plain(trim($param_value));
+      }
+    }
 
     // Set default value of the "From" field to author of the event's e-mail
     $message['headers']['From'] = $message['from'] = $event_author_email;
