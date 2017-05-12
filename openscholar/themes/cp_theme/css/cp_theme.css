@@ -15,8 +15,16 @@ body:not(.overlay) .node-form {
     color: #555;
     font-size: 2.3em;
 }
-#branding {
+#cp-appearance-theme-picker-form select,
+.wysiwyg-link-tool-wrapper .results div,
+#branding,
+.wysiwyg-link-tool-wrapper.ui-dialog .ui-dialog-content  {
     overflow: hidden;
+}
+
+
+#branding {
+  
     padding: 30px 20px 0 38px;
     position: relative;
     background-color: #FFF;
@@ -147,6 +155,7 @@ html.js input.throbbing {
     font-weight: bold;
     display: inline;
 }
+.owl-file-list .file-handler-dupe .actions button,
 input.form-submit, 
 a.button,
 .wysiwyg-link-tool-wrapper .form-actions button,
@@ -396,6 +405,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 #person-node-form .field-name-body {
     padding-bottom: 15px;
 }
+.owl-file-list .file-handler-dupe .actions,
 form.confirmation {
     margin-top: 20px;
 }
@@ -493,7 +503,6 @@ form.confirmation span.emphasize {
     padding:6px;
     background-color:#efefef;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 25ch;
     cursor:pointer;
@@ -567,7 +576,7 @@ table th label {
 }
 #cp-appearance-theme-picker-form select {
     max-width: 90px;
-    overflow: hidden;
+ 
 }
 #theme-header-single h2,
 #cp-appearance-theme-picker-form #theme-header-featured h2,
@@ -731,6 +740,7 @@ table.biblio-contributors td {
     width: 20px;
     display: inline-block;
 }
+#owl-file-messages:empty,
 table.biblio-contributors tr:first-child input.form-submit {
     display: none;
 }
@@ -1325,6 +1335,8 @@ div.warning {
     font-size: 0.923em !important;
     color: #666 !important;
 }
+.form-help:hover .description,
+.form-help .desscription:hover,
 form#os-maintenance #edit-os-search-solr,
 form#os-maintenance #edit-cp-clear-cache {
 display:block;
