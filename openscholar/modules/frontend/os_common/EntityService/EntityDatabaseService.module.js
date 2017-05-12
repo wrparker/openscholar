@@ -4,70 +4,17 @@
  * Provides an interface for communicating CRUD operations on entities to the server.
  */
 (function () {
-  var m = angular.module('EntityService', ['indexedDb']);
+  var m = angular.module('EntityService');
 
-  m.service('EntityDatabaseService', ['$http', '$q', '$timeout', '$indexedDB', function ($http, $q, $t, $idb) {
-    var httpConfig = {
-      params: {}
+  m.provider('EntityDatabaseService', function () {
+    var configs = {};
+    var provider = this;
+    var ignore = {
+      files: ['preview', 'url', 'size', 'changed', 'mimetype'],
+      node: [],
+      vocabulary: [],
+      taxonomy: {},
     };
-
-    var configs = {},
-      databaseParams = {};
-
-    if (Drupal.settings.spaces) {
-      httpConfig.params.vsite = databaseParams.vsite = Drupal.settings.spaces.id;
-    }
-    var restPath = Drupal.settings.paths.api;
-
-
-    /**
-     * Check for updates to our existing databases.
-     */
-    var checked = false;
-    this.CheckForUpdates = function() {
-      if (!checked) {
-        return;
-      }
-      checked = true;
-      $idb.openStore('entities', function (store) {
-        var results;
-        // if we're in a vsite, only get a subset of the database
-        // we really don't need to loop through everything
-        if (Drupal.settings.spaces && Drupal.settings.spaces.id) {
-          var query = store.query()
-            .$index('vsite')
-            .$eq(Drupal.settings.spaces.id);
-
-          results = store.eachWhere(query);
-        }
-        else {
-          results = store.getAll();
-        }
-
-        results.then(function (rows) {
-          var emptyParamCount = 0;
-          if (Drupal.settings.spaces) {
-            emptyParamcount = 1;
-          }
-          for (var i = 0; i < rows.length; i++) {
-            var entityType = rows[i].entityType;
-
-            if (Object.keys(row[i].params).length == emptyParamCount) {
-              if (this[entityType] == undefined) {
-                this[entityType] = new EntityTypeHandler(entityType, row[i].data);
-              }
-            }
-            else {
-              if (this[entityType] == undefined) {
-                this[entityType] = new EntityTypeHandler(entityType);
-              }
-              this[entityType].AddConfig(rows[i].params);
-            }
-          }
-        });
-      });
-    }
-
     /**
      * Adds a new configuration that the entity database should manage.
      * @param name - An object safe string
@@ -83,377 +30,506 @@
      *    }
      *  }
      */
-    this.addConfig = function (name, config) {
+    this.AddConfig = function (name, config) {
       if (!(/[a-zA-Z0-9_]+/).test(name)) {
-        throw new Exception (name + ' is not an acceptable config name.');
+        throw new Exception(name + ' is not an acceptable config name.');
       }
 
       if (config.entityType == undefined) {
-        throw new Exception('Config '+name+ ' cannot have an undefined entity type.');
+        throw new Exception('Config ' + name + ' cannot have an undefined entity type.');
       }
 
-      var entityType = config.entityType;
-      if (this[entityType] == undefined) {
-        this[entityType] = new EntityTypeHandler();
+      if (configs[name] == undefined) {
+        configs[name] = config;
       }
+    };
 
-      this[entityType].AddConfig(name, config);
-    }
+    this.$get = ['$http', '$q', '$timeout', '$indexedDB', function ($http, $q, $t, $idb) {
+      var Service = {};
+      var httpConfig = {
+        params: {}
+      };
 
-    /**
-     * Handles all server communication and local database interactions for a single entity type
-     *
-     * @param entityType
-     * @param entities - optional - a list of entities to pass from the local database
-     * @param timestamp - optional - the last time those entities were fetched
-     * @constructor
-     */
-    function EntityTypeHandler(entityType, entities, timestamp) {
-      var self = this;
-      var url = restPath + '/' + entityType;
-      this.entities = [];
-      if (angular.isArray(entities)) {
-        this.entities = entities;
+      var databaseParams = {};
+
+      if (Drupal.settings.spaces) {
+        httpConfig.params.vsite = databaseParams.vsite = Drupal.settings.spaces.id;
       }
-      var configKeys = [],
-        loaded = 0,
-        lastUpdated = 0;
+      var restPath = Drupal.settings.paths.api;
 
       /**
-       * Initialization for given entity type.
+       * Check for updates to our existing databases.
        */
-      // There were no entities provided, we're getting them for the first time.
-      if (this.entities.count == 0) {
-        $http.get(url, httpConfig)
-          .success(fetchSuccess)
-          .error(errorFunc);
-      }
-      // The constructor was provided entities. We only need updates.
-      else {
-        fetchUpdates();
-      }
-
-      /**
-       * Registers a new config, that can be refered to with EntityDatabaseService.entityType.configName
-       * @param name
-       * @param config
-       */
-      this.addConfig = function (name, config) {
-        this[name] = new EntitySubset(this, config);
-      }
-
-      /**
-       * @returns {number} - Total percentage of completed loading operation
-       */
-      this.LoadPercent = function () {
-        return loaded;
-      }
-
-      /**
-       * @returns {boolean} - Whether loading operation has completed or not.
-       * @constructor
-       */
-      this.Loaded = function () {
-        return loaded == 1;
-      }
-
-      /**
-       * HTTP response handler
-       * Recursive
-       * @param resp
-       * @param status
-       * @param headers
-       * @param config
-       */
-      function fetchSuccess(resp, status, headers, config) {
-        this.entities = this.entities.concat(resp.data);
-
-        if (resp.next) {
-          var max = Math.ceil(resp.count/resp.data.length),
-            curr = resp.next.href.match(/page=([\d]+)/)[1];
-          loaded = Math.round(((curr-1) / max) * 100);
-          $http.get(resp.next.href).success(fetchSuccess);
+      var checked = false;
+      Service.LoadDatabase = function () {
+        if (checked) {
+          return;
         }
-        else {
-          loaded = 1;
-          self.updateDatabase();
-        }
-      }
+        checked = true;
+        $idb.openStore('entities', function (store) {
+          var results;
+          // if we're in a vsite, only get a subset of the database
+          // we really don't need to loop through everything
+          if (Drupal.settings.spaces && Drupal.settings.spaces.id) {
+            var query = store.query()
+              .$index('vsite')
+              .$eq(Drupal.settings.spaces.id);
 
-      /**
-       * HTTP response error handler
-       */
-      var errorAttempts;
-      function errorFunc() {
-        errorAttempts++;
-        if (errorAttempts < 3) {
-          $http.get(restPath + '/' + entityType, config).
-            success(fetchSuccess).
-            error(errorFunc);
-        }
-        else {
-          console.log('Error getting files. Aborting after 3 attempts.');
-        }
-      }
-
-      /**
-       * Fetches first/next 50 updates from the server, then queues up the next request if necessary.
-       * @param nextUrl
-       */
-      function fetchUpdates(nextUrl) {
-        var url = nextUrl || urlBase.replace(':time', timestamp);
-
-        $http.get(url, httpConfig).then(function (resp) {
-          var isUpdates = typeof resp.data.updatesAsOf != 'undefined';
-          if (resp.data.next) {
-            fetchUpdates(nextUrl);
+            results = store.eachWhere(query);
+          }
+          else {
+            results = store.getAll();
           }
 
-          var entities = resp.data.data;
-          for (var i = 0; i < entities.length; i++) {
-            for (j = 0; j < self.entities.length; j++) {
-              if (self.entities[j].id == entities[i]) {
-                self.entities[j] = entities[i];
-                continue;
+          results.then(function (rows) {
+            var emptyParamCount = 0;
+            if (Drupal.settings.spaces) {
+              emptyParamcount = 1;
+            }
+            for (var i = 0; i < rows.length; i++) {
+              var entityType = rows[i].entityType;
+
+              if (Object.keys(rows[i].params).length == emptyParamCount) {
+                if (Service[entityType] == undefined) {
+                  Service[entityType] = new EntityTypeHandler(entityType, rows[i].data, rows[i].lastUpdated);
+                }
+              }
+              else {
+                if (Service[entityType] == undefined) {
+                  Service[entityType] = new EntityTypeHandler(entityType);
+                }
+                // figure out the name if one is not provided
+                var name = rows[i].name;
+                if (!name) {
+                  for (var k in configs) {
+                    if (Service[entityType][k] != undefined) {
+                      continue;
+                    }
+                    var params = angular.copy(configs[k].params) || {};
+                    if (Drupal.settings.spaces) {
+                      params.vsite = Drupal.settings.spaces.id;
+                    }
+                    if (angular.equals(params, rows[i].params)) {
+                      name = k;
+                      break;
+                    }
+                  }
+                }
+                Service[entityType].addConfig(name, rows[i].params);
               }
             }
+          });
+        }).then(angular.noOp, function () {
+          // Backup if indexedDB doesn't work for whatever reason.
+          for (var name in configs) {
+            var entityType = configs[name].entityType;
+            if (Service[entityType] == undefined) {
+              Service[entityType] = new EntityTypeHandler();
+            }
+
+            Service[entityType].addConfig(name, configs[name]);
           }
         });
       }
 
+      return Service;
+
       /**
-       * Adds additional fields to the fetch query so a subset can be requested directly from the server.
-       * @param fields
-       * @returns {*}
+       * Handles all server communication and local database interactions for a single entity type
+       *
+       * @param entityType
+       * @param entities - optional - a list of entities to pass from the local database
+       * @param timestamp - optional - the last time those entities were fetched
+       * @constructor
        */
-      this.fetchSubset = function (fields) {
-        var defer = $q.defer();
-        for (var k in fields) {
-          httpConfig.params[k] = fields[k];
+      function EntityTypeHandler (entityType, entities, timestamp) {
+        var self = this;
+        var url = restPath + '/' + entityType;
+        this.entities = [];
+        if (angular.isArray(entities)) {
+          this.entities = entities;
         }
-        var output = [];
-        $http.get(url, httpConfig).success(fetchSubsetSuccess).error(function (resp) {
-          console.log('Error fetching subset.');
-        });
+        var configKeys = [],
+          loaded = 0,
+          lastUpdated = 0;
 
-        return defer.promise;
+        /**
+         * Initialization for given entity type.
+         */
+        // There were no entities provided, we're getting them for the first time.
+        if (this.entities.length == 0) {
+          $http.get(url, httpConfig)
+            .success(fetchSuccess)
+            .error(errorFunc);
+        }
+        // The constructor was provided entities. We only need updates.
+        else {
+          fetchUpdates();
+        }
 
-        function fetchSubsetSuccess(resp, status, headers, config) {
-          output = output.concat(resp.data);
+        /**
+         * Registers a new config, that can be refered to with EntityDatabaseService.entityType.configName
+         * @param name
+         * @param config
+         */
+        this.addConfig = function (name, config) {
+          this[name] = new EntitySubset(this, config);
+        }
+
+        /**
+         * @returns {number} - Total percentage of completed loading operation
+         */
+        this.LoadPercent = function () {
+          return loaded;
+        }
+
+        /**
+         * @returns {boolean} - Whether loading operation has completed or not.
+         * @constructor
+         */
+        this.Loaded = function () {
+          return loaded == 1;
+        }
+
+        /**
+         * HTTP response handler
+         * Recursive
+         * @param resp
+         * @param status
+         * @param headers
+         * @param config
+         */
+        function fetchSuccess (resp, status, headers, config) {
+          self.entities = self.entities.concat(resp.data);
 
           if (resp.next) {
             var max = Math.ceil(resp.count / resp.data.length),
               curr = resp.next.href.match(/page=([\d]+)/)[1];
             loaded = Math.round(((curr - 1) / max) * 100);
-            defer.notify(loaded);
-            $http.get(resp.next.href).success(fetchSubsetSuccess);
+            $http.get(resp.next.href).success(fetchSuccess);
           }
           else {
-            defer.resolve(output);
-          }
-        }
-      }
-
-      /**
-       * Find the key of the given entity id in the master array
-       * @param id
-       * @returns {number}
-       */
-      function findEntityKeyById(id) {
-        if (!angular.isNumber(id)) {
-          return -1;
-        }
-        for (var i = 0; i < self.entities.length; i++) {
-          if (self.entities[i].id == id) {
-            return i;
-          }
-        }
-
-        return -1;
-      }
-
-      /**
-       * Adds an entity to the list of all entities, taking into account whether it exists or not prior
-       * @param entity
-       */
-      function addOrUpdate(entity) {
-        var i = findEntityKeyById(entity.id);
-        if (i != -1) {
-          self.entities[i] = entity;
-        }
-        else {
-          self.entities.push(entity);
-        }
-      }
-
-      /**
-       * Matches an entity against the defined subsets
-       * @param entity
-       */
-      function checkEntityAgainstConfigs(entity) {
-        for (var i = 0; i < configKeys.length; i++) {
-          var key = configKeys[i];
-          self[key].match(entity);
-        }
-      }
-
-      /**
-       * Allows for registering an entity to the database that was created outside of this service
-       * i.e. file uploads
-       * @param entity
-       */
-      this.register = function (entity) {
-        addOrUpdate(entity);
-      }
-
-      /**
-       * Uploads a brand new entity to the server
-       * @param entity
-       */
-      this.create = function (entity, extra) {
-        if (findEntityKeyById(entity.id) > -1) {
-          throw "Entity " + entity.id + " of type " + entityType+ " already exists, and cannot be created again.";
-        }
-
-        if (Drupal.settings.spaces) {
-          entity.vsite = Drupal.settings.spaces.id;
-        }
-
-        var defer = $q.defer();
-        $http.post(url, entity).then(function (resp) {
-          var entity = resp.data[0];
-          self.entities.push(entity);
-          defer.resolve(entity);
-        },
-        function (resp) {
-          console.log(resp.data);
-          defer.reject("Failed to create entity. Check error logs.");
-        });
-
-        return defer.promise;
-      }
-
-      /**
-       * Uploads changes to an entity to the server.
-       * @param entity - The full entity to be uploaded
-       *
-       * @return A Promise representing the operation
-       */
-      this.edit = function (entity) {
-        var ignoredFields = ignore[entityType],
-          originalKey = findEntityKeyById(entity.id),
-          original = entities[originalKey],
-          data = getDiff(entity, original, ignoredFields);
-
-        if (data.length) {
-          delete data.length;
-
-          var config = angular.copy(httpConfig);
-          config.headers = {};
-          config.headers['If-Unmodified-Since'] = (new Date(original.changed*1000)).toString().replace(/ \([^)]*\)/, '');
-
-          var defer = $q.defer();
-          $http.patch(url + '/' + entity.id, data, config).then(function (resp) {
-            var updated = resp.data[0];
-            entities[originalKey] = updated;
+            loaded = 1;
             self.updateDatabase();
-            defer.resolve(entity);
-          }, function (resp) {
-            switch (resp.status) {
-              case 409:
-              case 410:
-                console.log("Cache invalid. Reloading.");
-                defer.reject("Cache invalid");
-                checked = false;
-                this.CheckForUpdates();
-                break;
-              default:
-                console.log(resp.data);
-                defer.reject("Failed to update entity. Check error logs.");
+          }
+        }
+
+        /**
+         * HTTP response error handler
+         */
+        var errorAttempts;
+
+        function errorFunc () {
+          errorAttempts++;
+          if (errorAttempts < 3) {
+            $http.get(restPath + '/' + entityType, config).
+              success(fetchSuccess).
+              error(errorFunc);
+          }
+          else {
+            console.log('Error getting files. Aborting after 3 attempts.');
+          }
+        }
+
+        /**
+         * Fetches first/next 50 updates from the server, then queues up the next request if necessary.
+         * @param nextUrl
+         */
+        function fetchUpdates (nextUrl) {
+          var url = nextUrl || url + '/updates/' + timestamp;
+
+          $http.get(url, httpConfig).then(function (resp) {
+            var isUpdates = typeof resp.data.updatesAsOf != 'undefined';
+            if (resp.data.next) {
+              fetchUpdates(nextUrl);
             }
+
+            var entities = resp.data.data;
+            for (var i = 0; i < entities.length; i++) {
+              for (j = 0; j < self.entities.length; j++) {
+                if (self.entities[j].id == entities[i]) {
+                  self.entities[j] = entities[i];
+                  continue;
+                }
+              }
+            }
+          });
+        }
+
+        /**
+         * Adds additional fields to the fetch query so a subset can be requested directly from the server.
+         * @param fields
+         * @returns {*}
+         */
+        this.fetchSubset = function (fields) {
+          var defer = $q.defer();
+          for (var k in fields) {
+            httpConfig.params[k] = fields[k];
+          }
+          var output = [];
+          $http.get(url, httpConfig).success(fetchSubsetSuccess).error(function (resp) {
+            console.log('Error fetching subset.');
           });
 
           return defer.promise;
+
+          function fetchSubsetSuccess (resp, status, headers, config) {
+            output = output.concat(resp.data);
+
+            if (resp.next) {
+              var max = Math.ceil(resp.count / resp.data.length),
+                curr = resp.next.href.match(/page=([\d]+)/)[1];
+              loaded = Math.round(((curr - 1) / max) * 100);
+              defer.notify(loaded);
+              $http.get(resp.next.href).success(fetchSubsetSuccess);
+            }
+            else {
+              defer.resolve(output);
+            }
+          }
+        }
+
+        /**
+         * Find the key of the given entity id in the master array
+         * @param id
+         * @returns {number}
+         */
+        function findEntityKeyById (id) {
+          if (!angular.isNumber(id)) {
+            return -1;
+          }
+          for (var i = 0; i < self.entities.length; i++) {
+            if (self.entities[i].id == id) {
+              return i;
+            }
+          }
+
+          return -1;
+        }
+
+        /**
+         * Adds an entity to the list of all entities, taking into account whether it exists or not prior
+         * @param entity
+         */
+        function addOrUpdate (entity) {
+          var i = findEntityKeyById(entity.id);
+          if (i != -1) {
+            self.entities[i] = entity;
+          }
+          else {
+            self.entities.push(entity);
+          }
+        }
+
+        /**
+         * Matches an entity against the defined subsets
+         * @param entity
+         */
+        function checkEntityAgainstConfigs (entity) {
+          for (var i = 0; i < configKeys.length; i++) {
+            var key = configKeys[i];
+            self[key].match(entity);
+          }
+        }
+
+        /**
+         * Allows for registering an entity to the database that was created outside of this service
+         * i.e. file uploads
+         * @param entity
+         */
+        this.register = function (entity) {
+          addOrUpdate(entity);
+        }
+
+        /**
+         * Uploads a brand new entity to the server
+         * @param entity
+         */
+        this.create = function (entity, extra) {
+          if (findEntityKeyById(entity.id) > -1) {
+            throw "Entity " + entity.id + " of type " + entityType + " already exists, and cannot be created again.";
+          }
+
+          if (Drupal.settings.spaces) {
+            entity.vsite = Drupal.settings.spaces.id;
+          }
+
+          var defer = $q.defer();
+          $http.post(url, entity).then(function (resp) {
+              var entity = resp.data[0];
+              self.entities.push(entity);
+              defer.resolve(entity);
+            },
+            function (resp) {
+              console.log(resp.data);
+              defer.reject("Failed to create entity. Check error logs.");
+            });
+
+          return defer.promise;
+        }
+
+        /**
+         * Uploads changes to an entity to the server.
+         * @param entity - The full entity to be uploaded
+         *
+         * @return A Promise representing the operation
+         */
+        this.edit = function (entity) {
+          var ignoredFields = ignore[entityType],
+            originalKey = findEntityKeyById(entity.id),
+            original = entities[originalKey],
+            data = getDiff(entity, original, ignoredFields);
+
+          if (data.length) {
+            delete data.length;
+
+            var config = angular.copy(httpConfig);
+            config.headers = {};
+            config.headers['If-Unmodified-Since'] = (new Date(original.changed * 1000)).toString().replace(/ \([^)]*\)/, '');
+
+            var defer = $q.defer();
+            $http.patch(url + '/' + entity.id, data, config).then(function (resp) {
+              var updated = resp.data[0];
+              entities[originalKey] = updated;
+              self.updateDatabase();
+              defer.resolve(entity);
+            }, function (resp) {
+              switch (resp.status) {
+                case 409:
+                case 410:
+                  console.log("Cache invalid. Reloading.");
+                  defer.reject("Cache invalid");
+                  checked = false;
+                  this.CheckForUpdates();
+                  break;
+                default:
+                  console.log(resp.data);
+                  defer.reject("Failed to update entity. Check error logs.");
+              }
+            });
+
+            return defer.promise;
+          }
+        }
+
+        /**
+         * Deletes an entity from the server.
+         * @param entity - The full entity to delete
+         */
+        this.delete = function (entity) {
+
+          var config = angular.copy(httpConfig);
+          config.headers = {};
+          config.headers['If-Unmodified-Since'] = (new Date(original.changed * 1000)).toString().replace(/ \([^)]*\)/, '');
+
+          var defer = $q.defer();
+          $http.delete(url + '/' + entity.id, config).then(function (resp) {
+            self.entities.splice(key, 1);
+            self.updateDatabase();
+            $q.resolve("Success");
+          }, function (resp) {
+            console.log(resp.data);
+            $q.reject("Failed to delete entity " + entity.id);
+          });
+
+          var key = findEntityKeyById(entity.id);
+          return defer.promise;
+        }
+
+        /**
+         * Update the database and all subgroup databases
+         * WARNING: This reads from the EntityTypeHandler's entities array. Any changes must be made to it BEFORE
+         * calling this function or they will NOT be saved.
+         */
+        this.updateDatabase = function () {
+          // try to figure out a name for this set so we can initialize it in later runs
+          var name;
+          for (var k in configs) {
+            var clone = angular.copy(configs[k]);
+            clone.params = clone.params || {};
+            if (databaseParams.vsite) {
+              clone.params.vsite = databaseParams.vsite;
+            }
+            if (angular.equals(configs[k].params, databaseParams)) {
+              name = k;
+              break;
+            }
+          }
+          $idb.openStore('entities', function (store) {
+            var key = entityType + ":" + JSON.stringify(databaseParams),
+              cacheObject = {
+                data: self.entities,
+                key: key,
+                name: name,
+                entityType: entityType,
+                idProperty: "id",
+                lastUpdated: lastUpdated,
+                params: databaseParams,
+                matches: (function(entity, entityType) {
+                  if (entityType != this.entityType) {
+                    return false;
+                  }
+                  return testEntity.call(this, entity);
+                }).toString()
+              };
+            store.upsert(cacheObject);
+            for (var i = 0; i < configKeys.length; i++) {
+              self[configKeys[i]].updateDatabase(configKeys[i], store, lastUpdated);
+            }
+          });
         }
       }
 
       /**
-       * Deletes an entity from the server.
-       * @param entity - The full entity to delete
+       * Manages a subset of entities, based on parameters given.
+       * Nearly every interaction should go through this.
+       * @param config
+       * @constructor
        */
-      this.delete = function (entity) {
+      function EntitySubset (typeHandler, config) {
+        config.fields = config.fields || {};
+        config.params = config.params || {};
 
-        var config = angular.copy(httpConfig);
-        config.headers = {};
-        config.headers['If-Unmodified-Since'] = (new Date(original.changed*1000)).toString().replace(/ \([^)]*\)/, '');
+        /**
+         * Matches a single entity against the params given in config
+         * @param entity
+         * @returns {boolean}
+         */
+        function match (entity) {
+          var params = config.params,
+            type = config.entityType;
 
-        var defer = $q.defer();
-        $http.delete(url + '/' + entity.id, config).then(function (resp) {
-          self.entities.splice(key, 1);
-          self.updateDatabase();
-          $q.resolve("Success");
-        }, function (resp) {
-          console.log(resp.data);
-          $q.reject("Failed to delete entity " + entity.id);
-        });
+          // if this cache isn't for private files, and the entity is private, drop it.
+          //if (!params.private && entity.schema == 'private') {
+          //  return false;
+          //}
 
-        var key = findEntityKeyById(entity.id);
-        return defer.promise;
-      }
+          for (var k in params) {
+            if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
+              // this thing refers to other entities, like vocabs do. It can accept multiple types of entity type / file combinations
 
-      /**
-       * Update the database and all subgroup databases
-       * WARNING: This reads from the EntityTypeHandler's entities array. Any changes must be made to it BEFORE
-       * calling this function or they will NOT be saved.
-       */
-      this.updateDatabase = function () {
-        $idb.openStore('entities', function (store) {
-          var key = this.entityType + ":" + JSON.stringify(databaseParams),
-            cacheObject = {
-              data: this.entities,
-              entityType: entityType,
-              idProperty: "id",
-              lastUpdated: lastUpdated,
-              params: databaseParams
-            };
-          store.upsert(cacheObject);
-          for (var i = 0; i < configKeys.length; i++) {
-            self[[configKeys[i]]].updateDatabase(store, lastUpdated);
-          }
-        });
-      }
-    }
-
-    /**
-     * Manages a subset of entities, based on parameters given.
-     * Nearly every interaction should go through this.
-     * @param config
-     * @constructor
-     */
-    function EntitySubset(typeHandler, config) {
-
-      /**
-       * Matches a single entity against the params given in config
-       * @param entity
-       * @returns {boolean}
-       */
-      function match (entity) {
-        var params = config.params,
-          type = config.entityType;
-
-        // if this cache isn't for private files, and the entity is private, drop it.
-        //if (!params.private && entity.schema == 'private') {
-        //  return false;
-        //}
-
-        for (var k in params) {
-          if ((k == 'entity_type' || k == 'bundle') && typeof entity.bundles == 'object') {
-            // this thing refers to other entities, like vocabs do. It can accept multiple types of entity type / file combinations
-
-            if (entity.bundles[params.entity_type]) {
+              if (entity.bundles[params.entity_type]) {
+                var found = false;
+                for (var l in entity.bundles[params.entity_type]) {
+                  if (entity.bundles[params.entity_type][l] == params.bundle) {
+                    found = true;
+                    break;
+                  }
+                }
+                if (!found) {
+                  return false;
+                }
+              }
+              else {
+                // this does not accept the entity type we are looking for
+                return false;
+              }
+            }
+            // allow for a property on the entity to be a container that we only need to match one of to pass
+            else if (entity[k] instanceof Object && (typeof params[k] == 'string' || typeof params[k] == 'number')) {
               var found = false;
-              for (var l in entity.bundles[params.entity_type]) {
-                if ( entity.bundles[params.entity_type][l] == params.bundle) {
+              for (var l in entity[k]) {
+                if (entity[k][l] == params[k]) {
                   found = true;
                   break;
                 }
@@ -462,81 +538,98 @@
                 return false;
               }
             }
-            else {
-              // this does not accept the entity type we are looking for
-              return false;
-            }
-          }
-          // allow for a property on the entity to be a container that we only need to match one of to pass
-          else if (entity[k] instanceof Object && (typeof params[k] == 'string' || typeof params[k] == 'number')) {
-            var found = false;
-            for (var l in entity[k]) {
-              if (entity[k][l] == params[k]) {
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              return false;
-            }
-          }
-          else if (entity[k] == undefined) {
-            // this is not something that comes returned on the object
-            // try other things
-            switch (k) {
-              case 'vsite':
-                if (params[k] != Drupal.settings.spaces.id) {
-                  return false;
-                }
-                break;
-              case 'private': {
-                if (params[k] == 'only' && entity.schema != 'private') {
-                  return false;
+            else if (entity[k] == undefined) {
+              // this is not something that comes returned on the object
+              // try other things
+              switch (k) {
+                case 'vsite':
+                  if (params[k] != Drupal.settings.spaces.id) {
+                    return false;
+                  }
+                  break;
+                case 'private':
+                {
+                  if (params[k] == 'only' && entity.schema != 'private') {
+                    return false;
+                  }
                 }
               }
             }
+            else if (entity[k] != params[k]) {
+              return false;
+            }
           }
-          else if (entity[k] != params[k]) {
-            return false;
+          return true;
+        }
+
+        /**
+         * Returns a list of all entities that match the config params given in the constructor.
+         * @returns {Array.<T>}
+         * @constructor
+         */
+        var fetchPromise;
+        this.Entities = function () {
+          var entities = typeHandler.entities.filter(match);
+          if (entities.length) {
+            return entities;
+          }
+
+          if (!fetchPromise) {
+            fetchPromise = typeHandler.fetchSubset(config.fields);
+          }
+          return false;
+        }
+
+        /**
+         * Updates the database for this specific parameter set if the config requires it.
+         * @param store - indexedDB store
+         * @param lastUpdated
+         */
+        this.updateDatabase = function (name, store, lastUpdated) {
+          if (config.database) {
+            var cacheObject = {
+              data: this.Entities(),
+              name: name,
+              entityType: config.entityType,
+              idProperty: "id",
+              lastUpdated: lastUpdated,
+              params: config.params,
+            }
+            store.upsert(cacheObject);
           }
         }
-        return true;
-      }
 
-      /**
-       * Returns a list of all entities that match the cnfig params given in the constructor.
-       * @returns {Array.<T>}
-       * @constructor
-       */
-      this.Entities = function () {
-        return typeHandler.entities.filter(match);
-      }
+        /**
+         * Pass through so special fields can be added to the request if necessary
+         */
+        this.create = function (entity) {
+          typeHandler.create(entity, config.fields);
+        }
 
-      /**
-       * Updates the database for this specific parameter set if the config requires it.
-       * @param store - indexedDB store
-       * @param lastUpdated
-       */
-      this.updateDatabase = function (store, lastUpdated) {
-        if (config.database) {
-          var cacheObject = {
-            data: this.Entities(),
-            entityType: config.entityType,
-            idProperty: "id",
-            lastUpdated: lastUpdated,
-            params: config.params,
-          }
-          store.upsert(cacheObject);
+        /**
+         *
+         */
+        this.edit = function (entity) {
+          typeHandler.edit(entity, config.fields);
+        }
+
+        /**
+         *
+         */
+        this.delete = function (entity) {
+          typeHandler.delete(entity, config.fields);
         }
       }
-    }
-  }]);
+    }];
+
+
+  });
 
   /**
    * Kick off the update process
    */
   m.run(['EntityDatabaseService', function (eDB) {
-    eDB.CheckForUpdates();
+    eDB.LoadDatabase();
   }]);
 
   /**
