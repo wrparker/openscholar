@@ -9,11 +9,10 @@
       catch (err) {
       }
     }])
-    .directive('mediaBrowserField', ['mbModal', 'EntityService', function (mbModal, EntityService) {
+    .directive('mediaBrowserField', ['mbModal', 'EntityDatabaseService', function (mbModal, edb) {
 
       function link(scope, elem, attr, ngModelController) {
         // everything to define
-        var service = new EntityService('files', 'id');
         var field_root_id = "";
         if (scope.$parent.element) {
           field_root_id = scope.$parent.element.id;
@@ -70,6 +69,14 @@
           scope.selectedFiles = [];
         }
 
+        var selected = [];
+        scope.selected = function () {
+          return edb.files.entities.filter(function (item) {
+            return selected.indexOf(item.id) !== FALSE;
+          });
+        }
+
+        /*
         if (Array.isArray(scope.$parent.value)) {
           for (i = 0; i < scope.$parent.value.length; i++) {
             service.fetchOne(scope.$parent.value[i]).then(generateFunc(i));
@@ -87,19 +94,7 @@
             service.fetchOne(fid).then(generateFunc(i));
           }
           store.setData(scope.field_name, scope.selectedFiles);
-        }
-
-        // prefetch the files now so user can open Media Browser later
-        service.fetch();
-
-        scope.$on('EntityService.files.update', function (e, file) {
-          for (var i = 0; i<scope.selectedFiles.length; i++) {
-            if (file.id == scope.selectedFiles[i].id) {
-              scope.selectedFiles[i] = angular.copy(file);
-            }
-          }
-          store.setData(scope.field_name, scope.selectedFiles);
-        });
+        }*/
 
         scope.sendToBrowser = function($files) {
           var params = {
