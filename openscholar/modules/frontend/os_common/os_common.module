@@ -216,6 +216,7 @@ function os_common_library() {
     'version' => '1.0',
     'js' => array(
       $path.'/EntityService/EntityService.module.js' => array(),
+      $path.'/EntityService/EntityDatabaseService.module.js' => array(),
     ),
     'dependencies' => array(
       array('os_common', 'angularjs'),
