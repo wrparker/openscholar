@@ -4,9 +4,20 @@
 
   angular.module('mediaBrowser', ['JSPager', 'EntityService', 'os-auth', 'ngSanitize', 'angularFileUpload',
       'angularModalService', 'FileEditor', 'mediaBrowser.filters', 'locationFix', 'FileHandler'])
-    .config(function (){
+    .config(['EntityDatabaseServiceProvider', function (edbProvider) {
        rootPath = Drupal.settings.paths.moduleRoot;
-    })
+
+      edbProvider.AddConfig('allFiles', {
+        entityType: 'files',
+      });
+
+      edbProvider.AddConfig('privateFiles', {
+        entityType: 'files',
+        params: {
+          'private': 'only'
+        }
+      });
+    }])
     .run(['mbModal', 'FileEditorOpenModal', function (mbModal, feom) {
       // Disable drag and drop behaviors on the window object, to prevent files
       // from replacing the window.
@@ -62,13 +73,12 @@
         }
       }
     }])
-  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityService', 'EntityConfig', '$sce', '$q', '$upload',
+  .controller('BrowserCtrl', ['$scope', '$filter', '$http', 'EntityDatabaseService', '$sce', '$q', '$upload',
       '$timeout', 'FILEEDITOR_RESPONSES', 'FileHandlers', 'params', 'close',
-      function ($scope, $filter, $http, EntityService, config, $sce, $q, $upload, $timeout, FER, FileHandlers, params, close) {
+      function ($scope, $filter, $http, edb, $sce, $q, $upload, $timeout, FER, FileHandlers, params, close) {
 
     // Initialization
-    var service = new EntityService('files', 'id'),
-      toEditForm = false,
+    var toEditForm = false,
       directInsert = true;
     $scope.files = [];
     $scope.numFiles = 0;
@@ -92,6 +102,21 @@
     $scope.button_text = params.replace ? 'Select Replacement File' : 'Select files to Add';
 
     $scope.toInsert = [];
+
+    /**
+     * Set up the EntityDatabase for files.
+     * @type {string}
+     */
+    var db = edb.files;
+    $scope.db = db.allFiles;
+    if (params.private) {
+      $scope.db = db.privateFiles;
+    }
+        console.log($scope.db);
+
+    /**
+     * Extension handling
+     */
 
     var allTypes = [
       {label: 'Image', value: 'image'},
@@ -135,8 +160,15 @@
       }
     }
     $scope.extensions.sort();
+
+    /**
+     * URL whitelist for embeds.
+     */
     $scope.whitelist = Drupal.settings.embedWhitelist;
 
+    /**
+     * Setting the maximum file size
+     */
     if (params.max_filesize) {
       $scope.maxFilesize = params.max_filesize;
     }
@@ -150,22 +182,7 @@
       params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw,
       function ($files, messages) {
         for (var i = 0; i < $files.length; i++) {
-          service.register($files[i]);
-          var found = false;
-          // check to see if this file exists
-          for (var j = 0; j < $scope.files.length; j++) {
-            if ($scope.files[j].id == $files[i].id) {
-              // we just replaced an existing file.
-              $files[i].replaced = true;
-              $scope.files[j] = $files[i];
-              found = true;
-            }
-          }
-          if (!found) {
-            // This is a brand-new file. Set the true flag and add it to the list.
-            $files[i].new = true;
-            $scope.files.push($files[i]);
-          }
+          $scope.db.register($files[i]);
         }
         uploadBatch = uploadBatch.concat($files);
         if (!$scope.fh.hasDuplicates()) {
@@ -206,74 +223,22 @@
       next: 0
     };
 
-    // Watch for changes in file list
-    $scope.$on('EntityService.files.add', function (event, file) {
-      if (file.changed == file.timestamp) {
-        $scope.files.push(file);
+    /**
+     * Watch for completed loading of entities.
+     */
+    $scope.$watch('db.LoadPercent()', function (newVal, oldVal) {
+      if (newVal < 1) {
+        $scope.loading = true;
+        $scope.loadingMessage = "Loading " + newVal + "% complete";
       }
-    });
-
-    $scope.$on('EntityService.files.update', function (event, file) {
-      var t = $scope.selected_file;
-      for (var i=0; i < $scope.files.length; i++) {
-        if ($scope.files[i].id == file.id) {
-          if ($scope.files[i].replaced) {
-            file.replaced = $scope.files[i].replaced;
-          }
-          if ($scope.files[i].new) {
-            file.new = $scope.files[i].new;
-          }
-          $scope.files[i] = file;
-          break;
-        }
-      }
-
-      for (i=0; i<$scope.toInsert.length; i++) {
-        if ($scope.toInsert[i].id == file.id) {
-          $scope.toInsert[i] = file;
-        }
-      }
-
-      if ($scope.selected_file.id == file.id) {
-        $scope.selected_file = angular.copy(file);
-      }
-    });
-
-    $scope.$on('EntityService.files.delete', function (event, id) {
-      // Don't want to worry about what happens when you modify an array you're
-      // looping over.
-      if ($scope.selected_file.id == id) {
-        $scope.selected_file = null;
-      }
-      var deleteMe = false;
-      for (var i=0; i<$scope.files.length; i++) {
-        if ($scope.files[i].id == id) {
-          deleteMe = i;
-          break;
-        }
-      }
-
-      if (deleteMe !== false) {
-        $scope.files.splice(deleteMe, 1);
-      }
-    })
-
-    var fetching = service.fetch({})
-      .then(function (result) {
-        console.log(result);
-
-        $scope.files = result;
-        $scope.numFiles = $scope.files.length;
+      else {
         $scope.loading = false;
-      }, function (error) {
-        // there was an error getting results. We should tell the user and
-        // advise them.
-      }, function (message) {
-        // notification received.
-        $scope.loadingMessage = message;
-      });
+      }
+    });
 
-
+    /**
+     * Event handler for changing tab panes
+     */
     $scope.changePanes = function (pane, result) {
       if ($scope.activePanes[pane]) {
         $scope.pane = pane;
@@ -340,14 +305,7 @@
     };
 
     $scope.deleteConfirmed = function() {
-      service.delete($scope.selected_file)
-        .then(function (resp) {
-        });
-      for (var j = 0; j < $scope.files.length; j++) {
-        if ($scope.files[j].id == $scope.selected_file.id) {
-          $scope.files[j].status = 'deleting';
-        }
-      }
+      $scope.db.delete($scope.selected_file);
       $scope.changePanes('library');
     };
 
@@ -359,17 +317,14 @@
         embed: this.embed,
       }
 
-      service.add(data).success(function (e) {
-        if (e.data.length) {
-          $scope.embed = '';
-          e.data[0].new = e.data[0].changed == e.data[0].timestamp;
-          $scope.setSelection(e.data[0].id);
-          service.register(e.data[0]);
+      $scope.db.create(data).then(function (file) {
+        $scope.embed = '';
+        e.data[0].new = e.data[0].changed == e.data[0].timestamp;
+        $scope.setSelection(e.data[0].id);
+        $scope.db.register(e.data[0]);
 
-          $scope.changePanes('edit')
-        }
-      })
-      .error(function (e) {
+        $scope.changePanes('edit')
+      }, function (e) {
         $scope.embedFailure = true;
           $timeout(function () {
             $scope.embedFailure = false;
@@ -379,7 +334,7 @@
 
     $scope.closeFileEdit = function (result) {
       if (result == FER.CANCELED && $scope.selected_file.new) {
-        service.delete($scope.selected_file);
+        $scope.db.delete($scope.selected_file);
         for (var j = 0; j < $scope.files.length; j++) {
           if ($scope.files[j].id == $scope.selected_file.id) {
             $scope.files[j].status = 'deleting';
@@ -415,18 +370,16 @@
     // when a set of files are passed to the Media Browser, they were handled by some other service and then passed
     // to the Media Browser to handle
     if (params.files) {
-      fetching.then(function () {
-        var accepted = [], rejected = [];
-        for (var i=0; i<params.files.length; i++) {
-          if ($scope.validate(params.files[i])) {
-            accepted.push(params.files[i]);
-          }
-          else {
-            rejected.push(params.files[i]);
-          }
+      var accepted = [], rejected = [];
+      for (var i=0; i<params.files.length; i++) {
+        if ($scope.validate(params.files[i])) {
+          accepted.push(params.files[i]);
         }
-        $scope.fh.checkForDupes(accepted, {}, rejected);
-      });
+        else {
+          rejected.push(params.files[i]);
+        }
+      }
+      $scope.fh.checkForDupes(accepted, {}, rejected);
     }
   }])
   .directive('mbOpenModal', ['$parse', 'mbModal', function($parse, mbModal) {

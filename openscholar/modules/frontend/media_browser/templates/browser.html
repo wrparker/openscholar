@@ -71,7 +71,7 @@
                 <span class="mb-created" ng-click="sortReverse=(sortType == 'timestamp')?!sortReverse:true; sortType='timestamp';">Uploaded</span>
                 <span class="mb-file-actions">&nbsp;</span>
             </div>
-            <div js-pager="file in files | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
+            <div js-pager="file in db.Entities() | mbFilename:$parent.search | mbType:availFilter | mbType:filteredTypes | mbExtensions:extensions | filter:{status:'!deleting'} | orderBy:sortType:sortReverse track by file.id" page-size="5">
                 <div class="media-row" data-fid="{{file.id}}" ng-click="setSelection(file.id)" ng-class="{selected : selection == file.id, new : file.new}">
                     <span class="mb-preview" ng-bind-html="file.preview"></span>
                     <span class="mb-title">{{file.name}}</span>
