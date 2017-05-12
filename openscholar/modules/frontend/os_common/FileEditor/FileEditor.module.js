@@ -2,16 +2,27 @@
   var libraryPath = '';
 
   angular.module('FileEditor', ['EntityService', 'os-auth', 'TaxonomyWidget']).
-    config(function () {
+    config(['EntityDatabaseServiceProvider', function (edbProvider) {
       libraryPath = Drupal.settings.paths.FileEditor;
-    }).
+
+      edbProvider.AddConfig('allFiles', {
+        entityType: 'files',
+      });
+
+      edbProvider.AddConfig('privateFiles', {
+        entityType: 'files',
+        params: {
+          'private': 'only'
+        }
+      });
+    }]).
     constant("FILEEDITOR_RESPONSES", {
       SAVED: "saved",
       REPLACED: "replaced",
       NO_CHANGES: "no changes",
       CANCELED: "canceled"
     }).
-    directive('fileEdit', ['EntityService', '$http', '$timeout', '$filter', 'FILEEDITOR_RESPONSES', function (EntityService, $http, $timeout, $filter, FER) {
+    directive('fileEdit', ['EntityDatabaseService', '$http', '$timeout', '$filter', 'FILEEDITOR_RESPONSES', function (edb, $http, $timeout, $filter, FER) {
       return {
         scope: {
           file :  '=',
@@ -19,14 +30,8 @@
         },
         templateUrl: libraryPath + '/file_edit_base.html?vers='+Drupal.settings.version.FileEditor,
         link: function (scope, elem, attr, c, trans) {
-          var fileService = new EntityService('files', 'id'),
-              files = [],
+          var fileService = edb.files.allFiles,
               file_replaced = false;
-
-          fileService.fetch().then(function (data) {
-            files = data;
-            return data;
-          });
 
           scope.fileEditAddt = '';
           scope.date = '';
@@ -90,6 +95,7 @@
             }
             var lower = filename.toLowerCase();
             if (lower != old) {
+              var files = fileService.Entities();
               for (var i in files) {
                 if (lower == files[i].filename && scope.file.id != files[i].id) {
                   scope.invalidFileName = true;
@@ -153,7 +159,7 @@
                   scope.replaceSuccess = true;
                   file_replaced = true;
 
-                  fileService.register(result.data[0]);
+                  edb.files.register(result.data[0]);
 
                   $timeout(function () {
                     scope.replaceSuccess = false;
@@ -183,7 +189,7 @@
           };
 
           scope.save = function () {
-            fileService.edit(scope.file, ['preview', 'url', 'size', 'changed', 'mimetype']).then(function(result) {
+            fileService.edit(scope.file).then(function(result) {
                 if (result.data || typeof scope.file.new != 'undefined') {
                   scope.onClose({saved: FER.SAVED});
                 }
