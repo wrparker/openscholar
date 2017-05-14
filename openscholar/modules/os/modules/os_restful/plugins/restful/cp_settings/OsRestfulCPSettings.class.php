@@ -50,16 +50,26 @@ class OsRestfulCPSettings extends \RestfulBase implements \RestfulDataProviderIn
 
   public function processForms($form) {
     $access = spaces_access_admin();
-    foreach ($form as $var => &$elem) {
-      if (!isset($elem['form']['#id'])) {
-        $elem['form']['#id'] = drupal_html_id('edit-' . $var);
+    foreach ($form as $var => &$element) {
+      if (!isset($element['form']['#id'])) {
+        $element['form']['#id'] = drupal_html_id('edit-' . $var);
       }
 
-      if (!isset($elem['form']['#access'])) {
-        $elem['form']['#access'] = $access;
+      if (!isset($element['form']['#access'])) {
+        $element['form']['#access'] = $access;
       }
-      if (!empty($elem['form']['#states'])) {
-        drupal_process_states($elem['form']);
+      if (!empty($element['form']['#states'])) {
+        drupal_process_states($element['form']);
+      }
+
+      // Allow for elements to expand to multiple elements, e.g., radios,
+      // checkboxes and files.
+      if (isset($element['form']['#process']) && !$element['form']['#processed']) {
+        $form_state = [];
+        foreach ($element['form']['#process'] as $process) {
+          $element['form'] = $process($element['form'], $form_state, $element['form']);
+        }
+        $element['form']['#processed'] = TRUE;
       }
     }
 
