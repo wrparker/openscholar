@@ -95,8 +95,6 @@
     $scope.activePanes = params.browser.panes;
     $scope.activePanes.edit = true;
     $scope.activePanes.delete = true;
-    $scope.loading = true;
-    $scope.loadingMessage = '';
     $scope.sortType = 'timestamp';
     $scope.sortReverse = true;
     $scope.button_text = params.replace ? 'Select Replacement File' : 'Select files to Add';
@@ -112,7 +110,6 @@
     if (params.private) {
       $scope.db = db.privateFiles;
     }
-        console.log($scope.db);
 
     /**
      * Extension handling
@@ -176,6 +173,9 @@
       $scope.maxFilesize = Drupal.settings.maximumFileSize;
     }
 
+    /**
+     * Setting up the File Upload Handler
+     */
     var uploadBatch = [];
     $scope.fh = FileHandlers.getInstance($scope.extensions,
       $scope.maxFilesize,
@@ -203,6 +203,9 @@
         }
       });
 
+    /**
+     * Set up filters
+     */
     $scope.filteredTypes = [];
     $scope.isFiltered = function () {
       return $scope.filteredTypes.length || $scope.search;
@@ -222,19 +225,6 @@
     $scope.messages = {
       next: 0
     };
-
-    /**
-     * Watch for completed loading of entities.
-     */
-    $scope.$watch('db.LoadPercent()', function (newVal, oldVal) {
-      if (newVal < 1) {
-        $scope.loading = true;
-        $scope.loadingMessage = "Loading " + newVal + "% complete";
-      }
-      else {
-        $scope.loading = false;
-      }
-    });
 
     /**
      * Event handler for changing tab panes

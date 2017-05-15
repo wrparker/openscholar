@@ -188,7 +188,7 @@
          * @constructor
          */
         this.Loaded = function () {
-          return loaded == 1;
+          return loaded == 100;
         }
 
         /**
@@ -209,7 +209,7 @@
             $http.get(resp.next.href).success(fetchSuccess);
           }
           else {
-            loaded = 1;
+            loaded = 100;
             self.updateDatabase();
           }
         }
@@ -490,6 +490,8 @@
         config.fields = config.fields || {};
         config.params = config.params || {};
 
+        var subset = [];
+
         /**
          * Matches a single entity against the params given in config
          * @param entity
@@ -568,16 +570,22 @@
          * @constructor
          */
         var fetchPromise;
+        var loadPercent = 0;
         this.Entities = function () {
-          var entities = typeHandler.entities.filter(match);
-          if (entities.length) {
-            return entities;
+          subset = typeHandler.entities.filter(match);
+          if (subset.length) {
+            return subset;
           }
 
           if (!fetchPromise) {
-            fetchPromise = typeHandler.fetchSubset(config.fields);
+            fetchPromise = typeHandler.fetchSubset(config.fields).then(function (resultSet) {
+              console.log(resultSet);
+              subset = resultSet;
+            }, angular.noOp, function (percent) {
+              loadPercent = percent;
+            });
           }
-          return false;
+          return [];
         }
 
         /**
@@ -607,17 +615,37 @@
         }
 
         /**
-         *
+         * Pass through so special fields can be added to the request if necessary
          */
         this.edit = function (entity) {
           typeHandler.edit(entity, config.fields);
         }
 
         /**
-         *
+         * See @create
          */
         this.delete = function (entity) {
           typeHandler.delete(entity, config.fields);
+        }
+
+        /**
+         * Load percentage
+         */
+        this.LoadPercent = function () {
+          if (fetchPromise) {
+            return loadPercent;
+          }
+          return typeHandler.LoadPercent();
+        }
+
+        /**
+         * Is loading finished?
+         */
+        this.Loaded = function () {
+          if (fetchPromise) {
+            return loadPercent == 100;
+          }
+          return typeHandler.Loaded();
         }
       }
     }];

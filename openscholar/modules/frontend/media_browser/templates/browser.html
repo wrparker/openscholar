@@ -45,12 +45,12 @@
             </div>
         </div>
         <div class="media-browser-pane" ng-switch-when="library">
-            <div class="loading" ng-show="loading">
+            <div class="loading" ng-show="!db.Loaded()">
                 Please wait while we get information on your files.<br />
                 <div class="progress-bar progress-striped"><div class="progress-bar-completed" style="width: 100%"></div></div><br />
-                {{loadingMessage}}
+                Loading {{db.LoadPercent()}}% complete
             </div>
-            <div class="file-filters" ng-show="numFiles">
+            <div class="file-filters" ng-show="db.Entities().length != 0">
                 <div class="file-search">
                     <label for="file-search-input">Filename</label>
                     <input id="file-search-input" type="text" ng-model="$parent.search" class="form-text" size="30" maxlength="128">
@@ -64,7 +64,7 @@
                     <button ng-click="clearFilters()" ng-show="isFiltered()">Clear Filters</button>
                 </div>
             </div>
-            <div id="mb-library-header">
+            <div id="mb-library-header" ng-if="db.Entities().length != 0">
                 <span class="mb-preview">&nbsp;</span>
                 <span class="mb-title" ng-click="sortReverse=(sortType == 'name')?!sortReverse:false; sortType='name';">Title</span>
                 <span class="mb-filename" ng-click="sortReverse=(sortType == 'filename')?!sortReverse:false; sortType='filename';">Filename</span>
@@ -83,7 +83,7 @@
                     </span>
                 </div>
             </div>
-            <div class="no-files" ng-show="!loading && files.length == 0">
+            <div class="no-files" ng-show="db.Loaded() && db.Entities().length == 0">
                 No files to show.
             </div>
             <div class="actions" ng-show="$parent.showButtons">
