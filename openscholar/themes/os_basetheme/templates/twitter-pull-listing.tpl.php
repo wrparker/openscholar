@@ -40,7 +40,9 @@
         <?php if ($tweet->is_retweet) { print "<span class=\"fa fa-retweet\" ></span>"; } ?>
         <span class="tweet-author"><?php print l($tweet->username, '//twitter.com/' . $tweet->username, array('attributes' => array('target' => '_blank'))); ?></span>
         <span class="tweet-text"><?php print preg_replace('/(<a href="(http|https):[^"]+")/is','\\1 target="_blank"',  twitter_pull_add_links($tweet->text)); ?></span>
-        <div class="tweet-media_url"><img src="<?php print $tweet->media_url; ?>" /></div>
+        <?php if ($tweet->media_url): ?>
+        <div class="tweet-media_url"><img src="<?php print str_replace('http://', '//', $tweet->media_url); ?>" /></div>
+        <?php endif; ?>
         <div class="tweet-time"><?php print l($tweet->time_ago, '//twitter.com/' . $tweet->username . '/status/' . $tweet->id, array('attributes' => array('target' => '_blank')));?></div>
 
         <?php if ($tweet_key < $tweet_count - 1): ?>
