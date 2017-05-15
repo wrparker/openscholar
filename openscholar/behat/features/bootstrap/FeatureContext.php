@@ -23,7 +23,7 @@ class FeatureContext extends DrupalContext {
     // Set up the browser width.
 
     if ($this->getSession() instanceof Selenium2Driver) {
-      $this->getSession()->resizeWindow(1440, 1200, 'current');
+      $this->getSession()->resizeWindow(1440, 3000, 'current');
     }
 
     parent::beforeScenario($event);
@@ -3849,4 +3849,25 @@ JS;
       );
     }
   }
+
+  /**
+   * @Given /^I scroll and I "([^"]*)" see "([^"]*)"$/
+   */
+  public function iScrollAndILookFor($state, $path) {
+    $page = $this->getSession()->getPage();
+    $steps = round($this->getSession()->evaluateScript("return document.querySelector('html').scrollHeight;") / 250);
+
+    $mode = $state == 'should' ? TRUE : FALSE;
+
+    for ($i = 0; $i <= $steps; $i++) {
+      if ($page->find('xpath', $path) == $mode) {
+        return;
+      }
+
+      $this->getSession()->executeScript("scroll(0, " . 250 * $i . ")");
+    }
+
+    throw new Exception('The element ' . $state . ' appear but the step failed to verify that.');
+  }
+
 }

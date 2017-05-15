@@ -1,7 +1,7 @@
 Feature:
   Testing the link tab.
 
-  @api @features_second
+  @api @features
   Scenario: Test the Links tab
     Given I visit "john"
      When I click "Links"

@@ -1,7 +1,7 @@
 Feature:
   Testing the use of html code as files
 
-  @api @features_second
+  @api @features
   Scenario: Test that an html code will fail if it's not on the whitelist
     Given I am logging in as "john"
       And I visit "john/media/browser"
@@ -9,7 +9,7 @@ Feature:
       And I press "Submit"
      Then I should see "is from an untrusted domain."
 
-  @api @features_second
+  @api @features
   Scenario: Test that an html code will pass if it's on the whitelist
     Given I am logging in as "john"
       And I whitelist the domain "youtube.com"
