@@ -29,7 +29,7 @@ function os_profiles_update_7002() {
  */
 function os_profiles_update_7003() {
   $instance = field_info_instance('node', 'field_upload', 'person');
-  
+
   // Mark the field instance for deletion.
   // We avoid using field_delete_instance() as it deletes the instance data
   // which is the file in this case.
@@ -118,3 +118,11 @@ function os_profiles_update_7052(&$sandbox) {
 function os_profiles_update_7053() {
   features_revert(array('os_profiles' => array('variable')));
 }
+
+/**
+ * Alter teaser mode to os_text_trimmed for sort bio field.
+ */
+function os_profiles_update_7054() {
+  features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
+}
+

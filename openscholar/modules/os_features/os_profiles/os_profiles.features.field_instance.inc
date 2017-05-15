@@ -58,7 +58,7 @@ function os_profiles_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 160,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_text_trimmed',
         'weight' => 6,
       ),
       'title' => array(
@@ -662,7 +662,7 @@ function os_profiles_field_default_field_instances() {
       'type' => 'text_textfield',
       'weight' => 6,
     ),
-  );  
+  );
 
   // Exported field_instance: 'node-person-field_origin_destination'
   $field_instances['node-person-field_original_destination_url'] = array(
