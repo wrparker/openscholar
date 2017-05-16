@@ -182,7 +182,7 @@
       params.max_filesize_raw || Drupal.settings.maximumFileSizeRaw,
       function ($files, messages) {
         for (var i = 0; i < $files.length; i++) {
-          $scope.db.register($files[i]);
+          db.register($files[i]);
         }
         uploadBatch = uploadBatch.concat($files);
         if (!$scope.fh.hasDuplicates()) {
@@ -277,20 +277,31 @@
     }
 
     function getKeyForFile(fid) {
-      for (var i=0; i<$scope.files.length; i++) {
-        if ($scope.files[i].id == fid) {
+      var files = $scope.db.Entities();
+      for (var i=0; i<files.length; i++) {
+        if (files[i].id == fid) {
           return i;
         }
       }
-      return FALSE;
+      return false;
+    }
+
+    function getFileById(fid) {
+      var files = $scope.db.Entities(0);
+      for (var i=0; i<files.length; i++) {
+        if (files[i].id == fid) {
+          return files[i];
+        }
+      }
+      return false;
     }
 
     // selected file
     $scope.setSelection = function (fid) {
-      var key = getKeyForFile(fid);
-      if (key !== false) {
+      var file = getFileById(fid);
+      if (file !== false) {
         $scope.selection = fid;
-        $scope.selected_file = $scope.files[key];
+        $scope.selected_file = file;
       }
     };
 
@@ -311,7 +322,7 @@
         $scope.embed = '';
         e.data[0].new = e.data[0].changed == e.data[0].timestamp;
         $scope.setSelection(e.data[0].id);
-        $scope.db.register(e.data[0]);
+        db.register(e.data[0]);
 
         $scope.changePanes('edit')
       }, function (e) {

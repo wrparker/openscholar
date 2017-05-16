@@ -84,38 +84,45 @@
           results.then(function (rows) {
             var emptyParamCount = 0;
             if (Drupal.settings.spaces) {
-              emptyParamcount = 1;
+              emptyParamCount = 1;
             }
+            var args = {}
             for (var i = 0; i < rows.length; i++) {
               var entityType = rows[i].entityType;
 
               if (Object.keys(rows[i].params).length == emptyParamCount) {
-                if (Service[entityType] == undefined) {
-                  Service[entityType] = new EntityTypeHandler(entityType, rows[i].data, rows[i].lastUpdated);
-                }
+                var configs = args[entityType].configs || [];
+                args[entityType] = ['noop', entityType, rows[i].data, rows[i].lastUpdated];
+                args[entityType].configs = configs;
               }
               else {
-                if (Service[entityType] == undefined) {
-                  Service[entityType] = new EntityTypeHandler(entityType);
+                if (args[entityType] == undefined) {
+                  args[entityType] = [entityType];
                 }
-                // figure out the name if one is not provided
-                var name = rows[i].name;
-                if (!name) {
-                  for (var k in configs) {
-                    if (Service[entityType][k] != undefined) {
-                      continue;
-                    }
-                    var params = angular.copy(configs[k].params) || {};
-                    if (Drupal.settings.spaces) {
-                      params.vsite = Drupal.settings.spaces.id;
-                    }
-                    if (angular.equals(params, rows[i].params)) {
-                      name = k;
-                      break;
-                    }
+              }
+              // figure out the name if one is not provided
+              var name = rows[i].name;
+              if (!name) {
+                for (var k in configs) {
+                  var params = angular.copy(configs[k].params) || {};
+                  if (Drupal.settings.spaces) {
+                    params.vsite = Drupal.settings.spaces.id;
+                  }
+                  if (angular.equals(params, rows[i].params)) {
+                    name = k;
+                    break;
                   }
                 }
-                Service[entityType].addConfig(name, rows[i].params);
+              }
+              args[entityType].configs = args[entityType].configs || [];
+              args[entityType].configs.push({name: name, params: rows[i].params});
+            }
+
+            for (var entityType in args) {
+              Service[entityType] = new (Function.prototype.bind.apply(EntityTypeHandler, args[entityType]));
+              for (i = 0; i < args[entityType].configs.length; i++) {
+                var a = args[entityType].configs[i];
+                Service[entityType].addConfig(a.name, a.params);
               }
             }
           });
@@ -144,11 +151,12 @@
        */
       function EntityTypeHandler (entityType, entities, timestamp) {
         var self = this;
-        var url = restPath + '/' + entityType;
+        var baseUrl = restPath + '/' + entityType;
         this.entities = [];
         if (angular.isArray(entities)) {
           this.entities = entities;
         }
+        console.log(entities);
         var configKeys = [],
           loaded = 0,
           lastUpdated = 0;
@@ -158,7 +166,7 @@
          */
         // There were no entities provided, we're getting them for the first time.
         if (this.entities.length == 0) {
-          $http.get(url, httpConfig)
+          $http.get(baseUrl, httpConfig)
             .success(fetchSuccess)
             .error(errorFunc);
         }
@@ -236,12 +244,12 @@
          * @param nextUrl
          */
         function fetchUpdates (nextUrl) {
-          var url = nextUrl || url + '/updates/' + timestamp;
+          var url = nextUrl || baseUrl + '/updates/' + timestamp;
 
           $http.get(url, httpConfig).then(function (resp) {
             var isUpdates = typeof resp.data.updatesAsOf != 'undefined';
             if (resp.data.next) {
-              fetchUpdates(nextUrl);
+              fetchUpdates(resp.data.next.href);
             }
 
             var entities = resp.data.data;
@@ -267,7 +275,7 @@
             httpConfig.params[k] = fields[k];
           }
           var output = [];
-          $http.get(url, httpConfig).success(fetchSubsetSuccess).error(function (resp) {
+          $http.get(baseUrl, httpConfig).success(fetchSubsetSuccess).error(function (resp) {
             console.log('Error fetching subset.');
           });
 
@@ -418,8 +426,11 @@
          */
         this.delete = function (entity) {
 
-          var config = angular.copy(httpConfig);
-          config.headers = {};
+          var config = angular.copy(httpConfig),
+            originalKey = findEntityKeyById(entity.id),
+            original = entities[originalKey];
+
+          config.headers = config.headers || {};
           config.headers['If-Unmodified-Since'] = (new Date(original.changed * 1000)).toString().replace(/ \([^)]*\)/, '');
 
           var defer = $q.defer();
@@ -577,13 +588,17 @@
             return subset;
           }
 
-          if (!fetchPromise) {
-            fetchPromise = typeHandler.fetchSubset(config.fields).then(function (resultSet) {
-              console.log(resultSet);
-              subset = resultSet;
-            }, angular.noOp, function (percent) {
-              loadPercent = percent;
-            });
+          if (typeHandler.Loaded()) {
+            if (!fetchPromise) {
+              fetchPromise = typeHandler.fetchSubset(config.fields).then(function (resultSet) {
+                console.log(resultSet);
+                loadPercent = 100;
+                subset = resultSet;
+              }, angular.noOp, function (percent) {
+                console.log(percent);
+                loadPercent = percent;
+              });
+            }
           }
           return [];
         }
