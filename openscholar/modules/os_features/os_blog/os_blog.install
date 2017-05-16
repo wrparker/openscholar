@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Blog revert - blog uses infinite scroll.
@@ -22,5 +22,12 @@ function os_blog_update_7002() {
  * Set the comment field to use normal input text.
  */
 function os_blog_update_7003() {
+  features_revert(array('os_blog' => array('field_instance')));
+}
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_blog_update_7004() {
   features_revert(array('os_blog' => array('field_instance')));
 }

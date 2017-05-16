@@ -17,3 +17,10 @@ function os_presentations_update_7000() {
 function os_presentations_update_7001() {
   features_revert(array('os_presentations' => array('field_instance')));
 }
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_presentations_update_7002() {
+  features_revert(array('os_presentations' => array('field_instance')));
+}
