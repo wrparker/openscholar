@@ -580,7 +580,7 @@ function os_news_field_default_fields() {
         'weight' => '35',
       ),
     ),
-  );
+  ); 
   // Translatables
   // Included for use with string extractors like potx.
   t('Attach Files');
