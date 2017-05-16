@@ -327,7 +327,7 @@ function os_follow_default_networks() {
     'twitter'   => array(
       'title' => t('Twitter'),
       'domain' => 'twitter.com',
-      'offset' => 188,
+      'offset' => 189,
     ),
     'google_photos'    => array(
       'title' => t('google_photos'),
@@ -342,7 +342,7 @@ function os_follow_default_networks() {
     'youtube'   => array(
       'title' => t('YouTube'),
       'domain' => 'youtube.com',
-      'offset' => 93,
+      'offset' => 94,
     ),
     'vimeo'     => array(
       'title' => t('Vimeo'),
