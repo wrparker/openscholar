@@ -662,7 +662,7 @@ function os_profiles_field_default_field_instances() {
       'type' => 'text_textfield',
       'weight' => 6,
     ),
-  ); 
+  );  
 
   // Exported field_instance: 'node-person-field_origin_destination'
   $field_instances['node-person-field_original_destination_url'] = array(
