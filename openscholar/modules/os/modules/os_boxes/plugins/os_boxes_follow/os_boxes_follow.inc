@@ -312,77 +312,77 @@ function os_follow_default_networks() {
     'facebook'  => array(
       'title' => t('Facebook'),
       'domain' => 'facebook.com',
-      'offset' => 1056,
+      'offset' => 531,
     ),
     'virb'      => array(
       'title' => t('Virb'),
       'domain' => 'virb.com',
-      'offset' => 3232,
+      'offset' => 142,
     ),
     'myspace'   => array(
       'title' => t('MySpace'),
       'domain' => 'myspace.com',
-      'offset' => 2208,
+      'offset' => 289,
     ),
     'twitter'   => array(
       'title' => t('Twitter'),
       'domain' => 'twitter.com',
-      'offset' => 3104
+      'offset' => 188,
     ),
     'google_photos'    => array(
       'title' => t('google_photos'),
       'domain' => 'photos.google.com',
-      'offset' => 2368,
+      'offset' => 676,
     ),
     'flickr'    => array(
       'title' => t('Flickr'),
       'domain' => 'flickr.com',
-      'offset' => 1152,
+      'offset' => 483,
     ),
     'youtube'   => array(
       'title' => t('YouTube'),
       'domain' => 'youtube.com',
-      'offset' => 3520,
+      'offset' => 93,
     ),
     'vimeo'     => array(
       'title' => t('Vimeo'),
       'domain' => 'vimeo.com',
-      'offset' => 3200,
+      'offset' => 46,
     ),
     'lastfm'    => array(
       'title' => t('last.fm'),
       'domain' => 'last.fm',
-      'offset' => 1920
+      'offset' => 388,
     ),
     'linkedin'  => array(
       'title' => t('LinkedIn'),
       'domain' => 'linkedin.com',
-      'offset' => 1952,
+      'offset' => 337,
     ),
     'delicious' => array(
       'title' => t('Delicious'),
       'domain' => 'del.icio.us',
-      'offset' => 704,
+      'offset' => 579,
     ),
     'tumblr'    => array(
       'title' => t('Tumblr'),
       'domain' => 'tumblr.com',
-      'offset' => 3072,
+      'offset' => 238,
     ),
     'pinterest'    => array(
       'title' => t('Pinterest'),
       'domain' => 'pinterest.com',
-      'offset' => 390,
+      'offset' => 0,
     ),
     'instagram'    => array(
       'title' => t('Instagram'),
       'domain' => 'instagram.com',
-     'offset' => 427,
+     'offset' => 627,
     ),
     'soundcloud'    => array(
       'title' => t('soundcloud'),
       'domain' => 'soundcloud.com',
-     'offset' => 1889,
+     'offset' => 436,
     ),
   );
 
