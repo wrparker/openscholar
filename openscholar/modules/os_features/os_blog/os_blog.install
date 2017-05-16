@@ -26,7 +26,7 @@ function os_blog_update_7003() {
 }
 
 /**
- * Alter teaser mode to os_text_trimmed for body field.
+ * Change the formatter for blog teaser.
  */
 function os_blog_update_7004() {
   features_revert(array('os_blog' => array('field_instance')));

@@ -290,7 +290,7 @@ function os_reader_update_7006() {
 }
 
 /**
- * Alter teaser mode to os_text_trimmed for body field.
+ * Change the formatter for reader teaser.
  */
 function os_reader_update_7007() {
   features_revert(array('os_reader' => array('field_instance')));

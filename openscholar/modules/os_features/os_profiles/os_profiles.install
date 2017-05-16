@@ -120,7 +120,7 @@ function os_profiles_update_7053() {
 }
 
 /**
- * Alter teaser mode to os_text_trimmed for sort bio field.
+ * Change the formatter for profile teaser.
  */
 function os_profiles_update_7054() {
   features_revert(array('os_profiles' => array('field', 'field_base', 'field_instance')));
