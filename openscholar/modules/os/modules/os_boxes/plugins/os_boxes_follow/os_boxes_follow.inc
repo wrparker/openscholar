@@ -322,7 +322,7 @@ function os_follow_default_networks() {
     'myspace'   => array(
       'title' => t('MySpace'),
       'domain' => 'myspace.com',
-      'offset' => 289,
+      'offset' => 290,
     ),
     'twitter'   => array(
       'title' => t('Twitter'),
@@ -330,7 +330,7 @@ function os_follow_default_networks() {
       'offset' => 189,
     ),
     'google_photos'    => array(
-      'title' => t('google_photos'),
+      'title' => t('Google Photos'),
       'domain' => 'photos.google.com',
       'offset' => 676,
     ),
@@ -347,17 +347,17 @@ function os_follow_default_networks() {
     'vimeo'     => array(
       'title' => t('Vimeo'),
       'domain' => 'vimeo.com',
-      'offset' => 46,
+      'offset' => 47,
     ),
     'lastfm'    => array(
       'title' => t('last.fm'),
       'domain' => 'last.fm',
-      'offset' => 388,
+      'offset' => 389,
     ),
     'linkedin'  => array(
       'title' => t('LinkedIn'),
       'domain' => 'linkedin.com',
-      'offset' => 337,
+      'offset' => 340,
     ),
     'delicious' => array(
       'title' => t('Delicious'),
@@ -367,7 +367,7 @@ function os_follow_default_networks() {
     'tumblr'    => array(
       'title' => t('Tumblr'),
       'domain' => 'tumblr.com',
-      'offset' => 238,
+      'offset' => 241,
     ),
     'pinterest'    => array(
       'title' => t('Pinterest'),
@@ -377,7 +377,7 @@ function os_follow_default_networks() {
     'instagram'    => array(
       'title' => t('Instagram'),
       'domain' => 'instagram.com',
-     'offset' => 627,
+     'offset' => 630,
     ),
     'soundcloud'    => array(
       'title' => t('soundcloud'),
