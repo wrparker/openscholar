@@ -81,3 +81,10 @@ function os_links_update_7005() {
 
   features_revert($revert);
 }
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_links_update_7006() {
+  features_revert(array('os_links' => array('field_instance')));
+}

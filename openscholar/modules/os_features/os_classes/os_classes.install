@@ -38,3 +38,10 @@ function os_classes_update_7002(&$sandbox) {
 function os_classes_update_7003() {
   features_revert(array('os_classes' => array('feeds_tamper')));
 }
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_classes_update_7004() {
+  features_revert(array('os_classes' => array('field_instance')));
+}

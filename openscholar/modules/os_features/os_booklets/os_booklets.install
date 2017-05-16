@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_booklets_update_7001() {
+  features_revert(array('os_booklets' => array('field_instance')));
+}

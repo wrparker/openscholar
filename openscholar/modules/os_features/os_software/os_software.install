@@ -1,0 +1,12 @@
+<?php
+/**
+ * @file
+ * Install file of the OS Software module.
+ */
+
+/**
+ * Alter teaser mode to os_text_trimmed for body field.
+ */
+function os_software_update_7000() {
+  features_revert(array('os_software' => array('field_instance')));
+}
