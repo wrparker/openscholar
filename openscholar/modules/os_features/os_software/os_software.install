@@ -5,7 +5,7 @@
  */
 
 /**
- * Alter teaser mode to os_text_trimmed for body field.
+ * Change the formatter for software teaser.
  */
 function os_software_update_7000() {
   features_revert(array('os_software' => array('field_instance')));

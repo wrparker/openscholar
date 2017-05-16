@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Alter teaser mode to os_text_trimmed for body field.
+ * Change the formatter for book teaser.
  */
 function os_booklets_update_7000() {
   features_revert(array('os_booklets' => array('field_instance')));
