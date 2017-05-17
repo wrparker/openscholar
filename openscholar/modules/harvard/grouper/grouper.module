@@ -39,5 +39,43 @@ function grouper_library_alter(&$libraries, $module) {
  * Implements hook_vsite_access_privacy_values_alter().
  */
 function grouper_vsite_access_privacy_values_alter(&$options) {
-  $options['grouper'] = t('Groups within the Harvard Community <br><span class="description">Only select groups at harvard can view your site.</span>');
+  if (user_access('manage grouper groups')) {
+    $options['grouper'] = t('Groups within the Harvard Community <br><span class="description">Only select groups at harvard can view your site.</span>');
+  }
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function grouper_page_build(&$page) {
+  if (user_access('manage grouper groups')) {
+    os_common_angular_apps('grouper');
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function grouper_permission() {
+  $perms = array();
+
+  $perms['manage grouper groups'] = array(
+    'title' => t('Manage Grouper Groups'),
+  );
+
+  return $perms;
+}
+
+/**
+ * Implements hook_og_permission().
+ */
+function grouper_og_permission() {
+  $perms = array();
+
+  $perms['manage grouper groups'] = array(
+    'title' => t('Manage Grouper Groups'),
+    'roles' => array('???')
+  );
+
+  return $perms;
 }
