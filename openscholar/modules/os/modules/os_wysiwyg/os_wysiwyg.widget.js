@@ -33,8 +33,8 @@
         editor.on('paste', function (event) {
           // Create a dummy element from scratch.
           var div = document.createElement('div');
-          // Assign the pasted value as the text. Ths will help us search the font-*
-          // attributes we want to remove.
+          // Assign the pasted value as the text. Ths will help us search the
+          // font-* attributes we want to remove.
           div.innerHTML = event.data.dataValue;
 
           var allTags = div.getElementsByTagName("*");
@@ -54,15 +54,17 @@
               // Take the value of the style attributes and tare them apart.
               var attribute_values = tag.attributes[attributes_i].value.split(" ");
               for (var attribute_values_i = 0; attribute_values_i < attribute_values.length; attribute_values_i++) {
+                var font_attributes = ['font-size', 'font-family', 'font-weight', 'font-style'];
 
-                if (
-                  attribute_values[attribute_values_i].indexOf('font-size') != -1 ||
-                  attribute_values[attribute_values_i].indexOf('font-family') != -1 ||
-                  attribute_values[attribute_values_i].indexOf('font-weight') != -1 ||
-                  attribute_values[attribute_values_i].indexOf('font-style') != -1
-                ) {
-                  // Not a value we want, remove.
-                  delete attribute_values[attribute_values_i];
+                for (var fonts_i = 0; fonts_i < font_attributes.length; fonts_i++) {
+
+                  if (attribute_values[attribute_values_i] == undefined) {
+                    continue;
+                  }
+
+                  if (attribute_values[attribute_values_i].indexOf(font_attributes[fonts_i]) != -1) {
+                    delete attribute_values[attribute_values_i];
+                  }
                 }
               }
 
@@ -76,6 +78,7 @@
             }
           }
 
+          // Set the new value.
           event.data.dataValue = div.innerHTML;
         });
 
