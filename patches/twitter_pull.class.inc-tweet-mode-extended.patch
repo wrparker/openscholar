@@ -1,5 +1,5 @@
 diff --git a/twitter_pull.class.inc b/twitter_pull.class.inc
-index ac570f7..f6a2c07 100644
+index ac570f7..fff7378 100644
 --- a/twitter_pull.class.inc
 +++ b/twitter_pull.class.inc
 @@ -53,24 +53,24 @@ class twitter_puller {
@@ -31,3 +31,21 @@ index ac570f7..f6a2c07 100644
      }
      // otherwise, use the key as a search term
      else {
+@@ -139,7 +139,7 @@ class twitter_puller {
+           $obj->userphoto_https = (isset($item->retweeted_status->user) && !empty($item->retweeted_status->user->profile_image_url_https)) ? $item->retweeted_status->user->profile_image_url_https : $item->retweeted_status->profile_image_url_https;
+           $obj->userphoto_https = check_plain($obj->userphoto_https);
+ 
+-          $obj->text = filter_xss($item->retweeted_status->text);
++          $obj->text = filter_xss($item->retweeted_status->full_text);
+           //-- Convert date to unix timestamp so themer can easily work with it.
+           $obj->timestamp = strtotime($item->retweeted_status->created_at);
+ 
+@@ -155,7 +155,7 @@ class twitter_puller {
+           $obj->userphoto_https = (isset($item->user) && !empty($item->user->profile_image_url_https)) ? $item->user->profile_image_url_https : $item->profile_image_url_https;
+           $obj->userphoto_https = check_plain($obj->userphoto_https);
+ 
+-          $obj->text = filter_xss($item->text);
++          $obj->text = filter_xss($item->full_text);
+           //-- Convert date to unix timestamp so themer can easily work with it.
+           $obj->timestamp = strtotime($item->created_at);
+ 
