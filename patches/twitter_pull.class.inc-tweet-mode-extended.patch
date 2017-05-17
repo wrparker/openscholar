@@ -1,21 +1,26 @@
 diff --git a/twitter_pull.class.inc b/twitter_pull.class.inc
-index eefe6e1..e4a9c2a 100644
+index ac570f7..f6a2c07 100644
 --- a/twitter_pull.class.inc
 +++ b/twitter_pull.class.inc
-@@ -50,20 +50,20 @@ class twitter_puller {
+@@ -53,24 +53,24 @@ class twitter_puller {
        $username = drupal_substr($this->twitkey, 1, $slash - 1);
        $listname = drupal_substr($this->twitkey, $slash + 1);
        $url = 'https://api.twitter.com/1.1/lists/show.json';
 -      $query = '?slug=' . urlencode($listname);
 +      $query = '?slug=' . urlencode($listname) . '&tweet_mode=extended';
-       
      }
      // if the first character is @, then consider the key a username
      elseif ($prefix == "@") {
        $key = drupal_substr($this->twitkey, 1);
        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
--      $query = "?screen_name=${key}&count=${num}&include_rts=1";
-+      $query = "?screen_name=${key}&count=${num}&include_rts=1&tweet_mode=extended";
+       if ($this->exclude_retweets) {
+-        $query = "?screen_name=${key}&count=${num}&include_rts=false";
++        $query = "?screen_name=${key}&count=${num}&include_rts=false&tweet_mode=extended";
+       }
+       else {
+-        $query = "?screen_name=${key}&count=${num}&include_rts=true";
++        $query = "?screen_name=${key}&count=${num}&include_rts=true&tweet_mode=extended";
+       }
      }
      // if the first character is ~, then consider the key a favorites feed
      elseif ($prefix == "~") {
@@ -26,12 +31,3 @@ index eefe6e1..e4a9c2a 100644
      }
      // otherwise, use the key as a search term
      else {
-@@ -71,7 +71,7 @@ class twitter_puller {
-         $num = 100;
-       }
-       $url = 'https://api.twitter.com/1.1/search/tweets.json';
--      $query = '?q=' . urlencode($this->twitkey) ."&include_entities=true&count=${num}";
-+      $query = '?q=' . urlencode($this->twitkey) ."&include_entities=true&count=${num}&tweet_mode=extended";
-     }
-     
- 
