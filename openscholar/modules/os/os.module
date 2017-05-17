@@ -632,7 +632,6 @@ function os_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * a shorter (trimmed or summarized) body.
  */
 function os_process_node(&$vars) {
-
   // Adds a CSS class to the comment-add link.
   _os_process_node_links_comment_add_class($vars);
   // adds theme hook suggestion to load this template if it exists
@@ -712,7 +711,6 @@ function os_process_node(&$vars) {
   }
   // Hide the original "Read more" link by removing it from the render array.
   unset($vars['content']['links']['node']['#links']['node-readmore']);
-
 }
 
 /**
