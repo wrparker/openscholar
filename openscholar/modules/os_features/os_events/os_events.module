@@ -2326,18 +2326,25 @@ function os_events_mail($key, &$message, $params) {
  * Implements hook_mail_alter().
  */
 function os_events_mail_alter(&$message) {
-
   //Array for event mails
-  $eventEmailArr = array("registration_broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification");
+  $eventEmailArr = array("broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification");
 
   //Check if it is an event related mail
   if(in_array($message['key'],$eventEmailArr)) {
 
+    $event_author_email = "";
+
+    //Get the value of event creator email for all event related emails except broadcast.
     foreach($message['params'] as $param_key => $param_value){
-      if($param_key == '@event_creator_email'){
+      if ($param_key == '@event_creator_email' || $param_key == '@event-creator-email'){
        // Get event author event's author email address.
        $event_author_email = check_plain(trim($param_value));
       }
+    }
+
+    //Get the value of event creator email for broadcast.
+    if ($event_author_email == ""){
+      $event_author_email = $message['from'];
     }
 
     // Set default value of the "From" field to author of the event's e-mail
@@ -2346,18 +2353,6 @@ function os_events_mail_alter(&$message) {
     // Set the sender and return-path headers.
     $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
-  else {
-
-    // Set default value of the "From" field to hwp@harvard.edu
-    $message['headers']['From'] = $message['from'] = 'hwp@harvard.edu';
-
-    //Set the sender and return-path headers.
-    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
-  }
-
-  //Set the physical address at below the unsubscribe link
-  $message['body'][] = '';
-  $message['body'][] = "Massachusetts Hall, Cambridge, MA 02138";
 }
 
 /**
