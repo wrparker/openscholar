@@ -632,6 +632,7 @@ function os_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * a shorter (trimmed or summarized) body.
  */
 function os_process_node(&$vars) {
+
   // Adds a CSS class to the comment-add link.
   _os_process_node_links_comment_add_class($vars);
   // adds theme hook suggestion to load this template if it exists
@@ -711,6 +712,7 @@ function os_process_node(&$vars) {
   }
   // Hide the original "Read more" link by removing it from the render array.
   unset($vars['content']['links']['node']['#links']['node-readmore']);
+
 }
 
 /**
@@ -3704,7 +3706,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
 
         $read_more = function($entity_type, $entity, &$text) {
           $uri = entity_uri($entity_type, $entity);
-          $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
+          $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('attributes' => array('class' => array('node-readmore')), 'html' => true));
         };
 
         // We need to varify if there is any breake tag available in the content
@@ -3712,15 +3714,25 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
         $delimiter = strpos($item['safe_value'], '<!--break-->');
 
         if ($delimiter) {
+          // Checks if there is a break tag inserted at the end of the content.
+          // If this is the case, there is no need to add a "read more" link.
+          //$trailing_break_tag = FALSE;
+          $split_break_tag = explode('<!--break-->', $item['safe_value'], 2);
+          // Only checks for a trailing break tag if all the following are true:
+          // 1. There is a break tag in the body.
+          // 2. There is HTML text after the break tag.
+          if (isset($split_break_tag[1])) {
+            $text_after_break = strip_tags(trim($split_break_tag[1]), '<img><iframe><embed><object><param>');
+          }
           $text = text_summary($item['safe_value'], $item['format'], $display['settings']['trim_length']);
           // Remove the ellipsis we got from the text summary.
           if (strpos($text, '…') !== 0) {
             $text = str_replace('…', '', $text);
           }
-          // We have a break tag in the original value but the trimmed text
-          // function removed the break tag. In that case show the read more
-          // button.
-          $read_more($entity_type, $entity, $text);
+          // Only display read more link if there is a content after break tag.
+          if (!empty(drupal_strlen($text_after_break))) {
+            $read_more($entity_type, $entity, $text);
+          }
         }
         else {
           // No break tag but the original text is longer than the trimmed text.
