@@ -416,7 +416,7 @@ projects[twitter_pull][version] = 1.0-rc4
 projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/64dfc3710e7fb2494a69dad4013a14283afdcde2/patches/twitter_pull.class.inc_get-media_url.patch"
 projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/0aaed15ed27b084508dfd7f247c7a9bcb3660603/patches/twitter_pull-distinguish_retweets.patch"
-projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/79d0e0f211cc0a494937b3ed288710efab16ff4f/patches/twitter_pull.class.inc-tweet-mode-extended.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6343fbeba1b1e0bbc3fcefaa2eddc79eaf79dd4b/patches/twitter_pull.class.inc-tweet-mode-extended.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
