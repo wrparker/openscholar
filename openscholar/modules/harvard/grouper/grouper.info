@@ -1,0 +1,6 @@
+name = "Grouper"
+core = 7.x
+description = "Bridge module between OpenScholar and Grouper."
+
+dependencies[] = vsite_access
+dependencies[] = os_common

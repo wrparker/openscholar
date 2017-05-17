@@ -1,0 +1,14 @@
+<div>
+    <div class="grouper-header-bar">Edit Groups</div><span ng-if="groups.length">{{SelectedGroupNames()}}</span>
+    <div class="grouper-panel" ng-if="ShowPanel()">
+        <fieldset>
+            <legend>Selected Groups</legend>
+            <div class="grouper-selected-fieldset-panel">
+                <span class="group" ng-repeat="g in groups | filter:IsGroupSelected"></span>
+            </div>
+        </fieldset>
+        <div class="all-groups">
+            <div class="group" ng-repeat="g in groups" ng-click="AddGroup(g)" ng-class="{selected: IsGroupSelected(g)">{{g.name}}</div>
+        </div>
+    </div>
+</div>

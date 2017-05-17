@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Implements hook_library().
+ */
+function grouper_library() {
+  $libs = array();
+
+  $path = drupal_get_path('module', 'grouper');
+  $libs['module'] = array(
+    'title' => 'Grouper',
+    'version' => '0.1',
+    'js' => array(
+      $path . '/grouper.module.js' => array(),
+      array(
+        'type' => 'setting',
+        'data' => array(
+          'paths' => array(
+            'grouper' => url($path, array('alias' => true)),
+          )
+        )
+      )
+    ),
+  );
+
+  return $libs;
+}
+
+/**
+ * Implements hook_library_alter().
+ */
+function grouper_library_alter(&$libraries, $module) {
+  if (isset($libraries['admin_panel'])) {
+    $libraries['admin_panel']['dependencies'][] = array('grouper', 'module');
+  }
+}
+
+/**
+ * Implements hook_vsite_access_privacy_values_alter().
+ */
+function grouper_vsite_access_privacy_values_alter(&$options) {
+  $options['grouper'] = t('Groups within the Harvard Community <br><span class="description">Only select groups at harvard can view your site.</span>');
+}
