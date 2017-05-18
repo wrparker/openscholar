@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function grouper_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'restful') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
  * Implements hook_library().
  */
 function grouper_library() {
@@ -78,4 +87,11 @@ function grouper_og_permission() {
   );
 
   return $perms;
+}
+
+/**
+ * Returns a field instance for the given entity type and bundle
+ */
+function grouper_get_field_instance($entity_type, $bundle) {
+
 }
