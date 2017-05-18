@@ -1,6 +1,11 @@
-name = "Grouper"
+name = Grouper
+description = Bridge module between OpenScholar and Grouper.
 core = 7.x
-description = "Bridge module between OpenScholar and Grouper."
-
-dependencies[] = vsite_access
+package = Other
+dependencies[] = features
 dependencies[] = os_common
+dependencies[] = vsite_access
+features[features_api][] = api:2
+features[field_base][] = field_grouper_path
+features[field_instance][] = user-user-field_grouper_path
+mtime = 1495128535
