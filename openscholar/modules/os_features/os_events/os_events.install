@@ -50,10 +50,10 @@ function os_events_schema_alter(&$schema) {
 function _os_events_delete_variables() {
 
   // Delete footer variable for email footer information.
-  variable_del('defaultFromAddress');
+  variable_del('site_from_email');
 
   // Delete footer variable for email footer information.
-  variable_del('defaultEmailFooter');
+  variable_del('site_physical_address');
 }
 
 /**
