@@ -182,7 +182,10 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
   $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
   $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
+  $handler->display->display_options['fields']['timestamp']['exclude'] = TRUE;
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['timestamp']['date_format'] = 'os_time';
+  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'long';
   /* Field: File Usage: Entity ID */
   $handler->display->display_options['fields']['id']['id'] = 'id';
@@ -218,7 +221,14 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
   $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
-  
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
+
   /* Filter criterion: Spaces: Content in current space */
   $handler->display->display_options['filters']['current']['id'] = 'current';
   $handler->display->display_options['filters']['current']['table'] = 'spaces';
