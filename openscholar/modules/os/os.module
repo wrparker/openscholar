@@ -3714,7 +3714,6 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
         if ($delimiter) {
           // Checks if there is a break tag inserted at the end of the content.
           // If this is the case, there is no need to add a "read more" link.
-          //$trailing_break_tag = FALSE;
           $split_break_tag = explode('<!--break-->', $item['safe_value'], 2);
           // Only checks for a trailing break tag if all the following are true:
           // 1. There is a break tag in the body.
