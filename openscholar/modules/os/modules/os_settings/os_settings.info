@@ -1,5 +1,0 @@
-name = OS settings
-description = Custom settings for site information to be updated by adminstrator
-core = 7.x
-package = Administration
-project = "os_settings"

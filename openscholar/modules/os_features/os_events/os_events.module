@@ -2329,6 +2329,16 @@ function os_events_mail_alter(&$message) {
   //Array for event mails
   $eventEmailArr = array("broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification");
 
+  //get default email from site owner's email
+  if ($vsite = spaces_get_space()) {
+    $site_owner = user_load($vsite->group->uid);
+    $defaultMail = $site_owner->mail;
+  }
+  else {
+    $admin = user_load(1);
+    $defaultMail = $admin->mail;
+  }
+
   //Check if it is an event related mail
   if(in_array($message['key'],$eventEmailArr)) {
 
@@ -2353,6 +2363,18 @@ function os_events_mail_alter(&$message) {
     // Set the sender and return-path headers.
     $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
+  else {
+
+    // Set default value of the "From" field.
+    $message['headers']['From'] = $message['from'] = variable_get('defaultFromAddress',$defaultMail);
+
+    //Set the sender and return-path headers.
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+  }
+
+  //Adding the footer physical address for all emails
+  $message['body'][] = '';
+  $message['body'][] = variable_get('defaultEmailFooter');
 }
 
 /**
@@ -3144,4 +3166,72 @@ function os_events_cp_settings() {
     ),
   );
   return $settings;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ */
+function os_events_form_system_site_information_settings_alter(&$form, &$form_state, $form_id){
+  //get default email from site owner's email
+  if ($vsite = spaces_get_space()) {
+    $site_owner = user_load($vsite->group->uid);
+    $defaultMail = $site_owner->mail;
+  }
+  else {
+    $admin = user_load(1);
+    $defaultMail = $admin->mail;
+  }
+
+  //Configurable default physical address to be displayed in email footer
+  $form['site_information']['site_physical_address'] = array(
+    '#type' => 'textfield',
+    '#title' => t("Physical Address"),
+    '#default_value' => variable_get('defaultEmailFooter'),
+    '#description' => t("The physical address to be displayed in the footer of all emails triggered from this site."),
+    '#required' => TRUE,
+  );
+
+  //Configurable default from email address to be displayed in 'from' for all emails
+  $form['site_information']['site_from_email'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('defaultFromAddress',$defaultMail),
+    '#title' => t("Sender email address"),
+    '#description' => t("The email address to be displayed in the 'from' field of all emails triggered from this site."),
+    '#required' => TRUE,
+  );
+
+  //Custom submit handler to save the values in variables table
+  $form['#submit'][] = '_save_site_information_values';
+}
+
+//Submit function to save the values
+function _save_site_information_values(&$form, &$form_state){
+
+  //Save the default physical address
+  $site_physical_address = $form_state['values']['site_physical_address'];
+  variable_set('defaultEmailFooter',$site_physical_address);
+
+  //Save the default from email address
+  $site_from_email = $form_state['values']['site_from_email'];
+  variable_set('defaultFromAddress',$site_from_email);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function os_events_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'mail_alter') {
+    //alter implementations array in order to call os_events_mail_alter at the end
+    $group = $implementations['os_events'];
+    unset($implementations['os_events']);
+    $implementations['os_events'] = $group;
+
+    //just for logging purpose is mail_logger module exists
+    if(module_exists('mail_logger')){
+      $group = $implementations['mail_logger'];
+      unset($implementations['mail_logger']);
+      $implementations['mail_logger'] = $group;
+    }
+  }
 }
