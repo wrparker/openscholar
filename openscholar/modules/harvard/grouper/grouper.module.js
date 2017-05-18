@@ -20,7 +20,23 @@
       },
       templateUrl: Drupal.settings.paths.grouper + '/grouper.template.html',
       link: function (scope, elem, attrs) {
-        scope.groups = groups;
+        scope.Groups = function () {
+          return groups;
+        }
+
+        scope.search = '';
+        /**
+         * Find a group by its unique path identifier
+         * @param path
+         * @returns {*}
+         */
+        function findGroupByPath(path) {
+          for (var i = 0; i < groups.length; i++) {
+            if (groups[i].name == path) {
+              return groups[i];
+            }
+          }
+        }
 
         /**
          * Gets or sets the panel's visibile status
@@ -38,35 +54,55 @@
          * @returns string - human-readable, comma-separated list of all selected groups, on a single line
          */
         scope.SelectedGroupNames = function () {
-          return "";
+          var gs = groups.filter(function (g) {
+            return (scope.selected.indexOf(g.name) > -1);
+          });
+
+          var names = gs.map(function (g) {
+            return g.displayExtension;
+          });
+
+          return names.join(', ');
         }
 
         /**
-         *
+         * Returns the human readable label for a group
          */
         scope.GroupLabel = function (path) {
+          var g = findGroupbypath(path);
 
+          if (g) {
+            return g.displayExtension;
+          }
+          return '';
         }
 
         /**
          *
          */
         scope.Remove = function (path) {
-
+          var k = scope.selected.indexOf(path);
+          if (k > -1) {
+            scope.selected.splice(k, 1);
+          }
         }
 
         /**
          *
          */
         scope.AddGroup = function (path) {
-
+          var k = scope.selected.indexOf(path);
+          if (k == -1) {
+            scope.selected.push(path);
+          }
         }
 
         /**
          *
          */
         scope.IsGroupSelected = function (path) {
-
+          var k = scope.selected.indexOf(path);
+          return k > -1;
         }
       }
     }

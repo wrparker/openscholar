@@ -7,8 +7,10 @@
                 <span class="group" ng-repeat="path in selected">{{GroupLabel(path)}}<span class="remove" ng-click="Remove(path)">X</span></span>
             </div>
         </fieldset>
+        <label for="grouper-search">Filter By Name:</label><br>
+        <input type="text" class="form-text" id="grouper-search" ng-model="search">
         <div class="all-groups">
-            <div class="group" ng-repeat="g in groups" ng-click="AddGroup(g.path)" ng-class="{selected: IsGroupSelected(g.path)">{{g.name}}</div>
+            <div class="group" ng-repeat="g in Groups() | filter:{displayExtension:search}" ng-click="AddGroup(g.path)" ng-class="{selected: IsGroupSelected(g.path)">{{g.name}}</div>
         </div>
     </div>
 </div>
