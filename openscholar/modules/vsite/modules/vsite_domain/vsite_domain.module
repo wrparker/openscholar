@@ -103,7 +103,7 @@ function vsite_domain_apply_context($space_type, $sid) {
     $space->purl_provider = PURL_VSITE_DOMAIN;
 
     $modifier = purl_load(array('id' => $sid, 'provider' => $space->purl_provider));
-    $host = str_replace('http://', '', $_SERVER['HTTP_HOST']);
+    $host = preg_replace('~https?://~', '', $_SERVER['HTTP_HOST']);
     if ($modifier['value'] != $host && strpos($host, 'www.') === 0 && $modifier['value'] == substr($host, 4)) {
       // If we are at a path prefixed with www and this site is not configured
       // with www as the default domain then redirect to default
