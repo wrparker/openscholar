@@ -288,3 +288,10 @@ function os_reader_update_7005(&$sandbox) {
 function os_reader_update_7006() {
   variable_set('os_reader_last_feed_item', 0);
 }
+
+/**
+ * Change the formatter for reader teaser.
+ */
+function os_reader_update_7007() {
+  features_revert(array('os_reader' => array('field_instance')));
+}
