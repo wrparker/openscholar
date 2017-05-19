@@ -44,7 +44,16 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
       );
 
       $response = drupal_http_request($grouper_url, $options);
-      print_r($response);
+      if ($response->code == 200) {
+        $raw_data = '';
+      }
+      else {
+        // TODO: Remove when the service is actually working
+        $raw_data = file_get_contents(drupal_get_path('module', 'grouper').'/test_data.json');
+      }
+
+      $cleaned = json_decode($raw_data);
+      return $cleaned->WsFindGroupsResults->groupResults;
     }
   }
 

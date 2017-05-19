@@ -9,7 +9,8 @@
   m.directive('grouper', ['$http', function ($http) {
     var groups = [];
 
-    $http.get('groups').then(function (resp) {
+    $http.get(Drupal.settings.paths.api + '/grouper').then(function (resp) {
+      console.log(resp);
       Array.prototype.push.apply(groups, resp.data.data); // this adds group elements without creating a new array instance
     }, function (errorResp) {
       console.log(errorResp);
@@ -22,6 +23,10 @@
       link: function (scope, elem, attrs) {
         scope.Groups = function () {
           return groups;
+        }
+
+        if (!angular.isArray(scope.selected)) {
+          scope.selected = [];
         }
 
         scope.search = '';
@@ -69,8 +74,9 @@
          * Returns the human readable label for a group
          */
         scope.GroupLabel = function (path) {
-          var g = findGroupbypath(path);
+          var g = findGroupByPath(path);
 
+          console.log(g);
           if (g) {
             return g.displayExtension;
           }
