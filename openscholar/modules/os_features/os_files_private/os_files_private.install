@@ -44,3 +44,11 @@ function os_files_private_update_7001() {
 function os_files_private_update_7002() {
   features_revert(array('os_files_private' => array('views_view')));
 }
+
+/**
+ * Change "Upload date" column to "Updated date"
+ */
+function cp_content_update_7003() {
+  features_revert(array('os_files_private' => array('views_view')));
+  return t('Change "Upload date" column to "Updated date".');
+}
