@@ -242,8 +242,7 @@ margin-top:-2px;
 #page-title,
 #content-column h2,
 #content-column h3,
-#content-column h4,
-.cke_editable *  {
+#content-column h4 {
     font-family: georgia,sans-serif;
     font-weight: normal;
 }
