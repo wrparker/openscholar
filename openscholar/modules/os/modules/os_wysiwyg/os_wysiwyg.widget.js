@@ -54,8 +54,9 @@
               // Take the value of the style attributes and tare them apart.
               var attribute_values = tag.attributes[attributes_i].value.split(" ");
               for (var attribute_values_i = 0; attribute_values_i < attribute_values.length; attribute_values_i++) {
-                var font_attributes = ['font-size', 'font-family', 'font-weight', 'font-style'];
+                var font_attributes = ['font-family'];
 
+                // Remove bash style attributes.
                 for (var fonts_i = 0; fonts_i < font_attributes.length; fonts_i++) {
 
                   if (attribute_values[attribute_values_i] == undefined) {
@@ -65,6 +66,14 @@
                   if (attribute_values[attribute_values_i].indexOf(font_attributes[fonts_i]) != -1) {
                     delete attribute_values[attribute_values_i];
                   }
+                }
+
+                // Fixing text-decoration-line issue.
+                if (attribute_values[attribute_values_i] != undefined) {
+                  // For some reason, I need to use it here though putting it
+                  // at the beginning of the function make more sense. Looks
+                  // like JS WTF.
+                  attribute_values[attribute_values_i] = attribute_values[attribute_values_i].replace('text-decoration-line', 'text-decoration');
                 }
               }
 
