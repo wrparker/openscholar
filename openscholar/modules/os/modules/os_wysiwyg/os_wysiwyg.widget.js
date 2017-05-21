@@ -54,7 +54,7 @@
               // Take the value of the style attributes and tare them apart.
               var attribute_values = tag.attributes[attributes_i].value.split(" ");
               for (var attribute_values_i = 0; attribute_values_i < attribute_values.length; attribute_values_i++) {
-                var font_attributes = ['font-family'];
+                var font_attributes = ['font-family', 'font-size'];
 
                 // Remove bash style attributes.
                 for (var fonts_i = 0; fonts_i < font_attributes.length; fonts_i++) {
