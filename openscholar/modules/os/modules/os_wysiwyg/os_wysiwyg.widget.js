@@ -42,7 +42,7 @@
           // Start iterate over all the tags.
           // We are iterating over the tags and just find and replace using
           // regex because we might have html inside the body as a code example.
-          for (var i = 0, len = allTags.length; i < len; i++) {
+          for (var i = 0, length = allTags.length; i < length; i++) {
             var tag = allTags[i];
 
             for (var attributes_i = 0; attributes_i < tag.attributes.length; attributes_i++) {
@@ -64,6 +64,15 @@
                   }
 
                   if (attribute_values[attribute_values_i].indexOf(font_attributes[fonts_i]) != -1) {
+                    delete attribute_values[attribute_values_i];
+                  }
+                }
+
+                if (attribute_values[attribute_values_i] != undefined && tag.children.length != 0) {
+                  // When bold li item is passed that impact children as well
+                  // even if they are not bold items. Removing that is the best
+                  // solution since CKEDITOR do the same thing.
+                  if (tag.nodeName.toLowerCase() == 'li' && attribute_values[attribute_values_i].indexOf('font-weight') != -1) {
                     delete attribute_values[attribute_values_i];
                   }
                 }
