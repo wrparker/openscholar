@@ -34,3 +34,5 @@ CKEDITOR.config.font_names =
   'Trebuchet MS/Trebuchet MS, Helvetica, sans-serif;' +
   'Verdana/Verdana, Geneva, sans-serif;' +
   'Wingdings;';
+
+CKEDITOR.config.autoParagraph = false;
