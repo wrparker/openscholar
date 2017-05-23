@@ -10,6 +10,9 @@ function grouper_cp_settings() {
     'form' => array(
       '#access' => user_access('manage grouper groups'),
       '#custom_directive' => 'grouper',
+      '#custom_directive_parameters' => array(
+        'ng-if' => "\$parent.formData.vsite_private == 'grouper'"
+      ),
       '#weight' => 2
     ),
     'group' => array(
