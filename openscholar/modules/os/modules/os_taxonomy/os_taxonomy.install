@@ -93,3 +93,22 @@ function os_taxonomy_update_7005() {
     field_update_instance($instance);
   }
 }
+
+
+/**
+ * Add 'order nodes within categories' permission to 'vsite admin' role.
+ */
+function os_taxonomy_update_7006() {
+  $q = db_select('og_role', 'ogr')
+    ->fields('ogr', array('rid'))
+    ->condition('name', array(4 => 'vsite admin'), 'IN')
+    ->execute();
+
+  $count = 0;
+  foreach ($q as $r) {
+    $count++;
+    og_role_grant_permissions($r->rid, array('order nodes within categories'));
+  }
+
+  return t('Added \'order nodes within categories\' permission to '.$count.' "vsite admin" roles.');
+}
