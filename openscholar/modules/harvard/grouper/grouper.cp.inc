@@ -13,6 +13,7 @@ function grouper_cp_settings() {
       '#custom_directive_parameters' => array(
         'ng-if' => "\$parent.formData.vsite_private == 'grouper'"
       ),
+      '#default_value' => grouper_site_groups(),
       '#weight' => 2
     ),
     'group' => array(
