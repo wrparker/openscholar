@@ -186,7 +186,7 @@ function vsite_register_block_view($delta = '') {
     );
     $block['content'] = array(
       'content' => array(
-        '#markup' => l($text, $path, $options),
+        '#markup' => '<site-creation-form>' . l($text, $path, $options) . '</site-creation-form>',
       ),
     );
   }
