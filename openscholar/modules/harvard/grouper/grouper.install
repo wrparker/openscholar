@@ -1,0 +1,10 @@
+<?php
+
+function grouper_install() {
+  $group_types = og_get_all_group_bundle('node');
+
+  foreach ($group_types as $bundle) {
+    $instance = grouper_get_field_instance('node', $bundle);
+    field_create_instance($instance);
+  }
+}
