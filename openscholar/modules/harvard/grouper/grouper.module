@@ -90,8 +90,133 @@ function grouper_og_permission() {
 }
 
 /**
+ * Returns an array of groups that the site is associated with
+ */
+function grouper_site_groups($nid = null) {
+  if ($vsite = vsite_get_vsite($nid)) {
+    $node = $vsite->group;
+
+    if (is_array($node->field_grouper_path)) {
+      $groups = $node->field_grouper_path[LANGUAGE_NONE];
+    }
+  }
+
+  return $groups;
+}
+
+/**
  * Returns a field instance for the given entity type and bundle
  */
 function grouper_get_field_instance($entity_type, $bundle) {
+  return array(
+    'bundle' => $bundle,
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => $entity_type,
+    'field_name' => 'field_grouper_path',
+    'label' => 'Grouper Path',
+    'required' => FALSE,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 45,
+    ),
+  );
+}
 
+/**
+ * Implements hook_user_login().
+ */
+function grouper_user_login(&$edit, $account) {
+  if (!is_array($account->field_grouper_path)) {
+    // get the pin of the user's account
+
+    // call grouper service for all groups this user can see
+
+    // set them to the user account
+
+    // register user to be cheecked again in cron after... some amount of time
+
+  }
+}
+
+/**
+ * Tests if the given or current user can access the given or current site, based only on their grouper groups.
+ * @param null $group
+ * @param null $user
+ * @return bool
+ */
+function grouper_user_can_access($group = null, $user = null) {
+  if (!isset($group)) {
+    if ($vsite = vsite_get_vsite()) {
+      $group = $vsite->group;
+    }
+    else {
+      // not in a vsite, don't even bother checking
+      return true;
+    }
+  }
+
+  if (!isset($user)) {
+    $user = $GLOBALS['user'];
+  }
+
+  // if the site has no groups defined, don't deny access
+  if (!isset($group->field_grouper_path)) {
+    return true;
+  }
+
+  // if the site has groups, but the user is anonymous, deny access
+  if (user_is_anonymous()) {
+    return false;
+  }
+
+  // if the site has groups, but the user is not associated with any, deny access
+  if (!isset($user->field_grouper_path)) {
+    return false;
+  }
+
+  // we are only here if both the user and the group have data in this field. Compare them
+  $user_groups = $user->field_grouper_path[LANGUAGE_NONE];
+  $site_groups = $group->field_grouper_path[LANGUAGE_NONE];
+
+  $common = array_intersect($user_groups, $site_groups);
+  // $common will contains all groups both the user and group are a part of. If there's anything at all, return true.
+  return count($common) > 0;
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function grouper_node_access($node, $op, $account) {
+  if ($op != 'create') {
+    return NODE_ACCESS_IGNORE;
+  }
+
+  $group_id = $node->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'];
+  $group = node_load($group_id);
+  if (grouper_user_can_access($group, $account)) {
+    // ignore instead of allow to give other modules a chance to deny access
+    return NODE_ACCESS_IGNORE;
+  }
+  else {
+    return NODE_ACCESS_DENY;
+  }
 }
