@@ -2326,25 +2326,50 @@ function os_events_mail($key, &$message, $params) {
  * Implements hook_mail_alter().
  */
 function os_events_mail_alter(&$message) {
-  if (!in_array($message['id'], array('registration_broadcast', 'os_events_registration_confirmation'))) {
-    return;
-  }
+  //Array for event mails
+  $eventEmailArr = array("broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification");
 
-  // Get event default email address.
-  $wrapper = entity_metadata_wrapper($message['params']['context']['entity_type'], $message['params']['context']['entity_id']);
-  $event_author_email = $wrapper->author->mail->value();
+  //get user 1 email address as default from address
+  $admin = user_load(1);
+  $defaultMail = $admin->mail;
 
-  // Default value of the "From" field should be the author of the event's e-mail
-  // in case it hasn't been changed yet (if it hasn't been changed yet, the email
-  // will be set by default to be as defined in the field instance).
-  $info = field_info_instance('node', 'field_event_registration', 'event');
-  $default_email = $info['settings']['default_registration_settings']['settings']['from_address'];
-  if ($message['headers']['From'] == $default_email) {
+
+  //Check if it is an event related mail
+  if(in_array($message['key'],$eventEmailArr)) {
+
+    $event_author_email = "";
+
+    //Get the value of event creator email for all event related emails except broadcast.
+    foreach($message['params'] as $param_key => $param_value){
+      if ($param_key == '@event_creator_email' || $param_key == '@event-creator-email'){
+       // Get event author event's author email address.
+       $event_author_email = check_plain(trim($param_value));
+      }
+    }
+
+    //Get the value of event creator email for broadcast.
+    if ($event_author_email == ""){
+      $event_author_email = $message['from'];
+    }
+
+    // Set default value of the "From" field to author of the event's e-mail
     $message['headers']['From'] = $message['from'] = $event_author_email;
+
+    // Set the sender and return-path headers.
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+  }
+  else {
+
+    // Set default value of the "From" field.
+    $message['headers']['From'] = $message['from'] = variable_get('site_from_email',$defaultMail);
+
+    //Set the sender and return-path headers.
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
 
-  // Set the sender and return-path headers.
-  $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+  //Adding the footer physical address for all emails
+  $message['body'][] = '';
+  $message['body'][] = variable_get('site_physical_address');
 }
 
 /**
@@ -3113,9 +3138,8 @@ function os_events_field_create_field($field) {
 */
 function os_events_cp_settings() {
 
-  $settings = array();
   $spaces_features = variable_get('spaces_features');
-  // The app won't appear in CP menu if not enabled.
+  // Event settings link won't appear in CP menu if event app is not enabled.
   if (empty($spaces_features['os_events'])) {
     return $settings;
   }
@@ -3137,4 +3161,51 @@ function os_events_cp_settings() {
     ),
   );
   return $settings;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ */
+function os_events_form_system_site_information_settings_alter(&$form, &$form_state, $form_id){
+  //get user 1 email address as default from address
+  $admin = user_load(1);
+  $defaultMail = $admin->mail;
+
+  //Configurable default physical address to be displayed in email footer
+  $form['site_information']['site_physical_address'] = array(
+    '#type' => 'textfield',
+    '#title' => t("Physical Address"),
+    '#default_value' => variable_get('site_physical_address'),
+    '#description' => t("The physical address to be displayed in the footer of all emails triggered from this site."),
+    '#required' => TRUE,
+  );
+
+  //Configurable default from email address to be displayed in 'from' for all emails
+  $form['site_information']['site_from_email'] = array(
+    '#type' => 'textfield',
+    '#default_value' => variable_get('site_from_email',$defaultMail),
+    '#title' => t("Sender email address"),
+    '#description' => t("The email address to be displayed in the 'from' field of all emails triggered from this site."),
+    '#required' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function os_events_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'mail_alter') {
+    //alter implementations array in order to call os_events_mail_alter at the end
+    $group = $implementations['os_events'];
+    unset($implementations['os_events']);
+    $implementations['os_events'] = $group;
+
+    //just for logging purpose is mail_logger module exists
+    if(module_exists('mail_logger')){
+      $group = $implementations['mail_logger'];
+      unset($implementations['mail_logger']);
+      $implementations['mail_logger'] = $group;
+    }
+  }
 }
