@@ -97,7 +97,7 @@
   width: 30%;
 }
 
-#site-creation-container a,
+#site-creation-container a, 
 #site-creation-container a:visited{
   color: #0000EE;
   text-decoration: none;
