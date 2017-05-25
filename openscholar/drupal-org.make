@@ -140,6 +140,8 @@ projects[file_entity][download][branch] = 7.x-2.x
 projects[file_entity][download][revision] = 68ab8ed52f9bb993e8f3c541b89420637e440609
 projects[file_entity][patch][] = "http://drupal.org/files/file_entity.1834902-3.dimension_overrides.patch"
 projects[file_entity][patch][] = "http://drupal.org/files/filter-by-file-schema-type-1881356-12.patch"
+projects[file_entity][patch][] = "http://fill-this-in/patches/file_entity.admin-change_timestamp.patch"
+
 
 projects[filefield_paths][subdir] = "contrib"
 ;projects[filefield_paths][version] = 1.0-beta3+2-dev
