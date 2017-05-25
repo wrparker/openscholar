@@ -1,0 +1,223 @@
+#container{
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 12px;
+  line-height: 1.4;
+  border: 2px solid #000;
+  margin: auto;
+  width: 60%;
+  padding: 20px;
+}
+
+#header-container-page-1,
+#header-container-page2{
+  padding: 5px;
+}
+
+#header-container-group-1,
+#header-container-group-2,
+#header-container-group-1-page2,
+#header-container-group-2-page2{
+  overflow: hidden;
+}
+
+#header-container-group-3,
+#header-container-group-3-page-2{
+  margin: 15px 5px 5px;
+}
+
+.step{
+  padding: 3px 10px;
+  float: left;
+  width: 30%;
+}
+
+.clear{
+  clear: both;
+}
+
+.center{
+  text-align:center;
+}
+
+#body-container{
+  height: 382px;
+}
+
+#body-container-group-1{
+  margin: 15px 5px 5px;
+  height: 130px;
+  overflow: hidden;
+}
+
+#body-container-page2{
+  margin: 15px 5px 5px;
+  height: 393px;
+  overflow: hidden;
+}
+
+#body-container-group-2{
+  margin: 5px;
+  overflow: hidden;
+  border: 2px solid #CCC;
+  background-color: #EEE;
+}
+
+#body-container-group-page-2{
+  margin: 130px 5px;
+  overflow: hidden;
+  border: 2px solid #CCC;
+  background-color: #EEE;
+}
+
+.visibility{
+  float: left;
+  margin: 3px;
+  padding: 4px;
+  vertical-align: bottom;
+}
+
+.right{
+  float: right;
+}
+
+.left{
+  float: left;
+}
+
+.enlarged-text{
+  font-size: 14px;
+}
+
+.site-type{
+  padding: 3px 10px;
+  display:inline-block;
+  float: left;
+  width: 30%;
+}
+
+a, a:visited{
+  color: #0000EE;
+  text-decoration: none;
+}
+
+a:hover{
+  color: #0000EE;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a.button{
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  background: none;
+  text-decoration: none;
+  background-color: #696969;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+a:hover.button{
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  background: none;
+  text-decoration: none;
+  background-color: #3f3f3f;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#footer-container {
+  overflow: hidden;
+}
+
+#footer-container div#pre {
+  float: left;
+  padding: 4px 12px;
+  padding: 4px 12px;
+  width: 400px;
+}
+
+#footer-container div#nxt {
+  float: left;
+  text-align: right;
+  padding: 4px 12px;
+  padding: 4px 12px;
+  width: 400px;
+}
+
+.popup{
+  font-size: 11px;
+  border: 1px solid #CCC;
+  margin: 3px 5px;
+  padding: 5px;
+  height: 78px;
+}
+
+.error-msg{
+  color: red; padding: 5px;
+}
+
+.stepEnable {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.stepDisable {
+  background-color: #CCC;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.preNxt {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.preNxt:disabled{
+  background-color: #CCC;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+p{
+  margin: 1em 0;
+  padding: 0;
+}

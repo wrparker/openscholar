@@ -2,19 +2,25 @@
 
 define('OS_SITE_CREATION_FORM', '1.0.0');
 
+/**
+ * Implements hook_library().
+ */
 function os_site_creation_library() {
   $libs = array();
   $self = drupal_get_path('module', 'os_site_creation');
   $disable = array('alias' => TRUE);
-  $libs['module'] = array(
+  $libs['site_creation'] = array(
     'title' => 'Site Creation Form',
     'version' => OS_SITE_CREATION_FORM,
     'js' => array(
       $self.'/osSiteCreation.module.js' => array(),
+      $self.'/misc/js/os_site_creation.js' => array(),
+      $self.'/misc/js/messages.min.js' => array(),
       array(
         'data' => array(
           'paths' => array(
             'siteCreationForm' => url($self.'/templates', $disable),
+            'siteCreationModuleRoot' => url(drupal_get_path('module', 'os_site_creation'), $disable),
           ),
           'version' => array(
             'siteCreationForm' => OS_SITE_CREATION_FORM,
@@ -24,10 +30,10 @@ function os_site_creation_library() {
       )
     ),
     'css' => array(
-      drupal_get_path('theme', 'cp_theme') . '/css/cp_theme.css' => array(
-        'group' => CSS_THEME,
-        'every_page' => TRUE,
-        'media' => 'screen'),
+      drupal_get_path('module', 'os_site_creation') . '/misc/css/os_site_creation.css' => array(
+      'group' => CSS_THEME,
+      'every_page' => TRUE,
+      'media' => 'screen'),
     ),
     'dependencies' => array(
       array('os_common', 'angular-modal-service'),
@@ -36,20 +42,15 @@ function os_site_creation_library() {
       array('ap_settings_form', 'redirect')
     )
   );
-/*
-  $libs['redirect'] = array(
-    'title' => 'Redirect Form',
-    'version' => '0.1',
-    'js' => array(
-      $self.'/redirects.module.js' => array()
-    )
-  );
-*/
   return $libs;
 }
 
+/**
+ * Implements hook_library_alter().
+ *
+ */
 function os_site_creation_library_alter(&$libs) {
   if (isset($libs['admin_panel'])) {
-    $libs['admin_panel']['dependencies'][] = array('os_site_creation', 'module');
+    $libs['admin_panel']['dependencies'][] = array('os_site_creation', 'site_creation');
   }
 }
