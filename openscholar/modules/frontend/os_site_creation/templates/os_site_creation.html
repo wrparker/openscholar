@@ -1,4 +1,4 @@
-<div id="container" ng-app="siteCreationApp" ng-controller="siteCreationCtrl">
+<div id="site-creation-container" ng-app="siteCreationApp" ng-controller="siteCreationCtrl">
   <form name="siteCreationform">
     <!-- Screen 1 Start -->
     <div id="page-1" ng-show="page1">
@@ -44,7 +44,7 @@
               <div class="clear"></div>
               <div>
                 <span>http://hwpi.harvard.edu/</span>
-                <span><input name="projectLabSmallGroup" ng-model="projectLabSmallGroup" formcheck-Directive ng-keyup="clearRest('projectLabSmallGroup');"></span>
+                <span><input type="text" name="projectLabSmallGroup" ng-model="projectLabSmallGroup" formcheck-Directive ng-keyup="clearRest('projectLabSmallGroup');"></span>
               </div>
               <div ng-messages="siteCreationform.projectLabSmallGroup.$error">
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
@@ -58,7 +58,7 @@
               <div class="clear"></div>
               <div>
                 <span>http://hwpi.harvard.edu/</span>
-                <span><input name="departmentSchool" ng-model="departmentSchool" formcheck-Directive ng-keyup="clearRest('departmentSchool');"></span>
+                <span><input type="text" name="departmentSchool" ng-model="departmentSchool" formcheck-Directive ng-keyup="clearRest('departmentSchool');"></span>
               </div>
               <div ng-messages="siteCreationform.departmentSchool.$error">
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>

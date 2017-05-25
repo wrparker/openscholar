@@ -1,4 +1,4 @@
-#container{
+#site-creation-container{
   margin: 0;
   padding: 0;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
@@ -10,105 +10,106 @@
   padding: 20px;
 }
 
-#header-container-page-1,
-#header-container-page2{
+#site-creation-container #header-container-page-1,
+#site-creation-container #header-container-page2{
   padding: 5px;
 }
 
-#header-container-group-1,
-#header-container-group-2,
-#header-container-group-1-page2,
-#header-container-group-2-page2{
+#site-creation-container #header-container-group-1,
+#site-creation-container #header-container-group-2,
+#site-creation-container #header-container-group-1-page2,
+#site-creation-container #header-container-group-2-page2{
   overflow: hidden;
 }
 
-#header-container-group-3,
-#header-container-group-3-page-2{
+#site-creation-container #header-container-group-3,
+#site-creation-container #header-container-group-3-page-2{
   margin: 15px 5px 5px;
 }
 
-.step{
+#site-creation-container .step{
   padding: 3px 10px;
   float: left;
   width: 30%;
 }
 
-.clear{
+#site-creation-container .clear{
   clear: both;
 }
 
-.center{
+#site-creation-container .center{
   text-align:center;
 }
 
-#body-container{
+#site-creation-container #body-container{
   height: 382px;
 }
 
-#body-container-group-1{
+#site-creation-container #body-container-group-1{
   margin: 15px 5px 5px;
   height: 130px;
   overflow: hidden;
 }
 
-#body-container-page2{
+#site-creation-container #body-container-page2{
   margin: 15px 5px 5px;
   height: 393px;
   overflow: hidden;
 }
 
-#body-container-group-2{
+#site-creation-container #body-container-group-2{
   margin: 5px;
   overflow: hidden;
   border: 2px solid #CCC;
   background-color: #EEE;
 }
 
-#body-container-group-page-2{
+#site-creation-container #body-container-group-page-2{
   margin: 130px 5px;
   overflow: hidden;
   border: 2px solid #CCC;
   background-color: #EEE;
 }
 
-.visibility{
+#site-creation-container .visibility{
   float: left;
   margin: 3px;
   padding: 4px;
   vertical-align: bottom;
 }
 
-.right{
+#site-creation-container .right{
   float: right;
 }
 
-.left{
+#site-creation-container .left{
   float: left;
 }
 
-.enlarged-text{
+#site-creation-container .enlarged-text{
   font-size: 14px;
 }
 
-.site-type{
+#site-creation-container .site-type{
   padding: 3px 10px;
   display:inline-block;
   float: left;
   width: 30%;
 }
 
-a, a:visited{
+#site-creation-container a,
+#site-creation-container a:visited{
   color: #0000EE;
   text-decoration: none;
 }
 
-a:hover{
+#site-creation-container a:hover{
   color: #0000EE;
   text-decoration: underline;
   cursor: pointer;
 }
 
-a.button{
+#site-creation-container a.button{
   margin: 0;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   background: none;
@@ -123,7 +124,7 @@ a.button{
   font-size: 12px;
 }
 
-a:hover.button{
+#site-creation-container a:hover.button{
   margin: 0;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   background: none;
@@ -138,18 +139,18 @@ a:hover.button{
   font-size: 12px;
 }
 
-#footer-container {
+#site-creation-container #footer-container {
   overflow: hidden;
 }
 
-#footer-container div#pre {
+#site-creation-container #footer-container div#pre {
   float: left;
   padding: 4px 12px;
   padding: 4px 12px;
   width: 400px;
 }
 
-#footer-container div#nxt {
+#site-creation-container #footer-container div#nxt {
   float: left;
   text-align: right;
   padding: 4px 12px;
@@ -157,7 +158,7 @@ a:hover.button{
   width: 400px;
 }
 
-.popup{
+#site-creation-container .popup{
   font-size: 11px;
   border: 1px solid #CCC;
   margin: 3px 5px;
@@ -165,11 +166,11 @@ a:hover.button{
   height: 78px;
 }
 
-.error-msg{
+#site-creation-container .error-msg{
   color: red; padding: 5px;
 }
 
-.stepEnable {
+#site-creation-container .stepEnable {
   background-color: #4CAF50;
   border: none;
   color: white;
@@ -181,7 +182,7 @@ a:hover.button{
   font-size: 12px;
 }
 
-.stepDisable {
+#site-creation-container .stepDisable {
   background-color: #CCC;
   border: none;
   color: white;
@@ -193,7 +194,7 @@ a:hover.button{
   font-size: 12px;
 }
 
-.preNxt {
+#site-creation-container .preNxt {
   background-color: #4CAF50;
   border: none;
   color: white;
@@ -205,7 +206,7 @@ a:hover.button{
   font-size: 12px;
 }
 
-.preNxt:disabled{
+#site-creation-container .preNxt:disabled{
   background-color: #CCC;
   border: none;
   color: white;
@@ -217,7 +218,11 @@ a:hover.button{
   font-size: 12px;
 }
 
-p{
+#site-creation-container p{
   margin: 1em 0;
   padding: 0;
+}
+
+#site-creation-container input[type=text]{
+  border: 2px solid #CCC;
 }
