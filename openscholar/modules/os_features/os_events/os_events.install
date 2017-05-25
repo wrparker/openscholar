@@ -25,6 +25,7 @@ function os_events_install() {
 
 function os_events_uninstall() {
   db_drop_field('registration_entity', 'repeating_event_date');
+  _os_events_delete_variables();
 }
 
 // Implements hook_schema_alter().
@@ -39,6 +40,20 @@ function os_events_schema_alter(&$schema) {
     );
     $schema['registration_entity']['primary key'][] = 'repeating_event_date';
   }
+}
+
+/**
+ * Helper function.
+ *
+ * Delete the orcid id.
+ */
+function _os_events_delete_variables() {
+
+  // Delete footer variable for email footer information.
+  variable_del('site_from_email');
+
+  // Delete footer variable for email footer information.
+  variable_del('site_physical_address');
 }
 
 /**
