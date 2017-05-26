@@ -833,6 +833,90 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I create a "([^"]*)" widget for the vsite "([^"]*)" with the following <settings>:$/
+   */
+  public function iCreateAWidgetWithTheFollowingSettingsForTheVsite($widget, $vsite, TableNode $table) {
+    $metasteps = [];
+    switch (strtolower($widget)) {
+      case "custom html":
+        $widgetType = "os_boxes_html";
+        break;
+      case "list of posts":
+        $widgetType = "os_sv_list_box";
+        break;
+      case "embed media":
+        $widgetType = "os_boxes_media";
+        break;
+      case "feed reader":
+        $widgetType = "os_boxes_feedreader";
+        break;
+    }
+    $metasteps[] = new Step\When('I visit "/' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"');
+    $hash = $table->getRows();
+
+    print "\n" . 'I visit "/' . $vsite . '#overlay=' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"' . "\n";
+
+
+    foreach ($hash as $form_elements) {
+      switch ($form_elements[2]) {
+        case 'select list':
+          $values = explode(",", $form_elements[1]);
+
+          if (count($values) > 1) {
+            foreach ($values as $value) {
+              // Select multiple values from the terms options.
+              $this->getSession()
+                ->getPage()
+                ->selectFieldOption($form_elements[0], trim($value), TRUE);
+            }
+          }
+          else {
+            $metasteps[] = new Step\When('I select "' . $form_elements[1] . '" from "' . $form_elements[0] . '"');
+          }
+          break;
+        case 'checkbox':
+          $metasteps[] = new Step\When('I ' . $form_elements[1] . ' the box "' . $form_elements[0] . '"');
+          break;
+        case 'textfield':
+          $metasteps[] = new Step\When('I fill in "' . $form_elements[0] . '" with "' . $form_elements[1] . '"');
+          break;
+        case 'radio':
+          $metasteps[] = new Step\When('I select the radio button "' . $form_elements[0] . '" with the id "' . $form_elements[1] . '"');
+          break;
+      }
+    }
+    $metasteps[] = new Step\When('I press "Save"');
+    return $metasteps;
+  }
+
+  /**
+   * @Given /^the widget "([^"]*)" is placed in the "([^"]*)" layout$/
+   */
+  public function theWidgetIsPlacedInTheLayout($widget, $page) {
+    $q = db_select('spaces_overrides', 'so')
+      ->fields('so', array('object_id', 'id'))
+      ->condition('value', '%s:5:"title";s:' . strlen($widget) . ':"' . $widget . '";%', 'LIKE')
+      ->condition('object_type', 'boxes', '=');
+    $results = $q->execute()->fetchAll();
+    $row = array_pop($results);
+
+    $page_id = FeatureHelp::GetNodeId($page);
+
+    $vsite = spaces_load('og', $row->id);
+    $blocks = $vsite->controllers->context->get('os_pages-page-' . $page_id . ":reaction:block");
+    $blocks['blocks']['boxes-' . $row->object_id] = array(
+      'module' => 'boxes',
+      'delta' => $row->object_id,
+      'title' => $widget,
+      'region' => 'sidebar_second',
+      'status' => 0,
+      'weight' => 0
+    );
+    $vsite->controllers->context->set('os_pages-page-' . $page_id . ":reaction:block", $blocks);
+
+  }
+
+  /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
