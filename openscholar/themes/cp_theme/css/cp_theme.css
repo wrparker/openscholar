@@ -321,9 +321,9 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     width: 30px;
     height: 30px;
     position: relative;
-    margin: -28px 10px;
+    /* margin: -28px 10px; */
 }
-.ui-dialog.ap-settings-form button.ui-dialog-titlebar-close {
+.ui-dialog .ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
     border: 0;
@@ -354,10 +354,11 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
+.margin_bottom-20,
 .page-cp .ui-dialog-titlebar {
     margin-bottom: 22px;
 }
-.ui-dialog.ap-settings-form {
+.ui-dialog {
     padding: 0;
     top:10% !important;
 }
