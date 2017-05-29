@@ -3,6 +3,36 @@
 define('OS_SITE_CREATION_FORM', '1.0.0');
 
 /**
+ * Implements hook_menu().
+ */
+function os_site_creation_menu() {
+  $items['sitecreation/validate/%'] = array(
+    'page callback' => '_os_site_creation_get_exiting_sites',
+    'page arguments' => array(2),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+/**
+ * Callback to return JSON encoded output.
+ */
+function _os_site_creation_get_exiting_sites($siteValue) {
+  //Validate new vsite URL
+  if (strlen($siteValue) < 3 || !valid_url($siteValue)) {
+    drupal_json_output("Invalid");
+  }
+  else if (($purl = purl_load(array('value' => $siteValue, 'provider' => 'spaces_og'), TRUE)) || menu_get_item($siteValue)) {
+    drupal_json_output("Not-Available");
+  }
+  else {
+    drupal_json_output("Available");
+  }
+}
+
+
+/**
  * Implements hook_library().
  */
 function os_site_creation_library() {
