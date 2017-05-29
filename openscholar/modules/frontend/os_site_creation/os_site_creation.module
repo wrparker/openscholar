@@ -12,7 +12,37 @@ function os_site_creation_menu() {
     'type' => MENU_CALLBACK,
     'access arguments' => array('access content'),
   );
+
+  $items['sitecreation/savedata'] = array(
+    'page callback' => '_os_site_save_data',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
+
   return $items;
+}
+
+/**
+ * Callback save site creation data.
+ */
+function _os_site_save_data() {
+  $postData = json_decode($_POST['formdata']);
+
+  if($postData->individualScholar != "") {
+    $formData['bundle'] = 'personal';
+    $formData['domain'] = $postData->individualScholar;
+  } else if($postData['projectLabSmallGroup'] != "") {
+    $formData['bundle'] = 'project';
+    $formData['domain'] = $postData->projectLabSmallGroup;
+  } else {
+    $formData['bundle'] = 'department';
+    $formData['domain'] = $postData->departmentSchool;
+  }
+  $formData['preset'] = $postData->contentOption;
+  $formData['vsite_private'] = $postData->vsite;
+
+  print_r($formData);
+  die();
 }
 
 /**

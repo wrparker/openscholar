@@ -24,7 +24,7 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $
       $scope.departmentSchool = null;
     }
   }
-  
+
   //Set status of next button to disabled initially
   $scope.btnDisable = true;
   
@@ -41,21 +41,27 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $
   };
 
   //Site URL
-  $scope.baseURL = $location.protocol() + '://' + $location.host();
+  $scope.baseURL = $location.protocol() + '://' + $location.host() + '/';
   
   //Get all values and save them in localstorage for use
   $scope.saveAllValues = function() {
-    var data = {};
-    data["individualScholar"] = $scope.individualScholar;
-    data["projectLabSmallGroup"] = $scope.projectLabSmallGroup;
-    data["departmentSchool"] = $scope.departmentSchool;
-    data["vsite"] = $scope.vsite.value;
-    data["contentOption"] = $scope.contentOption.value;
+    var formdata = {};
+    formdata["individualScholar"] = $scope.individualScholar;
+    formdata["projectLabSmallGroup"] = $scope.projectLabSmallGroup;
+    formdata["departmentSchool"] = $scope.departmentSchool;
+    formdata["vsite"] = $scope.vsite.value;
+    formdata["contentOption"] = $scope.contentOption.value;
 
-    $localStorage.formData = data;
-    console.log($localStorage.formData);
+    //Ajax call to save formdata
+    $http({
+      method : "POST",
+      url : "sitecreation/savedata",
+      data : "formdata=" + angular.toJson(formdata),
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then(function mySuccess(response) {
+      alert(response.data);
+    });
   }
-  
 });
 
 //Validate form for existing site names
@@ -84,9 +90,9 @@ siteCreationApp.directive('formcheckDirective', ['$http', function($http) {
             else{
               scope.btnDisable = false;
             }
-            return ngModelValue;
           });
         }
+        return ngModelValue;
       }
       siteCreationCtrl.$parsers.push(formValidation);
     }

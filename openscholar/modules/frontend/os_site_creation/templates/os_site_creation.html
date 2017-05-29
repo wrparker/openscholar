@@ -41,7 +41,7 @@
           <div class="site-type center">
             <div><a class="button" ng-click="display = 'projectLabSmallGroup'">Project/Lab/Small Group</a></div>
             <div id="project-lab-small-group" class="popup" ng-show="display == 'projectLabSmallGroup'">
-              <div class="left">URL of the Site</div>
+              <div class="left"><b>URL of the Site</b></div>
               <div class="clear"></div>
               <div>
                 <span>{{baseURL}}</span>
@@ -56,7 +56,7 @@
           <div class="site-type center">
             <div><a class="button" ng-click="display = 'departmentSchool'">Department/School</a></div>
             <div id="department-school" class="popup" ng-show="display == 'departmentSchool'">
-              <div class="left">URL of the Site</div>
+              <div class="left"><b>URL of the Site</b></div>
               <div class="clear"></div>
               <div>
                 <span>{{baseURL}}</span>
@@ -131,14 +131,14 @@
         <div id="body-container-group-page-2">
           <div class="visibility">
             <div>
-              <p><input type="radio" ng-model="contentOption.value" value="0">
+              <p><input type="radio" ng-model="contentOption.value" value="os_department_minimal">
               <span class="enlarged-text"><b> Minimal setup, with no pre-set menu links and pages </b></span>
               </p>
-              <p><input type="radio" ng-model="contentOption.value" value="1">
+              <p><input type="radio" ng-model="contentOption.value" value="os_department">
               <span class="enlarged-text"><b>Academic Department with pre-set menu links and pages</b></span><br>
               Academic, Research, and People links will be added to the main menu. Don't worry, you'll be able to change this later if you are't sure now. 
               </p>
-              <p><input type="radio" ng-model="contentOption.value" value="2">
+              <p><input type="radio" ng-model="contentOption.value" value="hwp_administrative">
               <span class="enlarged-text"><b>Administrative Department with pre-set menu links and pages</b></span><br>
               Academic2, Research2, and People2 links will be added to the main menu. Don't worry, you'll be able to change this later if you are't sure now.
               </p>
