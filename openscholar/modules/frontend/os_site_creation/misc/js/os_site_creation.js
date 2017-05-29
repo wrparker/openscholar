@@ -1,5 +1,5 @@
 var siteCreationApp = angular.module('siteCreationApp', ["ngMessages"]);
-siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage) {
+siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $http, $location) {
 
   //Set default value for vsite
   $scope.vsite = {
@@ -25,13 +25,8 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage) {
     }
   }
   
-  //Set status of next button based on input value
-  $scope.checkEnable = function() {
-    if ($scope.individualScholar || $scope.projectLabSmallGroup || $scope.departmentSchool){
-      return false;
-    }
-    return true;
-  }
+  //Set status of next button to disabled initially
+  $scope.btnDisable = true;
   
   //Navigate between screens
   $scope.page1 = true;
@@ -44,6 +39,9 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage) {
   $scope.contentOption = {
     value: '0'
   };
+
+  //Site URL
+  $scope.baseURL = $location.protocol() + '://' + $location.host();
   
   //Get all values and save them in localstorage for use
   $scope.saveAllValues = function() {
@@ -61,20 +59,36 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage) {
 });
 
 //Validate form for existing site names
-siteCreationApp.directive('formcheckDirective', function() {
-  var siteArray = ["test", "test1", "test2"]; //existing site name array
+siteCreationApp.directive('formcheckDirective', ['$http', function($http) {
+  var responseData;
   return {
     require: 'ngModel',
     link: function(scope, element, attr, siteCreationCtrl) {
       function formValidation(ngModelValue) {
-        if (siteArray.indexOf(ngModelValue) > -1) {
-          siteCreationCtrl.$setValidity('sitename', false);
-        } else {
-          siteCreationCtrl.$setValidity('sitename', true);
+        siteCreationCtrl.$setValidity('isinvalid', true);
+        siteCreationCtrl.$setValidity('sitename', true);
+        scope.btnDisable = true;
+        if(ngModelValue){
+          //Ajax call to get all existing sites
+          $http({
+            method : "GET",
+            url : "sitecreation/validate/"+ngModelValue,
+          }).then(function mySuccess(response) {
+            responseData = response.data;
+            if (responseData == "Invalid"){
+              siteCreationCtrl.$setValidity('isinvalid', false);
+            }
+            else if (responseData == "Not-Available") {
+              siteCreationCtrl.$setValidity('sitename', false);
+            }
+            else{
+              scope.btnDisable = false;
+            }
+            return ngModelValue;
+          });
         }
-        return ngModelValue;
       }
       siteCreationCtrl.$parsers.push(formValidation);
     }
   };
-});
+}]);

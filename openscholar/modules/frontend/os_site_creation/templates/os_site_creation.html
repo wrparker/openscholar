@@ -29,10 +29,11 @@
               <div class="left"><b>URL of the Site</b></div>
               <div class="clear"></div>
               <div>
-                <span>http://hwpi.harvard.edu/</span>
+                <span>{{baseURL}}</span>
                 <span><input type="text" name="individualScholar" ng-model="individualScholar" formcheck-Directive ng-keyup="clearRest('individualScholar');"></span>
               </div>
               <div ng-messages="siteCreationform.individualScholar.$error">
+                <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
             </div>
@@ -43,10 +44,11 @@
               <div class="left">URL of the Site</div>
               <div class="clear"></div>
               <div>
-                <span>http://hwpi.harvard.edu/</span>
+                <span>{{baseURL}}</span>
                 <span><input type="text" name="projectLabSmallGroup" ng-model="projectLabSmallGroup" formcheck-Directive ng-keyup="clearRest('projectLabSmallGroup');"></span>
               </div>
               <div ng-messages="siteCreationform.projectLabSmallGroup.$error">
+                <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
             </div>
@@ -57,10 +59,11 @@
               <div class="left">URL of the Site</div>
               <div class="clear"></div>
               <div>
-                <span>http://hwpi.harvard.edu/</span>
+                <span>{{baseURL}}</span>
                 <span><input type="text" name="departmentSchool" ng-model="departmentSchool" formcheck-Directive ng-keyup="clearRest('departmentSchool');"></span>
               </div>
               <div ng-messages="siteCreationform.departmentSchool.$error">
+                <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
             </div>
@@ -100,7 +103,7 @@
       <div class="clear"></div>
       <div id ="footer-container">
         <div id="pre">&nbsp;</div>
-        <div id="nxt"><input type="button" class="preNxt" value="Next" ng-disabled="checkEnable() || siteCreationform.individualScholar.$invalid || siteCreationform.projectLabSmallGroup.$invalid || siteCreationform.departmentSchool.$invalid" ng-click="navigatePage('page1','page2');"></div>
+        <div id="nxt"><input type="button" class="preNxt" value="Next" ng-disabled="btnDisable == true" ng-click="navigatePage('page1','page2');"></div>
       </div>
     </div>
     <div class="clear"></div>
