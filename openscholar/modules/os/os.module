@@ -3704,7 +3704,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
 
         $read_more = function($entity_type, $entity, &$text) {
           $uri = entity_uri($entity_type, $entity);
-          $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('attributes' => array('class' => array('node-readmore')), 'html' => true));
+          $text .= ' ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('attributes' => array('class' => array('node-readmore')), 'html' => true));
         };
 
         // We need to varify if there is any breake tag available in the content
@@ -3724,7 +3724,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
           $text = text_summary($item['safe_value'], $item['format'], $display['settings']['trim_length']);
           // Remove the ellipsis we got from the text summary.
           if (strpos($text, '…') !== 0) {
-            $text = str_replace('…', '', $text);
+            $text = str_replace('…', ' ', $text);
           }
           // Only display read more link if there is a content after break tag.
           if (!empty(drupal_strlen($text_after_break))) {
