@@ -980,3 +980,9 @@ function os_update_7051() {
 
   return t('Enabled OS content revisions module.');
 }
+/**
+ * Enable os_orcid module.
+ */
+function os_update_7052() {
+  module_enable(array('os_orcid'));
+}
