@@ -14,7 +14,8 @@
       minHeight: 300,
       modal: true,
       position: 'center',
-      dialogClass: 'site-creation-form'
+      dialogClass: 'site-creation-form',
+      title: 'Create your web site',
     };
 
     function link(scope, elem, attrs) {
@@ -31,7 +32,6 @@
           }
         })
         .then(function (modal) {
-          dialogOptions.title = scope.title;
           dialogOptions.close = function (event, ui) {
             modal.element.remove();
           }
