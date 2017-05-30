@@ -28,6 +28,17 @@
       this.GetState = function (key) {
         return $ss['menuState'][key] === true;
       }
+
+      this.ChkLocalStorage = function () {
+        try {
+          localStorage.setItem('testLocalStorage', 'test');
+          localStorage.removeItem('testLocalStorage');
+          return true;
+        } catch(e) {
+          return false;
+        }
+      }
+
     }])
     .controller("AdminMenuController",['$scope', '$http', 'adminMenuStateService', '$localStorage', function ($scope, $http, $menuState, $localStorage) {
 
@@ -46,16 +57,18 @@
          $menuState.SetState('main', true);
        }
       //Init storage
-      $localStorage.admin_menu = $localStorage.admin_menu || {};
-      $localStorage.admin_menu[uid] = $localStorage.admin_menu[uid] || {};
-      $localStorage.admin_menu[uid][vsite] = $localStorage.admin_menu[uid][vsite] || {};
-      
-      // Check for the menu data in local storage.
-      if ($localStorage.admin_menu[uid][vsite][cid]) {
-        $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
+      if ($menuState.ChkLocalStorage()) {
+        $localStorage.admin_menu = $localStorage.admin_menu || {};
+        $localStorage.admin_menu[uid] = $localStorage.admin_menu[uid] || {};
+        $localStorage.admin_menu[uid][vsite] = $localStorage.admin_menu[uid][vsite] || {};
 
-        $scope.open = $menuState.GetState('main');
-        return;
+        // Check for the menu data in local storage.
+        if ($localStorage.admin_menu[uid][vsite][cid]) {
+          $scope.admin_panel = $localStorage.admin_menu[uid][vsite][cid];
+
+          $scope.open = $menuState.GetState('main');
+          return;
+        }
       }
       
       //Go get the admin menu from the server.
@@ -68,8 +81,10 @@
       $http({method: 'get', url: url, params: params, cache: true}).
         then(function(response) {
           //Clear out old entries.
-          $localStorage.admin_menu[uid][vsite] = {};
-          $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
+          if ($menuState.ChkLocalStorage()) {
+            $localStorage.admin_menu[uid][vsite] = {};
+            $localStorage.admin_menu[uid][vsite][cid] = response.data.data;
+          }
           $scope.admin_panel = response.data.data;
           $scope.open = $menuState.GetState('main');
         }); 

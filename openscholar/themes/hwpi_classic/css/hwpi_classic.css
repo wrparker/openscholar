@@ -54,6 +54,9 @@ margin-top: 12px;
 	font-family: arial;
 }
 
+.cke_editable p {
+	margin: 0;
+}
 
 /*SECTION NAV OVERRIDES*/
 .section-nav a {
