@@ -73,9 +73,9 @@ function os_site_creation_library() {
     'title' => 'Site Creation Form',
     'version' => OS_SITE_CREATION_FORM,
     'js' => array(
-      $self.'/osSiteCreation.module.js' => array(),
-      $self.'/misc/js/os_site_creation.js' => array(),
-      $self.'/misc/js/messages.min.js' => array(),
+      $self.'/misc/osSiteCreation.module.js' => array(),
+      $self.'/misc/os_site_creation.js' => array(),
+      $self.'/misc/messages.min.js' => array(),
       array(
         'data' => array(
           'paths' => array(
@@ -90,7 +90,7 @@ function os_site_creation_library() {
       )
     ),
     'css' => array(
-      drupal_get_path('module', 'os_site_creation') . '/misc/css/os_site_creation.css' => array(
+      drupal_get_path('module', 'os_site_creation') . '/misc/os_site_creation.css' => array(
       'group' => CSS_THEME,
       'every_page' => TRUE,
       'media' => 'screen'),
