@@ -617,7 +617,7 @@ function os_events_process_node(&$variables) {
     if ($variables['elements']['#view_mode'] == 'teaser') {
       $variables['content']['og_vocabulary']['#weight'] = 5;
     } else {
-      $variables['content']['og_vocabulary']['#weight'] = 0;
+      $variables['content']['og_vocabulary']['#weight'] = 100;
     }
     
   }
