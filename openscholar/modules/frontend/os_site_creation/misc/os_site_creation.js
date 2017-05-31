@@ -1,5 +1,5 @@
-var siteCreationApp = angular.module('siteCreationApp', ["ngMessages"]);
-siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $http, $location) {
+var siteCreationApp = angular.module('siteCreationApp', ['ngMessages', 'SiteCreationForm']);
+siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $location, $rootScope) {
 
   //Set default value for vsite
   $scope.vsite = {
@@ -37,7 +37,7 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $
   
   //Set default value for Content Option
   $scope.contentOption = {
-    value: '0'
+    value: 'os_department_minimal',
   };
 
   //Site URL
@@ -52,6 +52,16 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $
     formdata["vsite"] = $scope.vsite.value;
     formdata["contentOption"] = $scope.contentOption.value;
 
+    // Get sub site parent id
+    if (typeof $rootScope.siteCreationFormId !== 'undefined') {
+      var splitId = $rootScope.siteCreationFormId.split('add-subsite-');
+      if (splitId.length > 1) {
+        formdata["parent"] = splitId[1];
+      }
+    }
+
+    $scope.btnDisable = true;
+
     //Ajax call to save formdata
     $http({
       method : "POST",
@@ -59,7 +69,7 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $localStorage, $
       data : "formdata=" + angular.toJson(formdata),
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(function mySuccess(response) {
-      alert(response.data);
+      $scope.successData = response.data;
     });
   }
 });
