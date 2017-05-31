@@ -45,6 +45,11 @@ function _os_site_save_data() {
   $values['preset'] = $postData->contentOption;
   $values['vsite_private'] = $postData->vsite;
 
+  $parent = FALSE;
+  if($postData->parent){
+    $parent = $postData->parent;
+  }
+
   // The site has created on the behalf of a new user.
   $new_user = FALSE;
 
@@ -89,8 +94,6 @@ function _os_site_save_data() {
   }
 
   // Creates the vsite node.
-  $parent = FALSE;
-
   $name = $purl = $values['domain'];
   $author = $site_owner->uid;
   $bundle = $values['bundle'];
