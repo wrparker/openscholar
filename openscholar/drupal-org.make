@@ -358,6 +358,7 @@ projects[restful][patch][] = "https://raw.githubusercontent.com/openscholar/open
 
 projects[redirect][subdir] = "contrib"
 projects[redirect][version] = 1.0-rc1
+projects[redirect][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/307d34e14baefadba1d25cc5fde46af2f2b908d5/patches/redirect-9589-enable-redirection.patch"
 
 projects[robotstxt][subdir] = "contrib"
 projects[robotstxt][version] = "1.1"
