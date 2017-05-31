@@ -1,5 +1,8 @@
 # Quick codeship script to push builds to a pair of acquia repos as new branches are made.
 
+set -x
+env
+
 # Get PR branch, default to empty string
 PR_BRANCH=$(git show -s --format=%B $CI_COMMIT_ID | grep -oP 'Merge pull request #[\d]* from openscholar/\K(.*)' || echo "")
 echo "'$PR_BRANCH' set as PR branch."
@@ -43,7 +46,7 @@ cp -f openscholar/openscholar/drupal-org.make /tmp/
 cp -f openscholar/openscholar/bower.json /tmp/
 git subtree pull -m "subtree merge in codeship" --prefix=openscholar git://github.com/openscholar/openscholar.git $CI_BRANCH
 #Only build if no build has ever happened, or if the make files have changed
-if [ ! -d openscholar/openscholar/modules/contrib ] || [ $FORCE_REBUILD == "1" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
+if [ 1 == 1 ] || [ ! -d openscholar/openscholar/modules/contrib ] || [ $FORCE_REBUILD == "1" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org-core.make' '/tmp/drupal-org-core.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/drupal-org.make' '/tmp/drupal-org.make')" != "" ] || [ "$(cmp -b 'openscholar/openscholar/bower.json' '/tmp/bower.json')" != "" ]; then
 # Chores.
 for DIR in $BUILD_ROOT/www-build $BUILD_ROOT/www-backup openscholar/openscholar/1 openscholar/openscholar/modules/contrib openscholar/openscholar/themes/contrib openscholar/openscholar/libraries; do
 	rm -Rf $DIR
@@ -198,13 +201,13 @@ cp -R openscholar/temporary/* openscholar/openscholar/modules/contrib/
 cp -R openscholar/openscholar/modules/os_features/os_events/iCalcreator openscholar/openscholar/libraries/
 #Build the ops profile
 (
-	if [ -n "$OPSDIR" ] && [ -d $BUILD_ROOT/$DOCROOT/$OPSDIR ] ; then
+	if [ 1 == 1 ] || [ -n "$OPSDIR" ] && [ -d $BUILD_ROOT/$DOCROOT/$OPSDIR ] ; then
 	cd $BUILD_ROOT/$DOCROOT/$OPSDIR
 	$DRUSH make --no-core --contrib-destination $BUILD_ROOT/openscholar/openscholar/os-ops.make .
 	fi
 )
 for DIR in openscholar/openscholar/libraries openscholar/openscholar/themes/contrib openscholar/openscholar/modules/contrib; do
-	if [ -d "$DIR" ]; then
+	if [ 1 == 1 ] || [ -d "$DIR" ]; then
 		git add --all -f $DIR
 	fi
 done
