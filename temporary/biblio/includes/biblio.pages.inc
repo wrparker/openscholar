@@ -274,7 +274,6 @@ function biblio_entry($node) {
   }
 
   if (biblio_access('export')) {
-  dsm("Hello");
     $base = variable_get('biblio_base', 'biblio');
     $entry['export_links'] = array(
       '#markup' => theme('biblio_export_links', array('node' => $node)),
