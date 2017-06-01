@@ -3711,7 +3711,7 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
 
         $read_more = function($entity_type, $entity, &$text) {
           $uri = entity_uri($entity_type, $entity);
-          $text .= ' ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
+          $text .= ' ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('attributes' => array('class' => array('node-readmore')), 'html' => true));
         };
 
         // We need to varify if there is any breake tag available in the content
