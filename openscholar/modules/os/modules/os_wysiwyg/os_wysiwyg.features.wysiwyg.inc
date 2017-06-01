@@ -61,6 +61,7 @@ function os_wysiwyg_wysiwyg_default_profiles() {
           'lineutils' => 1,
           'mathjax' => 1,
           'panelbutton' => 1,
+          'pastefromword' => 1,
           'widget' => 1,
           'os_link' => 1,
           'break' => 1,

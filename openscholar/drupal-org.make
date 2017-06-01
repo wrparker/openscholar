@@ -116,6 +116,7 @@ projects[features][version] = 2.0
 
 projects[feeds][subdir] = "contrib"
 projects[feeds][version] = 2.0-alpha7
+projects[feeds][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/8e532e05ef206421f0b2e259223ee12afdcff877/patches/feeds-fid_9097_resubmitting.patch"
 
 projects[feeds_tamper][subdir] = "contrib"
 projects[feeds_tamper][version] = 1.1
@@ -414,6 +415,8 @@ projects[twitter_pull][subdir] = "contrib"
 projects[twitter_pull][version] = 1.0-rc4
 projects[twitter_pull][patch][] = "https://raw.github.com/openscholar/openscholar/cb4bfa4c382c3ef6d2c8a48c10d55695792c37d5/patches/twitter_pull-8577-retweet_option.patch"
 projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/64dfc3710e7fb2494a69dad4013a14283afdcde2/patches/twitter_pull.class.inc_get-media_url.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/0aaed15ed27b084508dfd7f247c7a9bcb3660603/patches/twitter_pull-distinguish_retweets.patch"
+projects[twitter_pull][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/6343fbeba1b1e0bbc3fcefaa2eddc79eaf79dd4b/patches/twitter_pull.class.inc-tweet-mode-extended.patch"
 
 projects[views][subdir] = "contrib"
 projects[views][version] = 3.8
@@ -477,7 +480,7 @@ libraries[tinymce][download][url] = "http://github.com/downloads/tinymce/tinymce
 
 libraries[ckeditor][type] = "libraries"
 libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.10/ckeditor_4.5.10_standard.zip"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.6.2/ckeditor_4.6.2_standard.zip"
 
 libraries[spyc][type] = "libraries"
 libraries[spyc][download][type] = "file"
@@ -541,6 +544,7 @@ libraries[mathjax][type] = "libraries"
 libraries[mathjax][subdir] = "ckeditor/plugins"
 libraries[mathjax][download][type] = "git"
 libraries[mathjax][download][url] = "https://github.com/RoySegall/mathjax.git"
+libraries[mathjax][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/b050f814816656c44db1490c4ff4d3295e960cb6/patches/mathjax-9530-cdn-path-update.patch"
 
 libraries[justify][type] = "libraries"
 libraries[justify][subdir] = "ckeditor/plugins"

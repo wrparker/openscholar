@@ -13,7 +13,7 @@
         element: '=',
         value: '='
       },
-      template: '<div class="form-wrapper">' +
+      template: '<div class="form-wrapper" ng-class="classname">' +
         '<span ng-if="element.prefix" ng-bind-html="to_trusted(element.prefix)"></span>' +
         '<span>Placeholder</span>' +
         '<div class="description" ng-bind-html="description"></div>' +
@@ -23,9 +23,14 @@
         scope.description = $sce.trustAsHtml(scope.element.description);
         scope.label = scope.element.title;
         scope.access = scope.element.access;
+        scope.classname = '';
         scope.to_trusted = function(html_code) {
           return $sce.trustAsHtml(html_code);
         }
+        angular.forEach(scope.element.class, function(classname, key) {
+          scope.classname += ' ' + classname;
+        });
+
         if (scope.access == undefined) {
           scope.access = true;
         }
@@ -54,10 +59,8 @@
           copy.attr('input-id', scope.id);
           copy.attr('ng-model', 'value');
           elem.find('span').replaceWith(copy);
-
           copy = $compile(copy)(scope);
           if (scope.element.attached && scope.element.attached.js) {
-            console.log(scope.element.attached);
             $t(function () {
               for (var i in scope.element.attached.js) {
                 if (angular.isObject(scope.element.attached.js[i])) {

@@ -179,7 +179,7 @@ function _os_restful_store_props($key, $value = null) {
     $stored[$key] = $value;
   }
 
-  return $stored[$key];
+  return isset($stored[$key]) ? $stored[$key] : NULL;
 }
 
 function os_restful_restful_parse_request_alter(&$request) {

@@ -24,11 +24,11 @@ default:
 
   extensions:
     Behat\MinkExtension\Extension:
-      base_url:  http://127.0.0.1
-      files_path: "/home/travis/build/openscholar/openscholar/openscholar/behat/features/files"
+      base_url:  http://localhost/openscholar/www/
+      files_path: "/var/www/html/openscholar/openscholar/behat/features/files"
     Drupal\DrupalExtension\Extension:
       drupal:
-        drupal_root: "/home/travis/build/openscholar/openscholar/www"
+        drupal_root: "/var/www/html/openscholar/www"
       api_driver: "drupal"
       drush:
         alias: self
