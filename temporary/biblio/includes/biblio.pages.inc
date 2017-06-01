@@ -274,6 +274,7 @@ function biblio_entry($node) {
   }
 
   if (biblio_access('export')) {
+  dsm("Hello");
     $base = variable_get('biblio_base', 'biblio');
     $entry['export_links'] = array(
       '#markup' => theme('biblio_export_links', array('node' => $node)),
@@ -300,6 +301,7 @@ function biblio_entry($node) {
  *
  */
 function biblio_build_query($arg_list) {
+
   global $user;
 
   $rss_info['feed'] = FALSE;
@@ -453,7 +455,7 @@ function biblio_build_query($arg_list) {
         case 'type':
           if (is_array($value)) {
             foreach ($value as $k => $v) {
-              if (is_int($k) && is_bool($v)) {
+              if (is_int($k) && (is_bool($v) || is_numeric($v))) {
                 $value[$k] = $k;
               } else {
                 $value[$k] = ucwords(strtolower(str_replace(array('-', '_'), ' ', $v)));
