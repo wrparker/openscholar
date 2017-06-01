@@ -107,6 +107,7 @@ function getClient() {
 
   $vsite = vsite_get_vsite();
   $redirectUri = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
+  error_log("\n" . __FILE__ . ":" . __LINE__ . ", redirectUri = " . $redirectUri);
   $client->setRedirectUri($redirectUri);
 
   // Load previously authorized credentials from a file.
@@ -137,7 +138,7 @@ function os_events_get_access_token_with_auth_code() {
   // This redirect URI has to be the same as the one we used for requesting the auth code (in fetchAccessTokenWithRefreshToken)
   $vsite = vsite_get_vsite();
   $redirectUri = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar/get-access-token-with-auth-code';
-
+  error_log("\n" . __FILE__ . ":" . __LINE__ . ", redirectUri = " . $redirectUri);
   $client->setState('1');
   $client->setRedirectUri($redirectUri);
 
@@ -157,11 +158,14 @@ function os_events_get_access_token_with_auth_code() {
 
 function os_events_gcal_create_calendar() {
 
+
+
   // Get the API client and construct the service object.
   $client = getClient();
 
   // Redirect URI is required to be absolute
   $redirectUri = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
+  error_log("\n" . __FILE__ . ":" . __LINE__ . ", redirectUri = " . $redirectUri);
   $client->setRedirectUri($redirectUri);
 
   $calendarService = new Google_Service_Calendar($client);
@@ -1251,6 +1255,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
       $client = getClient();
       $vsite = vsite_get_vsite();
       $redirectUri = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar/get-access-token-with-auth-code';
+      error_log("\n" . __FILE__ . ":" . __LINE__ . ", redirectUri = " . $redirectUri);
       $client->setRedirectUri($redirectUri);
       $authUrl = $client->createAuthUrl($client->getScopes());
       $buttons['Google'] = $authUrl;
