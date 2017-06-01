@@ -84,8 +84,9 @@ function os_events_settings() {
  * @return Google_Client the authorized client object
  */
 function getClient() {
-
-  include_once dirname(__FILE__) . '/../../../../../openscholar/openscholar/libraries/google-api-php-client/vendor/autoload.php';
+  
+  $path = libraries_get_path('google-api-php-client');
+  include_once "$path/vendor/autoload.php";
 
   define('APPLICATION_NAME', "OpenScholar Calendar Exporter");
   define('CLIENT_SECRET_PATH', tempnam(sys_get_temp_dir(), "google_client_secret"));
