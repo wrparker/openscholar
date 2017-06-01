@@ -159,7 +159,10 @@ function os_events_gcal_create_calendar() {
 
   // Get the API client and construct the service object.
   $client = getClient();
-  $client->setRedirectUri('/calendar');
+
+  // Redirect URI is required to be absolute
+  $redirectUri = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
+  $client->setRedirectUri($redirectUri);
 
   $calendarService = new Google_Service_Calendar($client);
 
