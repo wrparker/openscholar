@@ -3,9 +3,6 @@
 
 include_once 'os_events.features.inc';
 
-error_log("\nline " . __LINE__ . ", getcwd = " . getcwd());
-require '../../../../../openscholar/openscholar/libraries/google-api-php-client/vendor/autoload.php';
-
 /**
  * Implements hook_os_app_info().
  */
@@ -88,6 +85,9 @@ function os_events_settings() {
  */
 function getClient() {
 
+  error_log("\nline " . __LINE__ . ", getcwd = " . getcwd());
+  include_once dirname(__FILE__) . '/../../../../../openscholar/openscholar/libraries/google-api-php-client/vendor/autoload.php';
+
   define('APPLICATION_NAME', "OpenScholar Calendar Exporter");
   define('CLIENT_SECRET_PATH', tempnam(sys_get_temp_dir(), "google_client_secret"));
   define('CREDENTIALS_PATH', tempnam(sys_get_temp_dir(), "google_credentials"));
@@ -125,9 +125,6 @@ function getClient() {
 
 function os_events_get_access_token_with_auth_code() {
 
-  error_log("\nline " . __LINE__ . ", getcwd = " . getcwd());
-  require '../../../../../openscholar/openscholar/libraries/google-api-php-client/vendor/autoload.php';
-
   if (!isset($_GET['code'])) {
     error_log("Did not receive a Google auth code in the query string with which to create an access code.");
     return;
@@ -159,9 +156,6 @@ function os_events_get_access_token_with_auth_code() {
 }
 
 function os_events_gcal_create_calendar() {
-
-  error_log("\nline " . __LINE__ . ", getcwd = " . getcwd());
-  require '../../../../../openscholar/openscholar/libraries/google-api-php-client/vendor/autoload.php';
 
   // Get the API client and construct the service object.
   $client = getClient();
