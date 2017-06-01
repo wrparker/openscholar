@@ -3748,6 +3748,8 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
           }
         }
         $element[$delta] = array('#markup' => $text);
+
+        // Add a flag on the node for adding our own "Read more" text.
         $entity->readMoreAdded = TRUE;
       }
 
