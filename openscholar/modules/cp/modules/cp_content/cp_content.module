@@ -61,7 +61,7 @@ function cp_content_add_page_access() {
     // User has the permission to administer the content types, so grant access
     // to the page anyway.
     return TRUE;
-  } 
+  }
 
   // Access is TRUE if at least one of the OS bundles returns access TRUE.
   $bundles = os_get_bundles();
