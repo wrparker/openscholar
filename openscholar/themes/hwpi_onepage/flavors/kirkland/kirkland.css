@@ -67,29 +67,21 @@ body {
 	
 }
 
+#search-block-form input.form-submit,
+#search-block-form #edit-submit,
+#search-form #edit-submit {
+    background-color:#065DB2;
 
-.front #columns {
-    padding-top: 0;
-    margin-top: 46px;
 }
-#main-content-header {
-    height: 120px;
-    margin-top: 50px;
-    display: table;
-}
-.page-node #main-content-header {
-    margin-top: 55px;
-}
-.node-type-biblio #main-content-header {
-    margin-top: 42px;
-}
-#main-content-header h1#page-title {
-    display: table-cell;
-    vertical-align: middle;
-}
-.front #content-panels .region-content-first {
-    background-color: #e2e2e2;
-    padding-top: 10px;
+
+
+
+#header {
+
+    background: url(/profiles/openscholar/themes/custom/garyking/images/menu-bg.png?m=1470430593) repeat-x #FFF;
+ 
+   
+   
 }
 h1#page-title,
 h2.block-title {
