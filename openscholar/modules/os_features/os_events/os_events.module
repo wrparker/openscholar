@@ -107,7 +107,7 @@ function getClient() {
 
   $vsite = vsite_get_vsite();
   $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
-                    "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
+                    "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
   $client->setRedirectUri($redirectUri);
 
   // Load previously authorized credentials from a file.
@@ -119,7 +119,7 @@ function getClient() {
   }
 
   $client->setAccessToken($accessToken);
-  $client->setRedirectUri($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar/get-access-token-with-auth-code');
+  $client->setRedirectUri($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code');
 
   return $client;
 }
@@ -137,8 +137,11 @@ function os_events_get_access_token_with_auth_code() {
 
   // This redirect URI has to be the same as the one we used for requesting the auth code (in fetchAccessTokenWithRefreshToken)
   $vsite = vsite_get_vsite();
+
+  # So we go back to a reachable page
   $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
-                    "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar/get-access-token-with-auth-code';
+                    "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
+
   $client->setState('1');
   $client->setRedirectUri($redirectUri);
 
@@ -158,20 +161,18 @@ function os_events_get_access_token_with_auth_code() {
 
 function os_events_gcal_create_calendar() {
 
-
-
   // Get the API client and construct the service object.
   $client = getClient();
 
   // Redirect URI is required to be absolute
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
+  $vsite = vsite_get_vsite($_SESSION['og_context']['gid']);
+  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") .
                     "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
   $client->setRedirectUri($redirectUri);
 
   $calendarService = new Google_Service_Calendar($client);
 
   # Create a new calendar to import events into
-  $vsite = vsite_get_vsite();
   $calendar_calendar = new Google_Service_Calendar_Calendar();
   $calendar_calendar->setDescription(isset($vsite->group->field_site_description[LANGUAGE_NONE][0]['safe_value']) ? $vsite->group->field_site_description[LANGUAGE_NONE][0]['safe_value'] : "");
   $calendar_calendar->setSummary(isset($vsite->group->title) ? $vsite->group->title : "OpenScholar Calendar");
@@ -180,7 +181,12 @@ function os_events_gcal_create_calendar() {
 
   $name = "os_events";
   $display_id = "feed_2";
-  $args = array();
+  $args = array("upcoming", "all");
+
+  // Set the vsite space, since we've moved to the top-level docroot
+  spaces_set_space($vsite);
+  $vsite->activate_user_roles();
+  $vsite->init_overrides();
 
   // Load the view so we can iterate over it's results
   if ($view = views_get_view($name)) {
@@ -207,7 +213,7 @@ function os_events_gcal_create_calendar() {
   }
 
   drupal_set_message("Calendar export completed", 'Success');
-  drupal_goto('/calendar');
+  drupal_goto('/' . $vsite->group->purl . '/calendar');
 }
 
 /**
@@ -428,11 +434,12 @@ function os_events_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
-  $items['calendar/get-access-token-with-auth-code'] = array(
+
+  $items['get-google-access-token-with-auth-code'] = array(
     'title' => 'Get Access Token With Auth Code',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('os_events_get_access_token_with_auth_code'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
 
@@ -1255,7 +1262,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
       $client = getClient();
       $vsite = vsite_get_vsite();
       $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
-                        "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar/get-access-token-with-auth-code';
+                        "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
       $client->setRedirectUri($redirectUri);
       $authUrl = $client->createAuthUrl($client->getScopes());
       $buttons['Google'] = $authUrl;
