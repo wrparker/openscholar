@@ -399,15 +399,7 @@ a:visited {
     -webkit-transition: all .125s;
     border-bottom: 1px solid #fff;
 }
-.os-cvlink {
-    color: #fff !important;
-    padding: 2px 7px;
-    border-radius: 3px;
-    text-decoration: none !important;
-    display: block;
-    width: 150px;
-    background: url("../images/sprite.png?456") 138px -109px no-repeat #065DB2;
-}
+
 .research-by-topic ul .item-list ul li .description {
     transition: all .250s;
     -webkit-transition: all .250s;
