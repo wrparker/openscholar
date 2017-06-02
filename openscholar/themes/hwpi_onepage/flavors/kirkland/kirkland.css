@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Quattrocento|Oswald:400,700');
 
 body {
     -moz-osx-font-smoothing: grayscale;
@@ -347,29 +348,11 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent a:hover {
     padding: 13px 14px 16px 14px;
 }
-#block-os-primary-menu .nice-menu li.last a {
-    padding: 16px 22px 13px 22px;
-    background: url('../images/sprite.png?456') no-repeat 3px 8px #065DB2;
-    font-size: 0;
-    border-bottom: 3px solid #065DB2;
-}
-@media all and (-ms-high-contrast: none) {
-    *::-ms-backdrop,
-    #block-os-primary-menu .nice-menu li.last a {
-        padding: 16px 22px 36px 22px;
-    }
-}
+
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
-ul.nice-menu-down,
-#block-os-primary-menu {
-    float: right;
-}
-#block-boxes-site-info {
-    float: left;
-    width: 13% !important;
-}
+
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
@@ -486,11 +469,7 @@ ul.nice-menu-down,
     border-right: 1px solid #fff;
     padding-right: 8px;
 }
-#footer ul.menu li.last a {
-    border-right: none;
-    padding-right: 22px;
-    background: url("../images/sprite.png?456") 80px -250px no-repeat;
-}
+
 #footer ul.menu {
     text-align: right;
 }
@@ -523,10 +502,7 @@ ul.nice-menu-down,
     .region-content-top .bio-teaser-block2 p {
         font-size: 1.24em;
     }
-    #block-boxes-solr-search-box.opened.opened {
-        opacity: 1;
-        width: 40% !important;
-    }
+    
 }
 /*--------------------------------------------------------*/
 
