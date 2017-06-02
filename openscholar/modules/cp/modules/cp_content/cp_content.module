@@ -42,7 +42,7 @@ function cp_content_views_pre_render(&$view) {
 
   foreach ($view->result as $item) {
     if ($item->node_type != 'biblio') {
-      continue;
+      continue; 
     }
     $item->node_title = filter_xss($item->node_title, variable_get('html_title_allowed_elements', array('em', 'sub', 'sup')));
   }
@@ -71,7 +71,7 @@ function cp_content_add_page_access() {
       return TRUE;
     }
   }
-
+    
   return FALSE;
 }
 
