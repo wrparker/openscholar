@@ -612,10 +612,6 @@ function os_events_process_node(&$variables) {
     return;
   }
 
-  // Move the terms to the top of the node display.
-  if(isset($variables['content']['og_vocabulary'])) {
-    $variables['content']['og_vocabulary']['#weight'] = 100;
-  }
   // Move the event date above the event description.
   if(isset($variables['content']['field_date'])) {
     $variables['content']['field_date']['#weight'] = 0;
