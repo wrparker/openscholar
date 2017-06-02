@@ -61,6 +61,13 @@ body {
 #footer .footer-login {
     color: #ffffff;
 }
+
+.region-header-third ul.nice-menu a {
+	color: #215990;
+	
+}
+
+
 .front #columns {
     padding-top: 0;
     margin-top: 46px;
@@ -313,16 +320,9 @@ a:visited {
     color: #065DB2;
 }
 #menu-bar {
-    position: fixed !important;
+
     background: url('../images/menu-bg.png?m=1470430593') repeat-x #FFF;
-    background-position: left top;
-    padding-top: 6px;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 1;
-    opacity: 1;
-    transition: all .250s linear .250s;
+
 }
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
@@ -356,13 +356,7 @@ a:visited {
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
-#block-boxes-solr-search-box {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    padding: 15px 0 15px 15px;
-    background-color: #c7c7c7;
-}
+
 #search-block-form .form-item label {
     font-size: 0;
     white-space: nowrap;
