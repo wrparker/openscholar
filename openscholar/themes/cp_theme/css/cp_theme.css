@@ -182,13 +182,13 @@ a.button,
 .ui-dialog.ap-settings-form input[type="submit"],
 a#edit-cancel,
 a.form-cancel {
-    cursor: pointer;
+    /*cursor: pointer;
     padding: 5px 12px;
     margin-bottom: 1em;
-    margin-right: 1em;
+    margin-right: 1em;*/
     /* LTR */
 
-    color: #5a5a5a;
+    /*color: #5a5a5a;
     text-align: center;
     font-weight: normal;
     font-size: 1.077em;
@@ -200,7 +200,7 @@ a.form-cancel {
     background: url('/themes/seven/images/buttons.png') 0 0 repeat-x;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    border-radius: 3px;
+    border-radius: 3px;*/
 }
 
 /* SAVE BUTTON SPINNER */
@@ -1849,16 +1849,19 @@ div.no-bold {
     list-style: none;
 }
 .section-search-left {
-    float: left;
-    width: 40%;
+  float: left;
+  width: 40%;
 }
 .section-search-center {
-    float: left;
-    width: 40%;
-    margin: 0 20px;
+  float: left;
+  width: 40%;
+  margin: 0 20px;
 }
 .section-search-right {
-    float: left;
-    width: 10%;
+  float: left;
+  width: 10%;
+}
+.filter-taxonomy-terms {
+  margin-top: 10px;
 }
 
