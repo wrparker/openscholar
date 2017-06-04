@@ -1350,5 +1350,7 @@ function os_search_solr_form_boxes_box_form_alter(&$form, &$form_state) {
 function os_search_solr_os_layout_get_alter($context, &$blocks) {
 
   // Legacy block replaced with os_search_solr-solr_search_box
-  unset($blocks['boxes-solr_search_box']);
+  $blocks = array_filter($blocks, function ($item) {
+    return $item['delta'] != 'site-search';
+  });
 }
