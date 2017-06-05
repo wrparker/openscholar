@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Quattrocento|Oswald:400,700');
+
 body,
 body.not-front {
     -moz-osx-font-smoothing: grayscale;
@@ -47,9 +48,7 @@ h2.block-title,
 .pager.mini-pager {
     font-size: .8em;
 }
-.front #content-panels .region-content-bottom {
-    font-size: 1.3em;
-}
+
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom,
 .front-top-cloumn .region-two-66-33-second,
@@ -72,6 +71,8 @@ h1#page-title,
 h2.block-title {
     color: #545454;
 }
+.breadcrumb, 
+.breadcrumb a,
 .sidebar h2.block-title,
 .region-header-third ul.nice-menu a,
 #content-column h2,
@@ -82,11 +83,9 @@ h2.block-title {
 #content-column h2.block-title {
     font-weight: 400;
 }
-.region-content-second h2.block-title:first-child {
-    margin: 18px 0 23px;
-}
+
 .more-link:after {
-    background-image: url('../images/sprite.png?456');
+    background-image: url('images/sprite.png?456');
     background-position: 0 -126px;
     background-size: 60px auto;
     height: 12px;
@@ -115,10 +114,7 @@ body.node-type-biblio .biblio-export,
 .sidebar h2.block-title {
     padding: 15px 0;
 }
-.block-boxes-os_boxes_addthis .boxes-box-content,
-.ui-tabs {
-    padding: 0;
-}
+
 /* fontpage blocks*/
 
 h1#page-title {
@@ -129,13 +125,7 @@ h3 {
     margin-bottom: 7px;
     font-weight: 300;
 }
-#powerby-login,
-#columns,
-.node-person.node-teaser .field-name-field-person-photo,
-.block-boxes-os_boxes_tabs .ui-widget,
-.front .region-content-top .block-boxes-os_boxes_columns + .block-inner {
-    margin-top: 0;
-}
+
 #footer .footer-login:after,
 #footer .footer-login {
     -moz-box-shadow: none;
@@ -157,17 +147,13 @@ h3 {
 .sidebar .block:nth-child(4) {
     border-color: #3A4B68;
 }
-.block-boxes-os_search_solr_more_like_this {
-    border-color: #E45947 !important;
-}
+
 .ui-tabs ul.ui-tabs-nav {
     margin-bottom: 20px;
 }
 .front .region-content-second,
 #citation-wrapper,
 body.node-type-biblio .biblio-export,
-.front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider,
-.not-front .gkplus-show-heading.depth-2 h2,
 .ui-state-default:hover,
 .ui-widget-content .ui-state-default:hover,
 .ui-widget-header .ui-state-default:hover,
@@ -196,53 +182,40 @@ body.node-type-biblio .biblio-export,
 .node-biblio table.os-files-other-list {
     margin-bottom: 0;
 }
-.node-type-page .breadcrumb,
-.breadcrumb,
-.breadcrumb span,
-.breadcrumb a {
-    color: #FFF !important;
-}
-.breadcrumb {
-    position: relative;
-    top: 68px;
-    z-index: 1;
-}
-.page-node .breadcrumb {
-    top: 57px;
-}
+
 .bg-one {
-    background: url('../images/bg1.jpg?457') center -110px no-repeat;
+    background: url('images/bg1.jpg?457') center -110px no-repeat;
 }
 .bg-two {
-    background: url('../images/bg2.jpg') center -110px no-repeat;
+    background: url('images/bg2.jpg') center -110px no-repeat;
 }
 .bg-three {
-    background: url('../images/bg3.jpg') center -110px no-repeat;
+    background: url('images/bg3.jpg') center -110px no-repeat;
 }
 .bg-four {
-    background: url('../images/bg4.jpg') center -110px no-repeat;
+    background: url('images/bg4.jpg') center -110px no-repeat;
 }
 .bg-five {
-    background: url('../images/bg5.jpg') center -110px no-repeat;
+    background: url('images/bg5.jpg') center -110px no-repeat;
 }
 .bg-six {
-    background: url('../images/bg6.jpg') center -110px no-repeat;
+    background: url('images/bg6.jpg') center -110px no-repeat;
 }
 .bg-seven {
-    background: url('../images/bg7.jpg') center -110px no-repeat;
+    background: url('images/bg7.jpg') center -110px no-repeat;
 }
 .bg-eight {
-    background: url('../images/bg8.jpg') center -110px no-repeat;
+    background: url('images/bg8.jpg') center -110px no-repeat;
 }
 .front #content-panels .region-content-bottom {
-    background: url('../images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
+    background: url('images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
     background-size: 100%;
 }
 .front #content-panels .region-content-bottom a {
     color: #7cabd8;
 }
 .block-boxes-os_boxes_twitterfeed h2.block-title {
-    background: url('../images/sprite.png?456') 0 -55px no-repeat;
+    background: url('images/sprite.png?456') 0 -55px no-repeat;
     font-size: 0;
     height: 50px;
     width: 64px;
@@ -325,18 +298,8 @@ padding: 10px 15px;
     width: 41px;
     text-align: center;
 }
-.contextual-controls-wrapper {
-    top: 80px;
-}
-.page-node.node-type-biblio {
-    top: 50px;
-}
-.front .contextual-controls-wrapper {
-    top: 300px;
-}
-#footer {
-    padding: 10px 0 10px;
-}
+
+
 #footer ul li.leaf {
     display: inline;
 }
@@ -347,10 +310,7 @@ padding: 10px 15px;
 #footer ul.menu {
     text-align: right;
 }
-.region-footer .region-inner {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
+
 .field-name-field-biblio-image {
     width: 55px;
 }

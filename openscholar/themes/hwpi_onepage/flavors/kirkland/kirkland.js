@@ -4,7 +4,7 @@
 
      jQuery("body.not-front").each(function() {
          jQuery(this).addClass(classes[~~(Math.random() * classes.length)]);
-     });
+    })(jQuery);
 
 
 
