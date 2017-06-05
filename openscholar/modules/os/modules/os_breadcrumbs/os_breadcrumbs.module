@@ -350,22 +350,6 @@ function _os_breadcrumbs_build_subsection_breadcrumb($menu_active_trail) {
     }
   }
 
-  // remove extra breadcrumbs that are not in the menu_active_trail
-  $extra_links = abs(sizeof ($menu_active_trail) - sizeof($links));
-  if ($extra_links) {
-    foreach (array_keys($links) as $path) {
-      $keep_breadcrumb = false;
-      foreach ($menu_active_trail as $crumb) {
-        if (($crumb['href'] == $path) || ($crumb['link_path'] == $path)) {
-          $keep_breadcrumb = true;
-          break;
-        }
-      }
-      if (! $keep_breadcrumb) {
-        unset($links[$path]);
-      }
-    }
-  }
   return $links;
 }
 
