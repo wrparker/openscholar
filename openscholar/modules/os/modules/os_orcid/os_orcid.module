@@ -20,15 +20,16 @@ function os_orcid_cp_settings() {
 
   $settings['orcid_id'] = array(
     'group' => array(
-      '#title' => t('ORCID Integration'),
-      '#id' => 'orcid-integration',
+      '#id' => 'feature_os_publication',
+      '#title' => t('Publications'),
     ),
     'form' => array(
-      '#id' => 'orcid_id',
       '#type' => 'textfield',
       '#default_value' => variable_get('orcidId'),
       '#title' => t('ORCID ID'),
       '#description' => t('Enter your ORCID ID, It is in the format XXXX-XXXX-XXXX-XXXX and is available at <a href="http://orcid.org">http://orcid.org</a>.  When this is set, your publication information will be imported to your site.'),
+      '#column' => 'right',
+      '#weight' => 1,
     ),
     'rest_submit' => '_os_orcid_manage_orcid_submit',
   );
@@ -79,7 +80,7 @@ function _os_orcid_manage_orcid_submit($var, $value) {
 
       $orcidIdtoProcess = variable_get('orcidIdtoProcess');
       $orcidIdtoProcess[$vsite->group->vid] = $orcid_id;
-	  variable_set('orcidIdtoProcess', $orcidIdtoProcess);
+      variable_set('orcidIdtoProcess', $orcidIdtoProcess);
     }
   }
 }

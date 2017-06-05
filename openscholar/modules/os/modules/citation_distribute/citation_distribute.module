@@ -827,7 +827,7 @@ function citation_distribute_cp_settings() {
       '#type' => 'checkboxes',
       '#default_value' => variable_get('citation_distribute_autoflags', $default_autoflags),
       '#description' => t('New publications will automatically be flagged for distribution to the selected services.'),
-      '#weight' => 1,
+      '#weight' => 0,
       '#options' => $autoflags_options,
       '#column' => 'right',
       '#prefix' => '<label>Distribute to repositories</label>',
