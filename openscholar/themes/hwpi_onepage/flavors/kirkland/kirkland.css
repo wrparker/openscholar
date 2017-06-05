@@ -95,7 +95,12 @@ h2.block-title {
 .sidebar .block {
     border-top-style: solid;
     border-width: 3px;
+    padding: 15px 0 0 0;
 }
+.sidebar h2.block-title {
+    padding: 0 0 15px 0;
+}
+
 #menu-bar ul.nice-menu a.active,
 #menu-bar ul.nice-menu a:hover,
 #menu-bar ul.nice-menu .menuparent.over > a,
@@ -111,9 +116,7 @@ body.node-type-biblio .biblio-export,
 .biblio-title-chicago a {
     font-weight: normal !important;
 }
-.sidebar h2.block-title {
-    padding: 15px 0;
-}
+
 
 /* fontpage blocks*/
 
@@ -268,15 +271,7 @@ padding: 10px 15px;
 }
 
 
-#boxes-box-site_info h1 {
-    padding: 8px 0 8px 12px;
-}
-#search-block-form .form-item label {
-    font-size: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    position: absolute;
-}
+
 #footer {
     background-color: #3e464d;
     border-top: 4px solid #999;
