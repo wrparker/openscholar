@@ -668,6 +668,18 @@ function os_events_process_node(&$variables) {
       }
     }
 
+    // Seperate $register from export link
+    $register_full_view_theme = '';
+    if ($register != '' && $variables['view_mode'] == 'full') {
+      if(isset($variables['content']['field_event_registration'])) {
+        $variables['content']['field_event_registration'][0]['#markup'] = $register;
+      } elseif(isset($variables['content']['og_vocabulary'])) {
+        $variables['content']['og_vocabulary'][0]['#markup'] =  '<div class="os-events-signup-full">' . $register . '</div>' . $variables['content']['og_vocabulary'][0]['#markup'];
+      } else {
+        $register_full_view_theme = $register;
+      }
+    }
+
     // Change the date markup if this is a recurring event.
     if ($variables['content']['field_date']['#items'][0]['rrule']) {
       $variables['content']['field_date'][0]['#markup'] = _os_events_style_recurring_event($variables['content']['field_date'][0]['#markup']);
@@ -680,12 +692,11 @@ function os_events_process_node(&$variables) {
     // Hiding the original registration link because we are using our own link
     // with a ctools modal effect and because we placing the registration link
     // in the export area.
-    hide($variables['content']['field_event_registration']);
 
     $ical = l(t('iCal'), 'calendar/single/' . $variables['node']->nid . '/export.ics', array('attributes' => array('class' => array('ical'))));
 
     $params = array(
-      'register' => $register,
+      'register' => $register_full_view_theme,
       'ical' => $ical,
       'subscribe' => $subscribe,
     );
