@@ -64,8 +64,9 @@ h2.block-title,
 #search-form #edit-submit {
     background-color: #065DB2;
 }
-#header {
+#menu-bar {
     background: url(/profiles/openscholar/themes/custom/garyking/images/menu-bg.png?m=1470430593) repeat-x #FFF;
+    padding-top:6px;
 }
 h1#page-title,
 h2.block-title {
@@ -255,9 +256,11 @@ a,
 a:visited {
     color: #065DB2;
 }
-#menu-bar {
-    background: url('../images/menu-bg.png?m=1470430593') repeat-x #FFF;
+
+#menu-bar ul.nice-menu ul {
+    background: #32526e;
 }
+
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
 }
@@ -282,9 +285,16 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent a:hover {
     padding: 13px 14px 16px 14px;
 }
-#block-os-primary-menu .nice-menu li.last a:hover {
+
+#menu-bar ul.nice-menu .menuparent ul li a:hover {
+padding: 10px 15px;
     cursor: pointer;
 }
+#menu-bar ul.nice-menu .menuparent {
+    padding-right: 0;
+}
+
+
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
