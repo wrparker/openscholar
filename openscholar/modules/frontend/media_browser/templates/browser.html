@@ -53,10 +53,7 @@
             <label for="media-browser-web">URL or HTML:</label>
             <textarea id="media-browser-web" cols="60" rows="5" ng-model="$parent.embed" placeholder="Enter the URL or HTML here"></textarea>
             <div class="description embedly">Enter a URL from one of <a href="http://embed.ly/embed/features/providers" target="_blank">
-                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of the following sites. Don't see what you're looking for? <a href="http://docs.openscholar.harvard.edu/embedding-third-party-content" target="_blank">Learn more about how to whitelist.</a>   <br><br>
-                <span ng-init="limit = -21" ng-repeat="domain in whitelist" ng-mouseenter="limit = -120" ng-mouseleave="limit = -21" tooltip="{{domain}}" >
-                  <span ng-hide="(limit *-1) >= domain.length">...</span>{{domain | limitTo:limit}}{{$last ? '' : ', '}}
-                </span>
+                these providers</a> or paste a snippet of HTML. The HTML may contain references to any of <a href="https://docs.openscholar.harvard.edu/" target="_blank"> these additional sites. </a>Don't see what you're looking for? <a href="http://docs.openscholar.harvard.edu/embedding-third-party-content" target="_blank">Learn more about how to whitelist.</a>   <br><br>
             </div>
             <div class="embed-failure" ng-show="embedFailure" ng-click="$parent.embedFailure = false">
                 <span class="error-icon"></span>
