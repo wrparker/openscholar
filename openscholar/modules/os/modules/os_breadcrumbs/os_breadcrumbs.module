@@ -349,7 +349,6 @@ function _os_breadcrumbs_build_subsection_breadcrumb($menu_active_trail) {
       $links[$menu['href']] = l(strtoupper($short_title), $menu['href']);
     }
   }
-
   return $links;
 }
 
