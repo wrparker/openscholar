@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Quattrocento|Oswald:400,700');
-
-body {
+body,
+body.not-front {
     -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    color: #222;
 }
 .tweet-divider,
 .tweet-authorphoto,
@@ -45,15 +47,8 @@ h2.block-title,
 .pager.mini-pager {
     font-size: .8em;
 }
-body,
-body.not-front {
-    font-size: 16px;
-}
 .front #content-panels .region-content-bottom {
     font-size: 1.3em;
-}
-body {
-    color: #222;
 }
 .front #content-panels .region-content-first,
 .front #content-panels .region-content-bottom,
@@ -61,32 +56,23 @@ body {
 #footer .footer-login {
     color: #ffffff;
 }
-
 .region-header-third ul.nice-menu a {
-	color: #215990;
-	
+    color: #215990;
 }
-
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
-    background-color:#065DB2;
-
+    background-color: #065DB2;
 }
-
-
-
 #header {
-
     background: url(/profiles/openscholar/themes/custom/garyking/images/menu-bg.png?m=1470430593) repeat-x #FFF;
- 
-   
-   
 }
 h1#page-title,
 h2.block-title {
     color: #545454;
 }
+.sidebar h2.block-title,
+.region-header-third ul.nice-menu a,
 #content-column h2,
 #content-column h3,
 #content-column h4 {
@@ -127,7 +113,6 @@ body.node-type-biblio .biblio-export,
 }
 .sidebar h2.block-title {
     padding: 15px 0;
-    font-weight: 300;
 }
 .block-boxes-os_boxes_addthis .boxes-box-content,
 .ui-tabs {
@@ -135,17 +120,6 @@ body.node-type-biblio .biblio-export,
 }
 /* fontpage blocks*/
 
-.front .sv-list-view-slide_teaser .os-slider {
-    padding: 8px;
-    background-color: #f6f6f6 !important;
-}
-.front .sv-list-biblio.sv-list-view-slide_teaser .biblio-abstract-display.os-slider {
-    background: #eee !important;
-}
-#content-panels .front-lop-blockgrid .block-inner {
-    margin-top: 5px;
-    padding: 0 12px;
-}
 h1#page-title {
     font-size: 1.75em;
     line-height: 1.2em;
@@ -161,13 +135,6 @@ h3 {
 .front .region-content-top .block-boxes-os_boxes_columns + .block-inner {
     margin-top: 0;
 }
-.front-top-cloumn .region-two-66-33-second {
-    background: url('../images/working-paper_image.jpg?123') center right no-repeat;
-    background-size: cover;
-    margin: 0;
-    box-shadow: inset 0 0 0 1000px rgba(0, 35, 45, .5);
-    display: table;
-}
 #footer .footer-login:after,
 #footer .footer-login {
     -moz-box-shadow: none;
@@ -175,29 +142,6 @@ h3 {
     box-shadow: none;
     background-image: none;
     text-shadow: none;
-}
-.front-top-featured {
-    padding: 0 30px;
-}
-.front-top-cloumn .region-two-66-33-first {
-    margin: 0;
-    background: url('../images/homepage-left.jpg') center right no-repeat;
-    background-size: cover;
-    display: table;
-}
-.front-top-cloumn .region-two-66-33-first .region-inner,
-.front-top-cloumn .region-two-66-33-second .region-inner {
-    vertical-align: middle;
-    display: table-cell;
-}
-.front-four-lops .mini-pager,
-.front-four-lops .more-link {
-    position: absolute;
-    bottom: 10px;
-}
-.front-four-lops .more-link {
-    font-size: .85em;
-    right: 20px;
 }
 .item-list .pager li {
     padding: 0.2em;
@@ -312,9 +256,7 @@ a:visited {
     color: #065DB2;
 }
 #menu-bar {
-
     background: url('../images/menu-bg.png?m=1470430593') repeat-x #FFF;
-
 }
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
@@ -340,15 +282,12 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent a:hover {
     padding: 13px 14px 16px 14px;
 }
-
 #block-os-primary-menu .nice-menu li.last a:hover {
     cursor: pointer;
 }
-
 #boxes-box-site_info h1 {
     padding: 8px 0 8px 12px;
 }
-
 #search-block-form .form-item label {
     font-size: 0;
     white-space: nowrap;
@@ -358,55 +297,6 @@ a:visited {
 #footer {
     background-color: #3e464d;
     border-top: 4px solid #999;
-}
-
-.bio-teaser-block2 p,
-.research-by-topic .term-head {
-    font-size: 1.2em;
-    padding-bottom: 5px;
-    text-align: center;
-}
-.bio-teaser-block2 p {
-    font-size: 1.4em;
-    line-height: 1.2em;
-    margin-top: 1.2em !important;
-    text-align: left;
-}
-.region-content-top .bio-teaser-block2 p {
-    margin: 1.3em 1.3em 0 !important;
-}
-.region-content-top .bio-teaser-block2 a.os-front-bio_link {
-    text-decoration: none !important;
-    padding-right: 28px;
-    background: url("../images/sprite.png?456") 145px -109px no-repeat;
-}
-.region-content-top .bio-teaser-block2 a.os-front-bio_link:hover {
-    background-position: 150px -109px;
-}
-.bio-teaser-block2 a.os-front-bio_link {
-    text-decoration: none !important;
-    padding-right: 28px;
-    background: url("../images/sprite.png?456") 80px -207px no-repeat;
-    transition: all .250s;
-    -webkit-transition: all .125s;
-    border-bottom: 1px solid #fff;
-}
-
-.research-by-topic ul .item-list ul li .description {
-    transition: all .250s;
-    -webkit-transition: all .250s;
-    padding: 5px 10px 10px 12px;
-    z-index: 1;
-    position: relative;
-    top: 5px;
-    transition: all .250s;
-}
-.research-by-topic ul .item-list ul li.open .description {
-    /* top: -5px; */
-    
-    height: auto;
-    overflow-y: scroll;
-    max-height: 300px;
 }
 #citation-wrapper {
     margin-bottom: 0;
@@ -434,9 +324,6 @@ a:visited {
 .front .contextual-controls-wrapper {
     top: 300px;
 }
-.twitter-followme {
-    text-align: center;
-}
 #footer {
     padding: 10px 0 10px;
 }
@@ -447,7 +334,6 @@ a:visited {
     border-right: 1px solid #fff;
     padding-right: 8px;
 }
-
 #footer ul.menu {
     text-align: right;
 }
@@ -471,16 +357,6 @@ a:visited {
     #menu-bar ul.nice-menu a {
         font-size: 16px;
     }
-    /* #menu-bar #block-os-primary-menu a.active,
-    #menu-bar #block-os-primary-menu a:hover,
-    #menu-bar #block-os-primary-menu a:focus {
-        background-color: #303030!important;
-    }*/
-    
-    .region-content-top .bio-teaser-block2 p {
-        font-size: 1.24em;
-    }
-    
 }
 /*--------------------------------------------------------*/
 
@@ -516,8 +392,6 @@ a:visited {
         padding: 10px 10px 20px 10px;
     }
     #main-content-header,
-    .research-by-topic li.term-applications,
-    .research-by-topic li.term-methods,
     h1#page-title {
         width: 100%;
     }
@@ -587,11 +461,6 @@ a:visited {
     }
 }
 @media (max-width: 600px) {
-    .research-by-topic li.term-applications,
-    .research-by-topic li.term-methods {
-        float: none;
-        width: 100%;
-    }
     .region.region-footer-first,
     .region.region-footer {
         width: 100% !important;
@@ -620,9 +489,6 @@ img.file-icon {
     .bg-eight {
         background-position: center 60px;
         background-size: 100% 5%;
-    }
-    #block-boxes-solr-search-box.opened.opened {
-        width: 99% !important;
     }
     .front .block-boxes-os_sv_list_box {
         width: 94% !important;
