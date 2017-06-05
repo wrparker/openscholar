@@ -11,7 +11,7 @@ function grouper_cp_settings() {
       '#access' => user_access('manage grouper groups'),
       '#custom_directive' => 'grouper',
       '#custom_directive_parameters' => array(
-        'ng-if' => "\$parent.formData.vsite_private == 'grouper'"
+        'ng-show' => "\$parent.formData.vsite_private == 5"
       ),
       '#default_value' => grouper_site_groups(),
       '#weight' => 2
@@ -21,8 +21,38 @@ function grouper_cp_settings() {
       '#title' => t('Site Visibility'),
       '#weight' => 10,
       '#help_link' => l(t('Learn more about site visibility'), 'http://docs.openscholar.harvard.edu/global-site-settings#site-visibility', array('attributes' => array('target' => '_blank')))
-    )
+    ),
+    'rest_submit' => 'grouper_save_groups',
   );
 
   return $forms;
+}
+
+/**
+ *
+ */
+function grouper_save_groups($vals) {
+  $space = spaces_get_space();
+
+  $node = node_load($space->id);
+  $data = array();
+  foreach ($vals as $v) {
+    $data[] = array(
+      'value' => $v,
+      'format' => null,
+    );
+  }
+  $node->field_grouper_path[LANGUAGE_NONE] = $data;
+  node_save($node);
+  $cid = "field:node:$id";
+  cache_clear_all($cid, 'cache_field');
+  // Restful by default doesn't allow sessions to be saved
+  drupal_save_session(true);
+  $_SESSION['os_restful']['cache_clear_all'][] = array('field:node:'.$space->group->nid, 'cache_field');
+
+  // Clear the cache when we switch the privacy in ALL cases except toggling between invite only (value = 1) and Harvard (value = 4).
+  // For toggling, the sum of previous and selected value will be always '5' for such case; other two radio buttons values are 0 and 2.
+  if (($current_vsite_access + $val) != 5 && $current_vsite_access != $val) {
+    cp_clear_site_cache();
+  }
 }
