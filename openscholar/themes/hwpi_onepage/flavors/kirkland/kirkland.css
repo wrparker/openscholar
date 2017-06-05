@@ -63,8 +63,8 @@ h2.block-title,
 #search-form #edit-submit {
     background-color: #065DB2;
 }
-#menu-bar {
-    background: url(/profiles/openscholar/themes/custom/garyking/images/menu-bg.png?m=1470430593) repeat-x #FFF;
+#header {
+    background: url(/profiles/openscholar/themes/custom/garyking/images/menu-bg.png?m=1470430593) left bottom repeat-x #FFF;
     padding-top:6px;
 }
 h1#page-title,
@@ -186,14 +186,18 @@ body.node-type-biblio .biblio-export,
     margin-bottom: 0;
 }
 
+.not-front #menu-bar {
+    padding-bottom: 25px;
+}
+
 .bg-one {
     background: url('images/bg1.jpg?457') center -110px no-repeat;
 }
 .bg-two {
     background: url('images/bg2.jpg') center -110px no-repeat;
 }
-.bg-three {
-    background: url('images/bg3.jpg') center -110px no-repeat;
+.bg-three #menu-bar {
+    background: url('images/bg3.jpg') center bottom -180px no-repeat;
 }
 .bg-four {
     background: url('images/bg4.jpg') center -110px no-repeat;
