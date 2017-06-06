@@ -22,6 +22,8 @@ function os_orcid_cp_settings() {
     'group' => array(
       '#id' => 'feature_os_publication',
       '#title' => t('Publications'),
+      '#menu_parent' => 'app_settings',
+      '#help_link' => l(t('Learn more about publications'), '', array('attributes' => array('target' => '_blank'))),
     ),
     'form' => array(
       '#type' => 'textfield',
