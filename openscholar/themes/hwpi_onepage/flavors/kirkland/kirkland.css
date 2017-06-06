@@ -191,28 +191,28 @@ body.node-type-biblio .biblio-export,
 }
 
 .bg-one {
-    background: url('images/bg1.jpg?457') center -110px no-repeat;
+    background: url('images/bg1.jpg?457') center bottom -180px no-repeat;
 }
 .bg-two {
-    background: url('images/bg2.jpg') center -110px no-repeat;
+    background: url('images/bg2.jpg') center bottom -180px no-repeat;
 }
 .bg-three #menu-bar {
     background: url('images/bg3.jpg') center bottom -180px no-repeat;
 }
 .bg-four {
-    background: url('images/bg4.jpg') center -110px no-repeat;
+    background: url('images/bg4.jpg') center bottom -180px no-repeat;
 }
 .bg-five {
-    background: url('images/bg5.jpg') center -110px no-repeat;
+    background: url('images/bg5.jpg') center bottom -180px no-repeat;
 }
 .bg-six {
-    background: url('images/bg6.jpg') center -110px no-repeat;
+    background: url('images/bg6.jpg') center bottom -180px no-repeat;
 }
 .bg-seven {
-    background: url('images/bg7.jpg') center -110px no-repeat;
+    background: url('images/bg7.jpg') center bottom -180px no-repeat;
 }
 .bg-eight {
-    background: url('images/bg8.jpg') center -110px no-repeat;
+    background: url('images/bg8.jpg') center bottom -180px no-repeat;
 }
 .front #content-panels .region-content-bottom {
     background: url('images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
