@@ -53,10 +53,27 @@ h2.block-title,
 #header {
     background: #FFF;
 }
+
+
+.section-nav ul.menu li,
+.section-nav .expanded.menu-depth-2 > a,
+.section-nav .menu-depth-1 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-5 > a,
+.section-nav .expanded.menu-depth-2 .menu-depth-6 > a,
+.section-nav .leaf.menu-depth-3 > a,
+.section-nav .leaf.menu-depth-4 > a,
+.section-nav .leaf.menu-depth-5 > a,
+.section-nav .leaf.menu-depth-6 > a,
+.sidebar .block h2.block-title,
+.sidebar {
+    background: #f3f2f1 !important;
+}
+
+
 .rslides_tabs li,
 #layout_16_9_side .slide,
-.sidebar .block h2.block-title,
-.sidebar,
 #footer {
     background: #cdc7c3;
 }
@@ -116,19 +133,7 @@ h2.block-title,
 .section-nav a[class="active-trail active active"] {
     color: #333 !important;
 }
-.section-nav ul.menu li,
-.section-nav .expanded.menu-depth-2 > a,
-.section-nav .menu-depth-1 > a,
-.section-nav .expanded.menu-depth-2 .menu-depth-3 > a,
-.section-nav .expanded.menu-depth-2 .menu-depth-4 > a,
-.section-nav .expanded.menu-depth-2 .menu-depth-5 > a,
-.section-nav .expanded.menu-depth-2 .menu-depth-6 > a,
-.section-nav .leaf.menu-depth-3 > a,
-.section-nav .leaf.menu-depth-4 > a,
-.section-nav .leaf.menu-depth-5 > a,
-.section-nav .leaf.menu-depth-6 > a {
-    background-color: #f9f8f6 !important;
-}
+
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
     border-color: transparent;
