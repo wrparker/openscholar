@@ -71,6 +71,7 @@ function cp_content_add_page_access() {
       return TRUE;
     }
   }
+
   return FALSE;
 }
 
