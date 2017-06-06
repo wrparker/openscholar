@@ -34,6 +34,7 @@ function os_orcid_cp_settings() {
       '#weight' => 1,
     ),
     'rest_submit' => '_os_orcid_manage_orcid_submit',
+    'submit_full_request' => TRUE,
   );
   return $settings;
 }
@@ -44,45 +45,48 @@ function os_orcid_cp_settings() {
  * Submit callback to import/update from orcid.
  */
 function _os_orcid_manage_orcid_submit($var, $value) {
-  // Set variable to store the orcid_id from the form.
-  $orcid_id = trim($var);
+  if (is_array($var)) {
+    $orcid_id = "";
+    // Set variable to store the orcid_id from the form.
+    if (isset($var['orcid_id'])) {
+      $orcid_id = $var['orcid_id'];
+    }
 
-  // Get vsite id
-  $vsite = vsite_get_vsite();
+    // Get vsite id
+    $vsite = vsite_get_vsite();
 
-  if($orcid_id == ""){
-    if(module_exists('spaces')){
-      // Get the current space.
-      $space = spaces_get_space();
-      // Update the orcid_id for the user space.
-      $space->controllers->variable->del('orcidId', $orcid_id);
-    }
-    else{
-      variable_del('orcidId', $orcid_id);
-    }
-  }
-  else {
-    if(!preg_match('/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9A-Z]{4}$/', $orcid_id)) {
-      drupal_set_message(t('Your ORCID id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
-      return false;
-    }
-    else {
-      // Get the current space.
-       if(module_exists('spaces')){
+    if($orcid_id == ""){
+      if(module_exists('spaces')){
         // Get the current space.
         $space = spaces_get_space();
         // Update the orcid_id for the user space.
-        $space->controllers->variable->set('orcidId', $orcid_id);
+        $space->controllers->variable->del('orcidId', $orcid_id);
       }
       else{
-        variable_set('orcidId', $orcid_id);
+        variable_del('orcidId', $orcid_id);
       }
+    }
+    else {
+      if(!preg_match('/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9A-Z]{4}$/', $orcid_id)) {
+        drupal_set_message(t('Your ORCID id must match the pattern XXXX-XXXX-XXXX-XXXX.'), 'error');
+        return false;
+      }
+      else {
+        // Get the current space.
+         if(module_exists('spaces')){
+          // Get the current space.
+          $space = spaces_get_space();
+          // Update the orcid_id for the user space.
+          $space->controllers->variable->set('orcidId', $orcid_id);
+        }
+        else{
+          variable_set('orcidId', $orcid_id);
+        }
 
-      drupal_set_message(t('Your ORCID id has been updated. Your orcid data will be imported soon.'), 'status');
-
-      $orcidIdtoProcess = variable_get('orcidIdtoProcess');
-      $orcidIdtoProcess[$vsite->group->vid] = $orcid_id;
-      variable_set('orcidIdtoProcess', $orcidIdtoProcess);
+        $orcidIdtoProcess = variable_get('orcidIdtoProcess');
+        $orcidIdtoProcess[$vsite->group->vid] = $orcid_id;
+        variable_set('orcidIdtoProcess', $orcidIdtoProcess);
+      }
     }
   }
 }
