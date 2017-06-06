@@ -113,13 +113,13 @@
             '<div class="form-column-wrapper column-count-{{columnCount}}" ng-if="columnCount > 1">' +
               '<div class="form-column column-{{column_key}}" ng-repeat="(column_key, elements) in columns">' +
                 '<div class="form-item" ng-repeat="(key, field) in elements | weight">' +
-                  '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
+                  '<div form-element element="field" value="formData[key]"><div>placeholder</div></div>' +
                 '</div>' +
               '</div>' +
             '</div>' +
             '<div class="form-wrapper" ng-if="columnCount == 1">' +
               '<div class="form-item" ng-repeat="(key, field) in formElements | weight">' +
-                '<div form-element element="field" value="formData[key]"><span>placeholder</span></div>' +
+                '<div form-element element="field" value="formData[key]"><p>placeholder</p></div>' +
               '</div>' +
             '</div>' +
             '<div class="help-link" ng-bind-html="help_link"></div>' +

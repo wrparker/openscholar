@@ -162,8 +162,23 @@ function os_importer_cp_settings() {
           '#menu_parent' => 'import',          
         ),
       );
-      // Biblio specific select dropdown.
       if ($node_type == 'biblio') {
+        // Link to Orcid Setup
+        $orcid_link = '<a href="#" ap-settings-form form="os_importer_content_biblio" class="ng-isolate-scope">For ORCID imports, go publication settings</a>';
+        $settings['os_importer_orcid_link-' . $node_type] = array(
+            'group' => array(
+              '#id' => 'os_importer_content_' . $node_type,
+              '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
+              '#menu_parent' => 'import',
+            ),
+            'form' => array(
+              '#type' => 'markup',
+              '#markup' => $orcid_link,
+              '#weight' => 4,
+              '#access' => biblio_access('import'),
+            ),
+          );
+        // Biblio specific select dropdown.
         $biblio_import_options = module_invoke_all('biblio_import_options');
         asort($biblio_import_options);
         $biblio_import_options = array_merge(array('0' => 'Select type'), $biblio_import_options);
@@ -172,7 +187,7 @@ function os_importer_cp_settings() {
             'group' => array(
               '#id' => 'os_importer_content_' . $node_type,
               '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-              '#weight' => 4,
+              '#weight' => 5,
               '#menu_parent' => 'import',
             ),
             'form' => array(
@@ -180,7 +195,7 @@ function os_importer_cp_settings() {
               '#type' => 'optgroup',
               '#options' => $biblio_import_options,
               '#default_value' => '0',
-              '#weight' => 4,
+              '#weight' => 5,
               '#access' => biblio_access('import'),
             ),
           );
@@ -192,7 +207,7 @@ function os_importer_cp_settings() {
             'group' => array(
               '#id' => 'os_importer_content_' . $node_type,
               '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-              '#weight' => 4,
+              '#weight' => 5,
               '#menu_parent' => 'import',
             ),
             'form' => array(
@@ -201,7 +216,7 @@ function os_importer_cp_settings() {
               '#options' => $encode_options,
               '#default_value' => 'utf-8',
               '#description' => t('Select the encoding of your file. For a full list of encodings you can visit <a href="@wikipedia-url">this</a> Wikipedia page.', $params),
-              '#weight' => 4,
+              '#weight' => 5,
               '#class' => array('csv-import-fields'),
             ),
           );
@@ -211,14 +226,14 @@ function os_importer_cp_settings() {
         'group' => array(
           '#id' => 'os_importer_content_' . $node_type,
           '#title' => isset($importer_menu_title[$node_type]) ? $importer_menu_title[$node_type] : ucfirst($node_type),
-          '#weight' => 5,
+          '#weight' => 6,
           '#menu_parent' => 'import',
           '#group_validate' => 'os_importer_import_group_validate',
         ),
         'form' => array(
           '#value' => t('Submit'),
           '#type' => 'submit',
-          '#weight' => 5,
+          '#weight' => 6,
         ),
         'rest_submit' => 'os_importer_file_submit',
         'submit_full_request' => TRUE,
