@@ -1,12 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 body * {
     font-family: 'Montserrat', sans-serif !important;
 }
-
 body {
     font-weight: 300;
-} 
-
+}
 #boxes-box-site_info,
 #boxes-box-site_info a,
 .section-nav .menu-depth-1 > a {
@@ -16,38 +14,34 @@ a,
 a:visited {
     color: #407cb5;
 }
-
+h2.block-title,
 #boxes-box-site_info h1 {
     text-transform: uppercase;
 }
-
+#menu-bar ul.nice-menu a.active,
+#menu-bar ul.nice-menu a:hover,
+#boxes-box-site_info,
+#boxes-box-site_info a,
 .node-type-person #content-column .node-person h2.block-title,
 .sidebar .block h2.block-title {
     color: #000;
 }
-
-
 .not-front #content-column h2.block-title,
 .front h2.block-title,
 .node-type-person #content-column .node-person h2.block-title {
     margin-bottom: 17px;
 }
-
-
-
-
 .sidebar .block.section-nav {
     margin-bottom: 0;
 }
-
 .node-type-page .breadcrumb {
     padding-bottom: 2em;
 }
-
 .breadcrumb span {
     margin: 0 3px;
 }
-
+#menu-bar ul.nice-menu a.active,
+#menu-bar ul.nice-menu a:hover,
 #menu-bar,
 #header {
     background: #FFF;
@@ -57,35 +51,29 @@ a:visited {
 .sidebar .block h2.block-title,
 .sidebar,
 #footer {
-    background: #f3f2f1 !important;
+    background: #cdc7c3;
 }
-
-.front #content-column .block, .node-person .block-inner, .comment-wrapper {
+.front #content-column .block,
+.node-person .block-inner,
+.comment-wrapper {
     border-top: none;
 }
-
 #header,
-#branding_footer
-{
+#branding_footer {
     border-top: 1px solid #333;
 }
-a.rslides_nav,
-#search-block-form input.form-submit,
-#search-block-form #edit-submit,
-#search-form #edit-submit {
+a.rslides_nav {
     background-color: #857b6f;
 }
 .region-header-third ul.nice-menu a {
     color: #fff;
 }
 .region-header-third ul.nice-menu a,
-.node-type-page .breadcrumb, 
-.breadcrumb, 
+.node-type-page .breadcrumb,
+.breadcrumb,
 .breadcrumb a {
- text-transform:none;
- 
+    text-transform: none;
 }
-
 #footer .footer-login:after {
     background-image: none;
 }
@@ -95,7 +83,7 @@ a.rslides_nav,
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
-    background-position: 2px -441px;
+    background-position: 0px -617px;
 }
 #footer .footer-login {
     background: none;
@@ -107,25 +95,20 @@ h2.block-title,
 .sidebar .block h2.block-title {
     font-size: 1.2em;
     padding: 0;
-  background-color: #fff; 
+    background-color: #fff;
     letter-spacing: 0;
     font-weight: 500;
 }
 .sidebar .block h2.block-title {
-
-  background-color: transparent; 
-   
+    background-color: transparent;
 }
 .section-nav a.active,
 .section-nav .menu-depth-1 > a {
     color: #407cb5 !important;
 }
-
-.section-nav a[class="active-trail active active"]{
- color: #333 !important;
+.section-nav a[class="active-trail active active"] {
+    color: #333 !important;
 }
-
-
 .section-nav ul.menu li,
 .section-nav .expanded.menu-depth-2 > a,
 .section-nav .menu-depth-1 > a,
@@ -139,9 +122,6 @@ h2.block-title,
 .section-nav .leaf.menu-depth-6 > a {
     background-color: #f9f8f6 !important;
 }
-
-
-
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
     border-color: transparent;
@@ -187,35 +167,15 @@ h2.block-title,
     padding-right: 27px;
     font-size: 18px;
 }
-
-#menu-bar ul.nice-menu ul,
-#menu-bar ul.nice-menu a.active,
-#menu-bar ul.nice-menu a:hover,
-#menu-bar ul.nice-menu .menuparent.over > a,
-#menu-bar ul.nice-menu .menuparent a:hover,
-#menu-bar ul.nice-menu .menuparent a.active {
-  background-color: #696259;
-   background: #696259;
+#menu-bar ul.nice-menu ul {
+    background-color: #696259;
+    background: #696259;
 }
-
- #layout_3_1_overlay .slide-copy {
+#layout_3_1_overlay .slide-copy {
     background: #3B6E8F;
-
 }
-
-
-.slide-copy a,
-.slide-copy a:visited,
-.slide-copy a:hover {
- 
-    text-shadow: 1px 1px 2px #000;
+@-moz-document url-prefix() {
+    #menu-bar ul.nice-menu .menuparent.over > a::before, #menu-bar ul.nice-menu .menuparent a:hover::before, #menu-bar ul.nice-menu .menuparent a.active::before, #menu-bar ul.nice-menu .menuparent a::before {
+        background-position: 0 -609px;
+    }
 }
-
-@-moz-document url-prefix() { 
-#menu-bar ul.nice-menu .menuparent.over > a::before, #menu-bar ul.nice-menu .menuparent a:hover::before, #menu-bar ul.nice-menu .menuparent a.active::before, #menu-bar ul.nice-menu .menuparent a::before {
-    background-position: 0 -609px;
-
-}
-}
-
-
