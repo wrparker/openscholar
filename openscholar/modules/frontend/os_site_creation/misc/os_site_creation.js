@@ -41,7 +41,7 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $location
   };
 
   //Site URL
-  $scope.baseURL = $location.protocol() + '://' + $location.host() + '/';
+  $scope.baseURL = Drupal.settings.admin_panel.purl_base_domain + '/';
   
   //Get all values and save them in localstorage for use
   $scope.saveAllValues = function() {

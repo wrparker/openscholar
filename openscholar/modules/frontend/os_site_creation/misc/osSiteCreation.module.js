@@ -1,6 +1,6 @@
 (function () {
 
-  var m = angular.module('SiteCreationForm', ['angularModalService', 'redirectForm', 'formElement', 'os-buttonSpinner'])
+  var m = angular.module('SiteCreationForm', ['angularModalService'])
   .config(function (){
     rootPath = Drupal.settings.paths.siteCreationModuleRoot;
   });
@@ -25,7 +25,7 @@
         $rootScope.siteCreationFormId = attrs.id;
 
         ModalService.showModal({
-          controller: 'siteCreationFormController',
+          controller: 'siteCreationCtrl',
           templateUrl: rootPath+'/templates/os_site_creation.html',
           inputs: {
             form: scope.form
@@ -54,20 +54,4 @@
     };
   }]);
 
-  /**
-   * The controller for the site creation form
-   */
-  m.controller('siteCreationFormController', ['$scope', '$sce', 'apSettings', 'buttonSpinnerStatus', 'form', 'close', function ($s, $sce, apSettings, bss, form, close) {
-    var formSettings = {};
-    $s.formId = form;
-    $s.formElements = {};
-    $s.formData = {};
-
-    $s.status = [];
-    $s.errors = [];
-    $s.columns = {};
-    $s.columnCount = 0;
-    $s.showSaveButton = false;
-
-  }]);
 })()
