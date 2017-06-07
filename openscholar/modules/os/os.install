@@ -980,3 +980,29 @@ function os_update_7051() {
 
   return t('Enabled OS content revisions module.');
 }
+
+/**
+ * Remove drush errors and warnings for
+ * "The following module is missing from the file system"
+ */
+
+function os_update_7052() {
+
+  //$module_names = array(0=> 'acquia_search', 1=> 'acquia_agent', 2 => 'acquia_purge', 3 => 'advanced_help', 4 => 'diff', 5 => 'fb_social', 6 => 'google_feedapi', 7 => 'iqss_pinserver_register');
+
+  $module_list = db_select('system', 's')
+    ->fields('s', array('name'))
+    ->condition('type', 'module')
+    ->condition('status', 1);
+     $result = $module_list->execute();
+
+  while($record = $result->fetchAssoc()) {
+    $module = $record['name'];
+    if (!drupal_get_path('module', $module)) {
+      db_delete('system')
+        ->condition('name', $module)
+        ->condition('type', 'module')
+        ->execute();
+    }
+  }
+}
