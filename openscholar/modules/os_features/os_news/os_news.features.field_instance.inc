@@ -56,7 +56,7 @@ function os_news_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 600,
         ),
-        'type' => 'text_trimmed',
+        'type' => 'os_text_trimmed',
         'weight' => 2,
       ),
       'title' => array(

@@ -25,7 +25,7 @@ function os_wysiwyg_wysiwyg_editor_settings_alter(&$settings, $context) {
   $flavors = os_theme_get_flavors();
   $theme = os_theme_get();
 
-  $theme_info = os_get_themes($theme);
+  $theme_info = os_get_themes($theme, 'vsite', FALSE);
 
   if ($theme_info->stylesheets) {
     // Adding the css of the theme.
@@ -284,6 +284,6 @@ function os_wysiwyg_preprocess_field(&$variables) {
 
     if ($element['#field_name'] == 'body') {
         // Adding the latex JS library.
-        drupal_add_js('//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML', 'external');
-    } 
+        drupal_add_js('//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML', 'external');
+    }
 }

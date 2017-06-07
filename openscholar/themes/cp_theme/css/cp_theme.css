@@ -2,12 +2,12 @@
 body,
 .ui-dialog * {
     font-family: helvetica, arial, sans-serif;
-    
 }
 
 #page {
     padding: 0;
 }
+
 body:not(.overlay) .node-form {
     margin-left:50px;
 }
@@ -16,38 +16,48 @@ body:not(.overlay) .node-form {
     color: #555;
     font-size: 2.3em;
 }
+
 #branding {
     overflow: hidden;
     padding: 30px 20px 0 38px;
     position: relative;
     background-color: #FFF;
 }
+
 /* GENERAL CP STYLES */
 .form-item {padding:0;}
+
 .page-cp .form-item {
     padding: 2px 0;
 }
+
 .ui-widget-content a,
 a {
     color: #215990;
 }
+
 strong {
     color: #444;
 }
+
 fieldset {
     background: #f1f1f1;
 }
+
 .vertical-tabs-panes fieldset {
     background: #FFF;
 }
+
 #feature_os_publication span[name="biblio_sort"] .form-item,
 #feature_os_publication span[name="biblio_order"] .form-item,
 h3 {
     margin: 0;
 }
+
 table {
     font-size: 1em;
 }
+
 input.form-text,
 textarea,
 .redirect-add-form input {
@@ -58,15 +68,19 @@ textarea,
     border: 1px solid #CDCDCD;
     width:98%;
 }
+
 #og-vocabulary-add-more-wrapper select.form-select {
     height: 120px;
 }
+
 html.js input.form-autocomplete {
     background-position: 100% 8px;
 }
+
 html.js input.throbbing {
     background-position: 100% -15px !important;
 }
+
 .os-help-link {
     background: url("../images/cp-sprite.png") no-repeat 0 -150px;
     display: block;
@@ -76,28 +90,42 @@ html.js input.throbbing {
     height: 19px;
     width: 19px;
 }
+
 .os-help-link:hover {
     background: url("../images/cp-sprite.png") no-repeat 0 -170px;
 }
+
+.page-node-revisions .help-link,
 .help-link.ng-binding {
-  position: absolute;
+ position: absolute;
     bottom: 20px;
-    right: 10px;
-    padding: 2px 25px 2px 0;
-    background: url(../images/cp-sprite.png) no-repeat right -638px;
-    background-size: 21px 700px;
+    right:10px;
     font-size: .97em;
+}
+
+.page-node-revisions .help-link {
+    bottom: -7px;
+    right: 15px;
+}
+
+.revision-suffix.help-link a:after,
+.help-link.ng-binding a:after {
+    padding: 5px 25px 5px 0;
+    background: url("../images/cp-sprite.png") no-repeat 4px -732px;
+   content:'';
 
 }
+
 #support .help-link.ng-binding {
     bottom: 2px;
 }
-    
 
+    
 .view-os-files-private ul {
     list-style-type: none !important;
     list-style: none !important;
 }
+
 .cp-controls-wrapper .add_new {
     float: left;
     display: inline;
@@ -108,14 +136,16 @@ html.js input.throbbing {
     padding: 0 8px 0 22px !important;
     text-decoration: none !important;
 }
-/* Special behavior for action link and help position on CP > Content > Find: Files */
 
+/* Special behavior for action link and help position on CP > Content > Find: Files */
 .view-id-cp_files .cp-controls-wrapper {
     margin: 11px 29px 10px 0;
 }
+
 .view-id-cp_files .cp-controls-wrapper .add_new {
     margin-right: 0;
 }
+
 .view-id-cp_files .cp-controls-wrapper .add_new {
     line-height: 15px !important;
     display: inline-block;
@@ -132,6 +162,7 @@ html.js input.throbbing {
     text-decoration: none !important;
     float: right;
 }
+
 .view-os-files-private .cp-controls-wrapper .add_new {
     background: #2C890D !important;
     padding: 5px 10px !important;
@@ -143,6 +174,7 @@ html.js input.throbbing {
     font-weight: bold;
 }
 input.form-submit, a.button, .ui-dialog button, .ui-dialog.ap-settings-form input[type="button"], .ui-dialog.ap-settings-form input[type="submit"], a#edit-cancel, a.form-cancel {
+
     cursor: pointer;
     padding: 5px 12px;
     margin-bottom: 1em;
@@ -171,6 +203,7 @@ input.form-submit, a.button, .ui-dialog button, .ui-dialog.ap-settings-form inpu
   width: 1.80em;
   height: 1.80em;
 }
+
 .spinner {
  display: inline-block;
     float: left;
@@ -188,51 +221,60 @@ input.form-submit, a.button, .ui-dialog button, .ui-dialog.ap-settings-form inpu
     -webkit-animation: load8 .750s infinite linear;
     animation: load8 .750s infinite linear;
 }
+
 @-webkit-keyframes load8 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+
 }
+
 @keyframes load8 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+
 }
 
 a.form-cancel:hover {
     text-decoration: none;
 }
+
 .form-actions .form-submit,
 .form-actions #edit-delete,
 .form-actions #edit-delete--2 {
     display: inline-block;
 }
+
 .page-cp .form-item span label,
 .redirect-delete,
 .form-actions .os-delete-link {
-
     font-size: 1.1em;
 }
-/* CTools MODAL OVERRIDES */
 
+/* CTools MODAL OVERRIDES */
 #modalContent {
     top: 0 !important;
     color: #666;
     position: fixed !important;
 }
+
 div.ctools-modal-content .form-item label {
     float: none;
 }
+
 div.ctools-modal-content {
     color: #555;
     margin: 0;
@@ -242,24 +284,29 @@ div.ctools-modal-content {
     -webkit-box-shadow: 0 4px 26px rgba(0, 0, 0, 0.5);
     box-shadow: 0 4px 26px rgba(0, 0, 0, 0.5);
 }
+
 div.ctools-modal-content .modal-title {
     color: #666;
     font-size: 20px;
     font-weight: normal;
 }
+
 #modal-content {
     padding: 20px 0 20px 25px;
 }
+
 div.ctools-modal-content {
     height: 100% !important;
     border: none;
 }
+
 div.ctools-modal-content .modal-header {
     background: #EFEFEF;
     border-bottom: 2px solid #C4C2C2;
     height: 24px;
     padding: 10px;
 }
+
 div.ctools-modal-content .modal-header a {
     float: right;
     color: transparent;
@@ -267,62 +314,76 @@ div.ctools-modal-content .modal-header a {
     width: 30px;
     height: 30px;
 }
+
 div.ctools-modal-content .modal-content {
     padding: 12px 12px 0 12px;
     overflow: auto;
     width: 575px;
     height: 400px;
 }
+
 #modalContent .spaces-customize-form .buttons input.form-submit {
     margin-right: 140px;
 }
+
 div.ctools-modal-content .button-div-wrapper {
     display: inline;
 }
+
 div.ctools-modal-content a.close:hover {
     text-decoration: none;
 }
+
 div.ctools-modal-content a.close img {
     position: relative;
     top: 1px;
     display: none;
 }
+
 div.ctools-modal-content .modal-content .modal-throbber-wrapper {
     text-align: center;
 }
+
 div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     margin-top: 160px;
 }
+
 .helper {
     margin-top: 10px;
     display: block;
 }
-/** Column Widget Styles */
 
+/** Column Widget Styles */
 .downarrow {
     padding-right: 12px;
     background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -553px no-repeat;
 }
+
 .helper.columns {
     width: 968px !important;
 }
+
 .helper.columns .downarrow {
     background-position: 51px -553px;
 }
+
 .formlabel {
     color: #444;
     font-size: 12px;
     font-weight: bold;
 }
-/** OVERLAY MODAL OVERRIDES **/
 
-.ui-dialog button.ui-dialog-titlebar-close, #overlay-close, #overlay-close:hover {
+
+/** OVERLAY MODAL OVERRIDES **/
+.ui-dialog button.ui-dialog-titlebar-close, #overlay-close, #overlay-close:hover  {
     background: url('../images/cp-sprite.png') no-repeat 0 -547px;
     width: 30px;
     height: 30px;
     position: relative;
     /* margin: -28px 10px; */
 }
+
+
 .ui-dialog .ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
@@ -346,6 +407,8 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     border-bottom: 2px solid #C4C2C2;
     height: 24px;
 }
+
+
 #overlay-title, .ui-dialog-title {
     float: left;
     margin: 0;
@@ -354,45 +417,60 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
     font-size: 24px;
     font-weight: normal;
 }
+
 .margin_bottom-20,
 .page-cp .ui-dialog-titlebar {
     margin-bottom: 22px;
 }
+
+
 .ui-dialog {
     padding: 0;
     top:10% !important;
 }
+
 .ui-dialog.ap-settings-form .ui-dialog-content {
     overflow: visible;
 }
+
 #overlay-tabs {
     margin: -30px 0 0;
     right: 50px;
 }
+
 .page-node-add.page-node-add-biblio #overlay,
 .page-node-edit.node-type-biblio #overlay {
     max-width: 930px;
     min-width: 850px;
 }
+
 #person-node-form .field-name-body {
     padding-bottom: 15px;
 }
+
 form.confirmation {
     margin-top: 20px;
 }
+
 form.confirmation span.emphasize {
     font-weight: bold;
 }
-/* OVERRIDES WITH TABS IN MODAL - EXPERIMENTAL */
 
+/* OVERRIDES WITH TABS IN MODAL - EXPERIMENTAL */
 #overlay-tabs {
     border-bottom: 1px solid #CCCCCC;
     margin: 20px 0px 40px 75px;
     position: relative;
 }
+
 #overlay-content {
     padding: 2.5em 1em;
 }
+
+.page-node-revisions #overlay-content  {
+    padding: 0 1em 1.5em;
+}
+
 #overlay-tabs li a,
 #overlay-tabs li.active a,
 #overlay-tabs li.active a.active,
@@ -401,6 +479,7 @@ form.confirmation span.emphasize {
     margin-bottom: -1px;
     padding-bottom: 0px;
 }
+
 #overlay-tabs li.active a,
 #overlay-tabs li.active a.active,
 #overlay-tabs li.active a:active,
@@ -408,6 +487,7 @@ form.confirmation span.emphasize {
     background-color: #EFEFEF;
     color: #555555;
 }
+
 #overlay-tabs li a,
 #overlay-tabs li a:active,
 #overlay-tabs li a:visited,
@@ -416,12 +496,13 @@ form.confirmation span.emphasize {
     margin-bottom: -1px;
     padding-bottom: 0px;
 }
-/** CP TABLE STYLES **/
 
+/** CP TABLE STYLES **/
 table.spaces td.option,
 table.spaces td.storage {
     width: 13%;
 }
+
 #edit-menu-table .section-heading {
     background: #E1E2DC;
     border-bottom: 2px solid #C4C2C2;
@@ -429,59 +510,73 @@ table.spaces td.storage {
     height: 25px;
     text-transform: uppercase;
 }
+
 #edit-menu-table .section-heading a {
     text-transform: none;
     margin-left: 1em;
 }
+
 #edit-menu-table .section-heading .add-new-link {
     margin-left: 0;
 }
+
 #edit-menu-table td:first-child {
     width: 40%;
 }
+
 #user-register-form {
     background: #f1f1f1;
     padding: 15px;
     border: 1px solid #CCC;
 }
+
 .cp-add-new-user ul {
     list-style-type: none;
 }
+
 table th label {
     text-transform: none;
 }
+
 /* CP/BUILD MENU */
 #redirects .actions,
 #os-maintenance .actions,
-.page-cp-build-menu table thead {
+.page-cp-build-menu table thead,
+.page-node-revisions .comment-wrapper,
+.page-node-revisions .ctools-dropdown,
+.page-node-revisions .biblio-download-links-label {
     display: none;
 }
+
 #edit-menu-table,
 #cp-menu-build-form {
     width: 100%;
 }
+
 #cp-appearance-theme-picker-form select {
     max-width: 90px;
     overflow: hidden;
 }
+
 #theme-header-single h2,
 #cp-appearance-theme-picker-form #theme-header-featured h2,
 #cp-appearance-theme-picker-form #theme-header-other h2 {
     font-weight: normal;
 }
+
 #cp-appearance-theme-picker-form #theme-header-single p,
 #cp-appearance-theme-picker-form #theme-header-featured p {
     color: #777;
     font-size: 15px;
     margin: -8px 0 28px 0;
 }
-/* CP/BUILD LAYOUT */
 
+/* CP/BUILD LAYOUT */
 .page-cp-build-layout #content {
     width: 854px;
 }
-/* CP FEATURES */
 
+/* CP FEATURES */
 form#spaces-features-form td.actions a {
     background-image: url("../images/cp-sprite.png");
     background-position: 0 -575px;
@@ -493,18 +588,21 @@ form#spaces-features-form td.actions a {
     margin-left: 6px;
     position: relative;
 }
+
 #spaces-features-form select {
     float: left;
 }
-/** VSITE OS LOGIN CONTAINER STYLES **/
 
+/** VSITE OS LOGIN CONTAINER STYLES **/
 body.page-cp.page-cp-account {
     background: #EEE;
 }
+
 body.page-cp.page-cp-account #messages {
     margin: 0 auto -80px;
     width: 560px;
 }
+
 .page-cp.page-cp-account #columns {
     background: #FFFFFF;
     width: 540px;
@@ -514,43 +612,52 @@ body.page-cp.page-cp-account #messages {
     margin: 100px auto;
     border: 3px solid #8996A0;
 }
+
 .page-cp.page-cp-account #columns #main-content-header {
     background: #DDD;
     margin: -10px -8px;
     padding: 7px;
 }
-/* PUBLICATIONS SETTING FORM IN MODAL */
 
+/* PUBLICATIONS SETTING FORM IN MODAL */
 fieldset .fieldset-legend {
     text-transform: none;
 }
+
 .os_publications-customize-form .column-left,
 .os_publications-customize-form #comment_settings {
     float: left;
     clear: left;
 }
+
 .os_publications-customize-form .column-left {
     width: 48%;
 }
+
 .os_publications-customize-form #comment_settings {
     width: 100%;
 }
+
 .os_publications-customize-form .form-actions {
     clear: both;
 }
+
 .os_publications-customize-form .column-right {
     float: right;
     width: 48%;
     clear: right;
     margin-bottom: 20px;
 }
+
 .tabledrag-toggle-weight-wrapper {
     display: none;
 }
+
 table.biblio-contributors {
     min-width: 550px;
     max-width: 650px;
 }
+
 .field-name-og-vocabulary table,
 .field-name-og-vocabulary table th,
 .field-name-og-vocabulary table tr,
@@ -566,20 +673,25 @@ table.biblio-contributors tr.even {
     background: #FFF;
     margin: 0;
 }
+
 .field-name-og-vocabulary table td,
 table#field-biblio-extra-values td {
     padding: 8px 0;
 }
+
 #edit-biblio-authors table td,
 table.biblio-contributors td {
     padding: 0;
 }
+
 #edit-biblio-authors table td.biblio-contributor-type {
     padding-right: 1em;
 }
+
 .biblio-contributors .draggable {
     height: 40px;
 }
+
 #edit-og-vocabulary input.form-submit,
 .node-biblio-form #edit-field-biblio-extra input.form-submit,
 #edit-biblio-authors #edit-add-more {
@@ -602,6 +714,7 @@ table.biblio-contributors td {
     -webkit-border-radius: 0;
     border-radius: 0;
 }
+
 .biblio-contributor input.form-submit {
     cursor: pointer;
     padding: 0;
@@ -626,13 +739,16 @@ table.biblio-contributors td {
     width: 20px;
     display: inline-block;
 }
+
 table.biblio-contributors tr:first-child input.form-submit {
     display: none;
 }
+
 .biblio-contributor input.form-text {
     float: left;
     margin-right: 8px;
 }
+
 .form-item-biblio-url,
 .form-item-biblio-url-title,
 .node-biblio-form .form-item-biblio-section,
@@ -648,10 +764,12 @@ table.biblio-contributors tr:first-child input.form-submit {
     vertical-align: top;
     width: 165px;
 }
+
 .form-item-biblio-url,
 .form-item-biblio-url-title {
     width: 255px;
 }
+
 .form-item-biblio-url input.form-text,
 .form-item-biblio-url-title input.form-text,
 .node-biblio-form .form-item-biblio-section input.form-text,
@@ -664,57 +782,71 @@ table.biblio-contributors tr:first-child input.form-submit {
 .node-biblio-form .form-item-biblio-pages input.form-text {
     width: 100px;
 }
+
 .form-item-biblio-url .description,
 .form-item-biblio-url-title .description,
 .form-item-biblio-url input.form-text,
 .form-item-biblio-url-title input.form-text {
     width: 270px;
 }
+
 #edit-biblio-notes-value,
 #edit-biblio-abst-e-value {
     height: 60px;
 }
+
 .form-item-biblio-abst-e-value ~ .description {
     margin-bottom: 20px;
 }
+
 .form-item-biblio-year {
     margin-top: 10px;
 }
+
 #edit-biblio-year {
     width: 35px;
 }
+
 .form-item.form-type-radio {
     font-size: 1em;
     font-weight: normal;
     margin-bottom: .5em;
 }
+
 #edit-biblio-year-coded .form-item.form-type-radio {
     margin-left: 0;
 }
+
 span[fe-checkbox] input[type="checkbox"],
 span[fe-radios] input[type="radio"] {
     vertical-align: initial;
     margin-right: 5px;
 }
+
 span[radios] .form-type-radio {
     margin-left: 0;
 }
+
 #edit-biblio-year-coded .form-item label.option {
     font-size: 0.85em;
 }
+
 fieldset#edit-biblio-year-group {
     background: none;
     border: none;
     font-weight: bold;
 }
+
 fieldset#edit-biblio-year-group .fieldset-legend,
 fieldset#edit-biblio-year-group .fieldset-wrapper {
     padding-left: 0;
 }
+
 html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper .fieldset-legend {
     background: none;
     padding-left: 0;
 }
+
 .field-name-field-biblio-extra table.field-multiple-table,
 .field-name-field-biblio-extra table.field-multiple-table tr,
 .field-name-field-biblio-extra table.field-multiple-table th,
@@ -722,15 +854,19 @@ html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper fieldset 
     background-color: #FFF;
     border: none;
 }
+
 #edit-publication-extras {
     background-color: #FFF;
 }
+
 html.js fieldset.collapsible#edit-publication-extras .fieldset-wrapper {
     padding-left: 15px;
 }
+
 html.js fieldset.collapsible#edit-publication-extras .form-wrapper .fieldset-wrapper {
     padding-left: 0;
 }
+
 .field-widget-image-image {
     background: #f1f1f1;
     padding: 10px;
@@ -738,99 +874,115 @@ html.js fieldset.collapsible#edit-publication-extras .form-wrapper .fieldset-wra
     width: 94%;
     margin: 20px 0;
 }
+
 #edit-field-biblio-extra .description {
     margin-left: 35px;
 }
-/**	 QUICK TAB CREATION **/
 
+/**	 QUICK TAB CREATION **/
 .page-os-widget #tabs {
     background: #F1F1F1;
     border: 1px solid #CCCCCC;
     padding-left: 10px;
 }
+
 .page-os-widget #tabs .panel,
 .page-os-widget #tabs fieldset .fieldset-wrapper {
     padding: 0;
 }
+
 .page-os-widget .ui-state-disabled,
 .ui-widget-content .ui-state-disabled {
     opacity: 1;
 }
+
 .page-os-widget .ui-tabs .ui-tabs-nav li a {
     border-radius: 10px 10px 0 0;
     -webkit-border-radius: 10px 10px 0 0;
     -moz-border-radius: 10px 10px 0 0;
     padding: 5px;
 }
-/* Shrinks the node form to take up less vertical space. */
 
+/* Shrinks the node form to take up less vertical space. */
 #biblio-node-form .form-item {
     padding: 0;
 }
+
 form.node-form input.form-text {
     padding: 3px;
 }
+
 form.node-form fieldset .fieldset-wrapper {
     padding-bottom: 0;
 }
+
 form.node-form fieldset {
     padding: 2.0em 0px 0px;
     margin: 1em 0px 0.5em;
 }
+
 fieldset#edit-5 {
     padding-top: 0;
 }
-/* Shrinks the biblio node form to take up less vertical space. */
 
+/* Shrinks the biblio node form to take up less vertical space. */
 .field-name-field-biblio-extra table.field-multiple-table td .form-item.form-type-textfield,
 #field-biblio-extra-values td .form-item.form-type-textfield {
     float: left;
     width: 45%;
     padding-right: 4%;
 }
+
 fieldset#edit-biblio-authors {
     background-color: transparent;
     border: 0 none;
     padding: 0;
     margin: 0;
 }
+
 fieldset#edit-biblio-authors .fieldset-wrapper {
     padding-left: 0;
 }
+
 fieldset#edit-biblio-authors .fieldset-legend {
     padding-left: 0;
     margin-top: 0;
     text-transform: none;
 }
+
 /**
  * Media Browser tweaks
  */
-
 .ui-front {
     z-index: 301;
 }
+
 .ui-widget-overlay {
     background: #000;
     opacity: .7;
     filter: Alpha(Opacity=70);
 }
-/** STYLE IMPROVEMENTS BASED ON MOCKUP https://d2r1vs3d9006ap.cloudfront.net/s3_images/1010882/pubform_expanded.png **/
 
+/** STYLE IMPROVEMENTS BASED ON MOCKUP https://d2r1vs3d9006ap.cloudfront.net/s3_images/1010882/pubform_expanded.png **/
 .node-form .form-region-right {
     border-left: 1px dotted #777777;
     padding-left: 15px;
     width: 27%;
 }
+
 form.node-form .form-region-main input a,
 .node-form .form-region-right .node-form-options a {
     color: #0074BD;
 }
+
 form.node-form .form-region-right input.form-text {
     width: 85% !important;
 }
+
 form.node-form .form-region-main input.form-text {
     max-width: 85%;
 }
+
 form.node-form .form-region-right fieldset {
     background: none repeat scroll 0% 0% transparent;
     border: medium none;
@@ -838,24 +990,28 @@ form.node-form .form-region-right fieldset {
     padding: 3em 0px 0.1em;
     width: 100%;
 }
+
 form.node-form .form-region-right fieldset legend {
     background: none repeat scroll 0% 0% #F1F1F1;
 }
+
 form.node-form .fieldset-legend span.summary {
     color: #777;
     display: block;
     font-size: 0.8em;
     margin-left: 0px;
 }
+
 form.node-form .form-region-main .fieldset-legend span.summary {
     display: inline;
 }
+
 .field-name-field-biocv-pdf-upload {
     margin-bottom: 40px;
 }
+
 html.js .form-region-right fieldset.collapsible .fieldset-legend
 /*form.node-form.overlay-processed .form-region-right  fieldset.collapsed .fieldset-legend*/
-
 {
     border: 1px solid #CCCCCC;
     display: block;
@@ -867,9 +1023,11 @@ html.js .form-region-right fieldset.collapsible .fieldset-legend
     width: 89%;
     background-color: #f1f1f1;
 }
+
 html.js fieldset.collapsible .fieldset-legend {
     background-image: none;
 }
+
 html.js fieldset.collapsible > legend .fieldset-legend:before {
     content: '';
     position: absolute;
@@ -881,20 +1039,23 @@ html.js fieldset.collapsible > legend .fieldset-legend:before {
     top: 3px;
     left: 0;
 }
+
 html.js fieldset.collapsed > legend .fieldset-legend:before
 /*form.node-form.overlay-processed .form-region-right  fieldset.collapsed .fieldset-legend:before*/
-
 {
     background-position: -10px -436px;
 }
+
 .form-region-main a.fieldset-title,
 form.node-form .form-region-right .fieldset-title {
     font-size: 1.08em;
     font-weight: normal;
 }
+
 form.node-form {
     border: medium none;
 }
+
 form.node-form .form-region-right .fieldset-wrapper {
     border-bottom: 1px solid #CCCCCC;
     border-left: 1px solid #CCCCCC;
@@ -903,6 +1064,7 @@ form.node-form .form-region-right .fieldset-wrapper {
     padding-right: 15px;
     width: 89%;
 }
+
 .form-region-right .field-prefix {
     line-height: 15px;
     display: block;
@@ -910,28 +1072,35 @@ form.node-form .form-region-right .fieldset-wrapper {
     word-wrap: break-word;
     font-size: 11px;
 }
+
 a.tabledrag-handle .handle {
     background-image: url('../images/cp-sprite.png');
     background-position: 8px -15px;
 }
+
 a.tabledrag-handle-hover .handle {
     background-position: 8px -35px;
 }
+
 .delete-subtheme a {
     background: url('../images/cp-sprite.png') 0 -600px no-repeat;
     padding-left: 17px;
 }
+
 .zip-pull-button a {
     background: url('../images/cp-sprite.png') 0 -614px no-repeat #0a4476;
     padding: 15px 7px 8px 22px;
 }
+
 .git-pull-button a {
     background: url('../images/cp-sprite.png') 0 -645px no-repeat #0a4476;
     padding: 15px 7px 8px 22px;
 }
+
 form#cp-user-edit-membership-form .form-item-group-manager {
     margin: 15px 0 0;
 }
+
 h1.biblio-type-prefix {
     float: left;
     margin: 18px 10px 0px 0px;
@@ -940,36 +1109,44 @@ h1.biblio-type-prefix {
     font-size: 18px;
     font-weight: normal;
 }
+
 .form-item-biblio-type select {
     font-size: 18px;
     color: #666;
 }
+
 .form-item-biblio-type span.form-required {
     visibility: hidden;
 }
+
 #field-biblio-extra-values thead tr th {
     text-transform: none;
 }
-/* Term tree reference */
 
+/* Term tree reference */
 .term-reference-tree {
     border: 1px solid #CCC;
     padding-left: 10px;
     padding-right: 10px;
 }
+
 .term-reference-tree > ul {
     margin-left: 0;
 }
+
 ul.term-reference-tree-level {
     list-style-type: none;
 }
+
 .term-reference-tree-button,
 .no-term-reference-tree-button {
     float: left;
 }
+
 .no-term-reference-tree-button {
     background: none;
 }
+
 /** I think these aren't used anymore, but I'd need someone who remembers what they're used for to confirm
 .term-reference-tree-button {
   background: url('../../os_basetheme/images/scholarbase-sprite.png') 2px -449px no-repeat;
@@ -989,19 +1166,22 @@ ul.term-reference-tree-level {
 	 padding-left:14px;
 	 margin-left:10px;
 }
+
  */
 /* PUB FORM EXTERNAL URL SECTIONON */
-
 #edit-url .form-item-biblio-url-title {
     margin-right: 0;
     width: 138px;
 }
+
 #edit-url .form-item-biblio-url-title.editing {
     width: 195px;
 }
+
 #edit-url .form-item-biblio-url-title.editing #edit-biblio-url-title {
     text-align: right;
 }
+
 #edit-biblio-url-title {
     border: none;
     background: url('../images/cp-sprite.png') no-repeat 0 -475px #FFFFFF;
@@ -1010,6 +1190,7 @@ ul.term-reference-tree-level {
     text-decoration: underline;
     cursor: pointer;
 }
+
 #edit-biblio-url-title:focus {
     background: url('../../os_basetheme/images/form-input-bg.gif') repeat-x scroll left top #FFFFFF;
     border: 1px solid #CDCDCD;
@@ -1017,9 +1198,11 @@ ul.term-reference-tree-level {
     color: #444;
     text-decoration: none;
 }
+
 #edit-url .form-item-biblio-url .description {
     width: 450px;
 }
+
 .view-cp-content .form-item-vocab {
     float: left;
     /* LTR */
@@ -1027,9 +1210,11 @@ ul.term-reference-tree-level {
     margin-right: 20px;
     /* LTR */
 }
+
 .view-cp-content #edit-node-titles {
     clear: both;
 }
+
 .view-cp-content #edit-vocab {
     padding: 5px;
 }
@@ -1046,7 +1231,6 @@ margin: 0 0 10px;
 
 :not(form) div.messages {
 margin: 0;
-
 }
 
 div.messages h2 {
@@ -1063,7 +1247,6 @@ padding:10px 30px 10px 20px;
 }
 
 .messages.acquia_purge_messages {
-
     border-top:2px solid #fff;
 }
 
@@ -1094,11 +1277,9 @@ div.status .dismiss {
      background-color: transparent;
 }
 
-
 .messages.status .dismiss {
     top: 4px;
 }
-
 
 div.error {
     border: none;
@@ -1108,6 +1289,7 @@ background-image:none;
     padding:10px 30px 10px 20px;
     border-left:5px solid #a94442;
 }
+
 div.warning {
     border: none;
     background-image: none;
@@ -1116,14 +1298,16 @@ div.warning {
     padding: 10px 30px 10px 20px;
     border-left: 5px solid #8a6d3b;
 }
-/** Toolbar overrides */
 
+/** Toolbar overrides */
 #toolbar-home a span {
     background: url('../../os_basetheme/images/scholarbase-sprite.png') no-repeat 0 -845px;
 }
+
 #toolbar div.toolbar-menu a.toggle {
     background: url('../../os_basetheme/images/scholarbase-sprite.png') 0 -820px no-repeat;
 }
+
 #toolbar a.toggle {
     background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
     background-position: 0px -859px;
@@ -1133,13 +1317,16 @@ div.warning {
 .form-item-create-as-subsite {
     margin-bottom: 35px;
 }
+
 #toolbar a.toggle-active {
     background-position: -27px -859px;
 }
+
 #toolbar div.toolbar-menu ul li a[data-drawer] {
     background-image: none;
     position: relative;
 }
+
 #toolbar div.toolbar-menu ul li a[data-drawer]:after {
     content: '';
     background-image: url('../../os_basetheme/images/scholarbase-sprite.png');
@@ -1152,10 +1339,12 @@ div.warning {
     bottom: 0;
     right: 10px;
 }
+
 #toolbar div.toolbar-menu ul#toolbar-help li a {
     background-image: none;
     position: relative;
 }
+
 #toolbar div.toolbar-menu ul#toolbar-help li a:before {
     content: '';
     position: absolute;
@@ -1168,22 +1357,25 @@ div.warning {
     bottom: 0;
     left: 10px;
 }
+
 /** End Toolbar Overrides */
 /** Layout Form Overrides */
-
 .widget-container a.edit {
     background-image: url("../images/cp-sprite.png");
     background-position: -12px -691px;
     width: 12px;
 }
+
 .widget-container a.edit:hover {
     background-image: url("../images/cp-sprite.png");
     background-position: 0px -691px;
 }
+
 #cp-layout-unused-widgets div.ctools-dropdown a.ctools-dropdown-link {
     background: none;
     position: relative;
 }
+
 #cp-layout-unused-widgets div.ctools-dropdown a.ctools-dropdown-link:before {
     content: '';
     position: absolute;
@@ -1195,18 +1387,20 @@ div.warning {
     left: -4px;
     background-repeat: no-repeat;
 }
+
 #edit-layout a.edit {
     background-image: url("../images/cp-sprite.png");
     background-position: 0 -675px;
 }
+
 #og-vocabulary-add-more-wrapper #edit-og-vocabulary-und .fieldset-wrapper {
     border: 1px solid #ccc;
     background: #f1f1f1;
     padding: 5px;
     width: 96%;
 }
-/** News edit page calendar field override */
 
+/** News edit page calendar field override */
 .node-news-form .date-padding {
     padding: 0;
     border: 1px solid #ccc;
@@ -1214,51 +1408,63 @@ div.warning {
     padding: 5px;
     width: 96%;
 }
+
 #site-visibility-help-text {
     display: none;
     font-weight: normal;
     padding: 8px 0;
 }
+
 .select2-container {
     min-width: 300px;
 }
+
 .form-item-field-biblio-pub-month-und .select2-container,
 .form-item-field-biblio-pub-day-und .select2-container {
     min-width: 65px;
 }
+
 #edit-biblio-year-group .select2-container .select2-choice {
     line-height: 23px;
     font-size: 13px !important;
     font-weight: normal;
     height: 23px;
 }
+
 .description {
     margin: 5px 0;
     line-height: 1.231em;
     font-size: 0.923em !important;
     color: #666 !important;
 }
+
 form#os-maintenance #edit-os-search-solr,
 form#os-maintenance #edit-cp-clear-cache {
 display:block;
 }
+
 ul.table-list {
     list-style-type: none;
     margin-left: 0;
     border: 1px solid #CACACA;
 }
+
 ul.table-list:empty {
     border: none;
 }
+
 ul.table-list li {
     padding: 10px;
 }
+
 ul.table-list li:nth-child(odd) {
     background-color: #FFF;
 }
+
 ul.table-list li:nth-child(even) {
     background-color: #EFEFEF;
 }
+
 .redirect-delete {
     float: right;
 }
@@ -1271,8 +1477,6 @@ form#os-maintenance .form-item .description {
     margin-top: 0; 
 }
 
-
-
 .redirect-add-form input {
        width: 98%;
 }
@@ -1280,6 +1484,7 @@ form#os-maintenance .form-item .description {
 .redirect-add-form div {
     margin:15px 0;
 }
+
 .redirect-add.ng-hide {
     display: block !important;
     width: 0;
@@ -1303,7 +1508,6 @@ form#os-maintenance .form-item .description {
  margin: 0 0 16px 0;
 }
 
-
 .ui-dialog.ap-settings-form #os_taxonomy .form-item {
  margin: 12px 0;
 }
@@ -1321,7 +1525,6 @@ form#os-maintenance .form-item .description {
   -webkit-column-count: 3;
   -moz-column-count: 3;
   column-count: 3;
-
   -webkit-column-gap: 0px;
   -moz-column-gap: 0px;
   column-gap: 0px;
@@ -1334,18 +1537,21 @@ form#os-maintenance .form-item .description {
   display: block;
   width: 33.3%;
 }
+
 #feature_os_publication .actions {
   display: block;
   clear: both;
 }
+
 .form-item label.option.bold{
   font-weight: bold;
 }
+
 .citebox.hidden {
   display: none;
 }
-/* PUBLICATION SETTINGS CITATION PREVIEW */
 
+/* PUBLICATION SETTINGS CITATION PREVIEW */
 span[name="os_publications_citation_examples"] .ng-binding {
     position: absolute;
     right: 15px;
@@ -1366,7 +1572,6 @@ span[name="os_publications_citation_examples"] .citebox h2 {font-size: 1.3em;mar
 
 .citation-example {margin: 10px 0 0 0;}
 
-
 form#documentation img {
 	    margin-top: 30px;
 }
@@ -1378,10 +1583,10 @@ form#documentation img {
 span[name="faq_sort"] .form-radios {
     margin: 0 15px 15px 0;
 }
+
 .margin-bottom{
     margin-bottom: 15px;
 }
-
 
 label[for="edit-blog-comments-settings"],
 label[for="edit-os-booklets-toc-position"],
@@ -1393,8 +1598,6 @@ label[for="edit-os-booklets-toc-position"],
 }
 
 /* CKEDITOR - WYSIWYG */
-
-
 body.cke_editable blockquote {
     border-left: 2px solid #807E6D;
     font-style: italic;
@@ -1416,16 +1619,20 @@ span.cke_button__break_icon {
     margin-top: 30px !important;
     letter-spacing: -1em;
 }
+
 .view-content ~ .item-list ul.pager li.pager-current,
 .view-content ~ .item-list ul.pager li:hover {
     background-color: #efefef;
 }
+
 .view-content ~ .item-list ul.pager li a:hover {
     text-decoration: none;
 }
+
 li.pager-previous + li.pager-ellipsis {
     display: none;
 }
+
 .view-content ~ .item-list ul.pager li {
     border-left: 1px solid #dededc !important;
     border-top: 1px solid #dededc !important;
@@ -1433,29 +1640,193 @@ li.pager-previous + li.pager-ellipsis {
     letter-spacing: normal;
     padding: 0.7em !important;
 }
+
 .view-content ~ .item-list ul.pager li.pager-first {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
+
 .view-content ~ .item-list ul.pager li.pager-last {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-right: 1px solid #dededc !important;
 }
+
 .view-content ~ .item-list ul.pager li.pager-next,
 .view-content ~ .item-list ul.pager li.pager-previous {
 	font-weight: bold;
-	}
+}
 
-img.file-icon {
-    width:16px;
-
+body.cke_editable img.media-element.file-default {
+    padding-right: 15px;
 }
 
 body.cke_editable {
     background-color: #FFF;
     background: #FFF;
 }
+
+img.file-icon {
+    width:16px;
+}
+
+/* REVISIONS */
+.page-node-revisions table.os-files-other-list td.mime,
+.os-files-other-list img.file-icon {
+    width:16px;
+}
+
+body.page-node-revisions table.sticky-table caption {
+    margin: 10px 0 20px;
+    font-size: 1.1em;
+}
+
+body.page-node-revisions table.sticky-table caption .num-revisions {
+    font-weight:bold;
+    font-size:1.5em;
+}
+
+body.page-node-revisions table.sticky-table thead th:nth-of-type(1) {
+    width: 3%;
+}
+
+body.page-node-revisions table.sticky-table thead th:nth-of-type(2),
+body.page-node-revisions table.sticky-table thead th:nth-of-type(4) {
+    width: 15%;
+}
+body.page-node-revisions table.sticky-table tbody tr td:nth-of-type(1) {
+   text-align:center;
+}
+
+body.page-node-revisions table.sticky-table td.revision-current {
+    background: #E0E4EA;
+}
+
+body.page-node fieldset#edit-revision-information span.summary {
+    display: none;
+}
+
+body.page-node fieldset#edit-revision-information #warning-text {
+    padding: 8px;
+    background-color: #fffce5;
+}
+
+body.page-node fieldset#edit-revision-information #warning-text p {
+    color: #840;
+    padding: 0px;
+    margin: 0.5em 0;
+}
+
+body.page-node-revisions ul.action-links a:hover {
+text-decoration:none;
+}
+
+body.page-node-revisions ul.action-links {
+      margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    float: right;
+}
+
+body.page-node-revisions .node {
+    display: block;
+    clear: both;
+    padding-top: 15px;
+}
+.page-node-revisions .sticky-table {
+    margin-bottom: 30px;
+}
+
+.page-node-revisions .jcarousel-container {
+    background: #FAFAFA;
+    border: 1px solid #e1e1e1;
+    margin: 0 0 10px 0;
+    padding: 10px;
+    width: 98.5%;
+}
+
+.page-node-revisions .os-files-other-list {
+	border: none;
+}
+
+.page-node-revisions .os-files-other-list tr {
+    border-width: 0;
+    background-color: #F3F3F1;
+}
+
+.page-node-revisions .os-files-other-list tr td:last-child {
+    border-right: none;
+}
+
+.page-node-revisions .publication-cover-container:before,
+.page-node-revisions .node-news .photo .field-type-image:before,
+.page-node-revisions .os-files-other-list:before,
+.page-node-revisions .jcarousel-skin-default:before {
+    font-weight:bold;
+    display: block;
+    width: 100px;
+}
+
+.page-node-revisions .os-files-other-list:before,
+.page-node-revisions .jcarousel-skin-default:before {
+  content: 'Attached files';
+}
+
+.node-news .photo .field-type-image:before {
+  content:'News Photo';
+}
+
+.page-node-revisions .publication-cover-container:before {
+ content: 'Book Cover';
+}
+
+ .page-node-revisions  .jcarousel-skin-default ~ .os-files-other-list:before {
+  content: '';
+}
+
+.page-node-revisions .jcarousel-skin-default {
+    text-align: left;
+}
+
+.page-node-revisions.node-type-biblio h3 {
+    font-size: 1em;
+}
+
+.page-node-revisions #citation-wrapper,
+.page-node-revisions .publication-cover-container,
+.page-node-revisions .pubcontent-wrapper p {
+	
+	
+    margin: 0 0 20px 0;
+}
+
+.page-node-revisions #pub-cover-content-wrapper {
+	display:table;
+}
+
+.page-node-revisions .publication-cover-container,
+.page-node-revisions .pubcontent-wrapper {
+	display:table-cell;
+	    padding-right: 30px;
+}
+
+.page-node-revisions .node-link .field-name-field-upload .field-items div {
+	float:left;
+}
+
+.page-node-revisions .node-link .field-name-field-upload {
+	margin-top: 20px;
+}
+
+.page-node-revisions .media-element[style*="float: left"] {
+	padding-right:15px;
+}
+
+.page-node-revisions .media-element[style*="float: right"] {
+	padding-left:15px;
+}
+
 .form-type-radio label {
   cursor: pointer
 }
+
