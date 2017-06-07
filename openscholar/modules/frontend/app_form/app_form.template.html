@@ -3,8 +3,8 @@
     <table class="apps-table enabled">
         <thead>
             <tr>
-                <th width="60%">Apps this website is using</th>
-                <th width="10%">Learn more</th>
+                <th width="55%">Apps this website is using</th>
+                <th width="15%">Learn more</th>
                 <th width="20%">Who can see this?</th>
                 <th width="10%">Disable</th>
             </tr>
@@ -22,8 +22,8 @@
     <table class="apps-table disabled">
         <thead>
             <tr>
-                <th width="60%">Apps not currently used by this website</th>
-                <th width="10%">Learn more</th>
+                <th width="55%">Apps not currently used by this website</th>
+                <th width="15%">Learn more</th>
                 <th width="20%"></th>
                 <th width="10%">Enable</th>
             </tr>
@@ -32,6 +32,7 @@
             <tr ng-repeat="a in apps | filter:{enabled: 0}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
                 <td><a href="{{a.help}}" class="apps-help-link"></a></td>
+                <td></td>
                 <td width="10%"><input type="checkbox" ng-model="a.enable"></td>
             </tr>
         </tbody>
