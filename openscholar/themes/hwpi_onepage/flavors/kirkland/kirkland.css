@@ -101,7 +101,6 @@ h2.block-title {
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
-.front .region-content-second,
 body.node-type-biblio .biblio-export,
 #citation-wrapper {
     background-color: #f6f6f6;
@@ -206,10 +205,7 @@ body.node-type-biblio .biblio-export,
 .bg-eight #menu-bar {
     background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
-.front #content-panels .region-content-bottom {
-    background: url('images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
-    background-size: 100%;
-}
+
 .front #content-panels .region-content-bottom a {
     color: #7cabd8;
 }
@@ -313,9 +309,7 @@ a:visited {
 /*--------------------------------------------------------*/
 
 @media (max-width: 768px) {
-    body {
-        overflow-y: hidden;
-    }
+   
     .block-boxes-os_boxes_columns.front-top-cloumn .at-panel,
     .block-boxes-os_boxes_columns .at-panel {
         padding: 0;
@@ -336,9 +330,7 @@ a:visited {
     .region.region-footer {
         width: 54% !important;
     }
-    #menu-bar {
-        position: relative !important;
-    }
+   
     #menu-bar,
     #menu-bar.fixed {
         border-bottom: none;
