@@ -164,7 +164,7 @@ function os_importer_cp_settings() {
       );
       if ($node_type == 'biblio') {
         // Link to Orcid Setup
-        $orcid_link = '<a href="#" ap-settings-form form="os_importer_content_biblio" class="ng-isolate-scope">For ORCID imports, go publication settings</a>';
+        $orcid_link = '<a ap-settings-form form="feature_os_publication">For ORCID imports, go publication settings</a>';
         $settings['os_importer_orcid_link-' . $node_type] = array(
             'group' => array(
               '#id' => 'os_importer_content_' . $node_type,
@@ -172,7 +172,7 @@ function os_importer_cp_settings() {
               '#menu_parent' => 'import',
             ),
             'form' => array(
-              '#type' => 'markup',
+              '#type' => 'htmlmarkup',
               '#markup' => $orcid_link,
               '#weight' => 4,
               '#access' => biblio_access('import'),
