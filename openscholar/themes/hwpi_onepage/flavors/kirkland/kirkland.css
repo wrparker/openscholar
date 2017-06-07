@@ -185,34 +185,37 @@ body.node-type-biblio .biblio-export,
 .node-biblio table.os-files-other-list {
     margin-bottom: 0;
 }
+#menu-bar {
+    background-color: #FFF;
+}
 
 .not-front #menu-bar {
     padding-bottom: 25px;
 }
 
-.bg-one {
-    background: url('images/bg1.jpg?457') center bottom -180px no-repeat;
+.bg-one #menu-bar {
+    background: url('images/bg1.jpg?457') center bottom -180px no-repeat #FFF;
 }
-.bg-two {
-    background: url('images/bg2.jpg') center bottom -180px no-repeat;
+.bg-two #menu-bar {
+    background: url('images/bg2.jpg') center bottom -180px no-repeat #FFF;
 }
 .bg-three #menu-bar {
-    background: url('images/bg3.jpg') center bottom -180px no-repeat;
+    background: url('images/bg3.jpg') center bottom -180px no-repeat #FFF;
 }
-.bg-four {
-    background: url('images/bg4.jpg') center bottom -180px no-repeat;
+.bg-four #menu-bar {
+    background: url('images/bg4.jpg') center bottom -180px no-repeat #FFF;
 }
-.bg-five {
-    background: url('images/bg5.jpg') center bottom -180px no-repeat;
+.bg-five #menu-bar {
+    background: url('images/bg5.jpg') center bottom -180px no-repeat #FFF;
 }
-.bg-six {
-    background: url('images/bg6.jpg') center bottom -180px no-repeat;
+.bg-six #menu-bar {
+    background: url('images/bg6.jpg') center bottom -180px no-repeat #FFF;
 }
-.bg-seven {
-    background: url('images/bg7.jpg') center bottom -180px no-repeat;
+.bg-seven #menu-bar {
+    background: url('images/bg7.jpg') center bottom -180px no-repeat #FFF;
 }
-.bg-eight {
-    background: url('images/bg8.jpg') center bottom -180px no-repeat;
+.bg-eight #menu-bar {
+    background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
 .front #content-panels .region-content-bottom {
     background: url('images/front-page-twitter-bg3.jpg?12345') center -30px no-repeat;
