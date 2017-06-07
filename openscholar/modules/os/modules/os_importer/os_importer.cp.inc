@@ -164,7 +164,7 @@ function os_importer_cp_settings() {
       );
       if ($node_type == 'biblio') {
         // Link to Orcid Setup
-        $orcid_link = '<a ap-settings-form form="feature_os_publication">For ORCID imports, go publication settings</a>';
+        $orcid_link = '<div><a ap-settings-form form="feature_os_publication">For ORCID imports, go publication settings</a></div>';
         $settings['os_importer_orcid_link-' . $node_type] = array(
             'group' => array(
               '#id' => 'os_importer_content_' . $node_type,

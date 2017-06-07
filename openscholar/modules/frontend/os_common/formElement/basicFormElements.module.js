@@ -329,14 +329,14 @@
    *
    * .
    */
-  m.directive('feHtmlmarkup', ['$sce', '$compile', function ($sce, $compile) {
+  m.directive('feHtmlmarkup', ['$compile', function ($compile) {
     return {
       scope: {
         name: '@',
         value: '=ngModel',
         element: '=',
       },
-      template: '<span>{{htmlcode}}</span>',
+      template: '<div ng-bind-html="markup"></div>',
       link: function (scope, elem, attr) {
         var markup = $compile(scope.element.markup)(scope);
         elem.append(markup);
