@@ -21,11 +21,11 @@ body,
 #tinymce h2,
 #tinymce h3,
 #tinymce h4,
-.block-boxes-os_taxonomy_fbt.navigation,
 #footer ul.menu li ul li a,
 .date-nav h3,
-.front-top-featured h1.node-title,
-.node-title {
+.node-title,
+#boxes-box-site_info h2,
+#boxes-box-site_info p {
     font-family: 'Quattrocento', sans-serif !important;
 }
 .node-type-page .breadcrumb,
@@ -34,8 +34,7 @@ body,
 .region-header-third ul.nice-menu a,
 #menu-bar ul.nice-menu a,
 #footer ul.menu li a,
-#boxes-box-site_info,
-#boxes-box-site_info a,
+#boxes-box-site_info h1 a,
 h2.block-title,
 #content-column h2,
 #content-column h3,
@@ -47,9 +46,9 @@ h2.block-title,
 .pager.mini-pager {
     font-size: .8em;
 }
-.front #content-panels .region-content-first,
-.front #content-panels .region-content-bottom,
-.front-top-cloumn .region-two-66-33-second,
+#boxes-box-site_info h2  {
+    font-style: italic;
+}
 #footer .footer-login {
     color: #ffffff;
 }
