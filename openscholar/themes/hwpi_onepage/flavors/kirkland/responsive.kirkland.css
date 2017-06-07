@@ -4,11 +4,12 @@
     background-color: #f3f3f1;
   }
   .region-header-third ul.nice-menu a {
-    color: #222 !important;
+    color: #065DB2 !important;
   }
   .region-header-third .os-custom-menu li,
   .region-header-third #block-os-secondary-menu li {
-    border-top: 1px solid #f4f4f4 !important;
+    border-top: 1px solid #f3f3f1 !important;
+    border-bottom: 1px solid #f3f3f1!important;
   }
   .region-header-third #block-os-secondary-menu.opened,
   .region-header-third .os-custom-menu.opened {
@@ -28,7 +29,11 @@
   }
   #menu-bar #block-os-primary-menu a {
     color: #222 !important;
+font-size:1em;
   }
+
+
+  
   #menu-bar #block-os-primary-menu li {
     border-bottom: 1px solid #f4f4f4!important;
     border-top: none!important;

@@ -141,9 +141,7 @@ h3 {
 .sidebar .block:nth-child(4) {
     border-color: #3A4B68;
 }
-.ui-tabs ul.ui-tabs-nav {
-    margin-bottom: 20px;
-}
+
 .front .region-content-second,
 #citation-wrapper,
 body.node-type-biblio .biblio-export,
@@ -206,9 +204,6 @@ body.node-type-biblio .biblio-export,
     background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
 
-.front #content-panels .region-content-bottom a {
-    color: #7cabd8;
-}
 .block-boxes-os_boxes_twitterfeed h2.block-title {
     background: url('images/sprite.png?456') 0 -55px no-repeat;
     font-size: 0;
