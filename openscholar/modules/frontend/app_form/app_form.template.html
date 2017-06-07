@@ -4,7 +4,7 @@
         <thead>
             <tr>
                 <th width="60%">Apps this website is using</th>
-                <th width="10%">&nbsp;</th>
+                <th width="10%">Learn more</th>
                 <th width="20%">Who can see this?</th>
                 <th width="10%">Disable</th>
             </tr>
@@ -12,7 +12,7 @@
         <tbody>
             <tr ng-repeat="a in apps | filter:{enabled: 1}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
-                <td><a href="{{a.help}}" class="apps-help-link">Learn more</a></td>
+                <td><a href="{{a.help}}" class="apps-help-link"></a></td>
                 <td><span app-privacy-selector ng-model="a.private"></span></td>
                 <td><input type="checkbox" ng-model="a.disable"></td>
             </tr>
@@ -22,15 +22,16 @@
     <table class="apps-table disabled">
         <thead>
             <tr>
-                <th>Apps not currently used by this website</th>
-                <th>&nbsp;</th>
-                <th>Enable</th>
+                <th width="60%">Apps not currently used by this website</th>
+                <th width="10%">Learn more</th>
+                <th width="20%"></th>
+                <th width="10%">Enable</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="a in apps | filter:{enabled: 0}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
-                <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
+                <td><a href="{{a.help}}" class="apps-help-link"></a></td>
                 <td width="10%"><input type="checkbox" ng-model="a.enable"></td>
             </tr>
         </tbody>
