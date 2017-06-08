@@ -560,10 +560,16 @@ html.js div.ctools-dropdown.section_links div.ctools-dropdown-container {
     right: 1px;
 }
 html.js div.ctools-dropdown div.ctools-dropdown-container ul li span {
-    background: #777;
-    color: #FFF;
     padding: 5px !important;
     font-family: helvetica;
+}
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li span:not([id*="os-importer"]) {
+    background: #777;
+    color: #FFF;
+}
+html.js div.ctools-dropdown div.ctools-dropdown-container ul li span[id*="os-importer"] {
+    font-weight: normal;
+    cursor: pointer;
 }
 /** NICE MENU OVERRIDES **/
 

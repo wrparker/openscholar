@@ -123,11 +123,13 @@
         var ext = Drupal.settings.extensionMap[types[t]],
           i = 0, l = ext ? ext.length : false;
 
-        if (!ext) continue;
-
-        for (var i=0; i<l; i++) {
-          if ($scope.extensions.indexOf(ext[i]) === -1) {
-            $scope.extensions.push(ext[i]);
+        if (!ext) {
+          $scope.extensions.push(types[t]);
+        } else {
+          for (var i=0; i<l; i++) {
+            if ($scope.extensions.indexOf(ext[i]) === -1) {
+              $scope.extensions.push(ext[i]);
+            }
           }
         }
       }

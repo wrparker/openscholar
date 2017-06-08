@@ -24,7 +24,7 @@ Feature:
      When I click "JFK was murdered"
      Then I should see "Assassination of John F. Kennedy"
 
-  @api @features_second
+  @api @features_second 
   Scenario: Feed items are displayed for each site
     Given I am logging in as "admin"
       And I import feed items for "obama"

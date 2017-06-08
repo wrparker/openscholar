@@ -571,24 +571,6 @@ function os_basetheme_facetapi_count($variables) {
 }
 
 /**
- * Override theme_file_icon
- */
-function os_basetheme_file_icon($variables) {
-  $file = $variables['file'];
-  $alt = $variables['alt'];
-  $icon_directory = $variables['icon_directory'];
-
-  // Setting icon directory for svg files
-  $icon_directory = variable_get('file_icon_directory', drupal_get_path('module', 'os_files') . '/icons');
-  $icon_url = file_icon_url($file, $icon_directory);
-
-   // Replacing png icons with svg
-  $svg_url = str_replace('.png', '.svg', $icon_url );
-  $mime = check_plain($file->filemime);
-  return '<img class="file-icon" alt="' . check_plain($alt) . '" title="' . $mime . '" src="' . $svg_url . '" />';
-}
-
-/**
  * Override theme_views_mini_pager
  */
 function os_basetheme_views_mini_pager($vars) {

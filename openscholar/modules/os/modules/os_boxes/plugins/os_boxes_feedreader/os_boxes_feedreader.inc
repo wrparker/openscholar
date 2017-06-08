@@ -154,8 +154,6 @@ class os_boxes_feedreader extends os_boxes_default {
       '#suffix' => '</div>',
       '#attached' => array(
         'js' => array(
-          libraries_get_path('yui') . '/yui-min.js',
-          drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_feedreader/os_boxes_feedreader.render.js',
           array(
             'type' => 'setting',
             'data' => array(
@@ -168,6 +166,42 @@ class os_boxes_feedreader extends os_boxes_default {
                 )
               )
             ),
+            'weight' => 0
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('yui') . '/yui-min.js',
+            'weight' => 1,
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('oop') . '/oop-min.js',
+            'weight' => 2,
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('jsonp') . '/jsonp-min.js',
+            'weight' => 3,
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('jsonp-url') . '/jsonp-url-min.js',
+            'weight' => 4,
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('yql') . '/yql-min.js',
+            'weight' => 5,
+          ),
+          array(
+            'type' => 'file',
+            'data' => libraries_get_path('yql-jsonp') . '/yql-jsonp-min.js',
+            'weight' => 6,
+          ),
+          array(
+            'type' => 'file',
+            'data' =>  drupal_get_path('module', 'os_boxes') . '/plugins/os_boxes_feedreader/os_boxes_feedreader.render.js',
+            'weight' => 7,
           ),
         ),
       )

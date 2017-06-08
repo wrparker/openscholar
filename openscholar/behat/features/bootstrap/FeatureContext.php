@@ -833,6 +833,90 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I create a "([^"]*)" widget for the vsite "([^"]*)" with the following <settings>:$/
+   */
+  public function iCreateAWidgetWithTheFollowingSettingsForTheVsite($widget, $vsite, TableNode $table) {
+    $metasteps = [];
+    switch (strtolower($widget)) {
+      case "custom html":
+        $widgetType = "os_boxes_html";
+        break;
+      case "list of posts":
+        $widgetType = "os_sv_list_box";
+        break;
+      case "embed media":
+        $widgetType = "os_boxes_media";
+        break;
+      case "feed reader":
+        $widgetType = "os_boxes_feedreader";
+        break;
+    }
+    $metasteps[] = new Step\When('I visit "/' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"');
+    $hash = $table->getRows();
+
+    print "\n" . 'I visit "/' . $vsite . '#overlay=' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"' . "\n";
+
+
+    foreach ($hash as $form_elements) {
+      switch ($form_elements[2]) {
+        case 'select list':
+          $values = explode(",", $form_elements[1]);
+
+          if (count($values) > 1) {
+            foreach ($values as $value) {
+              // Select multiple values from the terms options.
+              $this->getSession()
+                ->getPage()
+                ->selectFieldOption($form_elements[0], trim($value), TRUE);
+            }
+          }
+          else {
+            $metasteps[] = new Step\When('I select "' . $form_elements[1] . '" from "' . $form_elements[0] . '"');
+          }
+          break;
+        case 'checkbox':
+          $metasteps[] = new Step\When('I ' . $form_elements[1] . ' the box "' . $form_elements[0] . '"');
+          break;
+        case 'textfield':
+          $metasteps[] = new Step\When('I fill in "' . $form_elements[0] . '" with "' . $form_elements[1] . '"');
+          break;
+        case 'radio':
+          $metasteps[] = new Step\When('I select the radio button "' . $form_elements[0] . '" with the id "' . $form_elements[1] . '"');
+          break;
+      }
+    }
+    $metasteps[] = new Step\When('I press "Save"');
+    return $metasteps;
+  }
+
+  /**
+   * @Given /^the widget "([^"]*)" is placed in the "([^"]*)" layout$/
+   */
+  public function theWidgetIsPlacedInTheLayout($widget, $page) {
+    $q = db_select('spaces_overrides', 'so')
+      ->fields('so', array('object_id', 'id'))
+      ->condition('value', '%s:5:"title";s:' . strlen($widget) . ':"' . $widget . '";%', 'LIKE')
+      ->condition('object_type', 'boxes', '=');
+    $results = $q->execute()->fetchAll();
+    $row = array_pop($results);
+
+    $page_id = FeatureHelp::GetNodeId($page);
+
+    $vsite = spaces_load('og', $row->id);
+    $blocks = $vsite->controllers->context->get('os_pages-page-' . $page_id . ":reaction:block");
+    $blocks['blocks']['boxes-' . $row->object_id] = array(
+      'module' => 'boxes',
+      'delta' => $row->object_id,
+      'title' => $widget,
+      'region' => 'sidebar_second',
+      'status' => 0,
+      'weight' => 0
+    );
+    $vsite->controllers->context->set('os_pages-page-' . $page_id . ":reaction:block", $blocks);
+
+  }
+
+  /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
@@ -1042,11 +1126,11 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I should see tineMCE in "([^"]*)"$/
+   * @Then /^I should see CKEDITOR in "([^"]*)"$/
    */
   public function iShouldSeeTinemceIn($field) {
     $page = $this->getSession()->getPage();
-    $iframe = $page->find('xpath', "//label[contains(., '{$field}')]//..//iframe[@id='edit-body-und-0-value_ifr']");
+    $iframe = $page->find('xpath', "//label[contains(., '{$field}')]//..//iframe[contains(@class, 'cke')]");
 
     if (!$iframe) {
       throw new Exception("tinyMCE wysiwyg does not appear.");
@@ -3525,7 +3609,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-<<<<<<< HEAD
    * @Given /^I make sure admin panel is open$/
    */
   public function adminPanelOpen() {
@@ -3570,10 +3653,10 @@ class FeatureContext extends DrupalContext {
    */
   public function iOpenUserMenu() {
     $page = $this->getSession()->getPage();
-    while (!$page->find('css', 'div[right-menu-toggle]')) {
+    while (!$page->find('css', '.topRight_Menu')) {
       usleep(100);
     }
-    if ($elem = $page->find('css', 'div[right-menu-toggle]')) {
+    if ($elem = $page->find('css', '.topRight_Menu')) {
       $elem->click();
       sleep(1);
     }
@@ -3727,7 +3810,7 @@ JS;
    */
   public function iAmVerifyingTheDatePickerBehaviour() {
     $page = $this->getSession()->getPage();
-    $page->find('xpath', '//input[@id="edit-published"]')->click();
+    $page->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
 
     $month_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-month"]');
     $day_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-day"]');
@@ -3752,6 +3835,7 @@ JS;
   public function iCreateANewPublicationWithADatePicker() {
     $this->randomizeMe();
     $this->getSession()->getDriver()->executeScript('CKEDITOR.instances["edit-title-field-und-0-value"].setData("' . $this->randomText . '");');
+    $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
     $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
     $this->getSession()->getPage()->pressButton('Save');
     $this->assertTextVisible("Forthcoming. “{$this->randomText},” 2010.");
@@ -3769,7 +3853,7 @@ JS;
 
     $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
 
-    $page->find('xpath', '//input[@id="edit-published"]')->click();
+    $page->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
     $page->find('xpath', '//div[@id="s2id_edit-field-biblio-pub-month-und"]//a[@class="select2-choice"]')->click();
     $page->find('xpath', '//ul[@class="select2-results"]//li[contains(@class, "select2-result-selectable")][3]')->click();
 
