@@ -332,7 +332,6 @@ projects[pinserver][download][url] = "git://github.com/openscholar/pinserver.git
 ;projects[pinserver][download][tag] = 7.x-3.4.20
 projects[pinserver][download][branch] = 9451-record_actual_huid
 
-
 projects[purl][subdir] = "contrib"
 ;: projects[purl][version] = 1.0-beta1+11-dev
 projects[purl][download][type] = git
