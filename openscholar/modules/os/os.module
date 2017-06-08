@@ -190,6 +190,34 @@ function os_menu_alter(&$items) {
   );
 }
 
+/**
+ * Returns if the active theme uses hwpi_basetheme as one of it's base theme.
+ *
+ * @return bool
+ */
+function _is_hwpi_theme($theme_name = NULL) {
+  if (is_null($theme_name)) {
+    $theme_name = $GLOBALS['theme'];
+  }
+  $themes = list_themes();
+  if (isset($themes[$theme_name])) {
+    $t = $themes[$theme_name];
+    if (isset($t->base_themes) && isset($t->base_themes['hwpi_basetheme'])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Check of the the given is in a read only mode.
+ *
+ * @param $page
+ *   The current path.
+ *
+ * @return bool
+ *   True or false.
+ */
 function os_in_readonly_mode($page) {
   // Callback data for each page.
   switch ($page) {
