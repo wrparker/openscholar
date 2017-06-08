@@ -143,12 +143,16 @@
           }).then(function mySuccess(response) {
             responseData = response.data.data;
             if (responseData == "Invalid"){
+              siteCreationCtrl.$setValidity('sitename', true);
               siteCreationCtrl.$setValidity('isinvalid', false);
             }
             else if (responseData == "Not-Available") {
+              siteCreationCtrl.$setValidity('isinvalid', true);
               siteCreationCtrl.$setValidity('sitename', false);
             }
             else{
+              siteCreationCtrl.$setValidity('isinvalid', true);
+              siteCreationCtrl.$setValidity('sitename', true);
               scope.btnDisable = false;
             }
           });
