@@ -986,19 +986,5 @@ function os_update_7051() {
  * "The following module is missing from the file system"
  */
 function os_update_7052() {
-  $module_list = db_select('system', 's')
-    ->fields('s', array('name'))
-    ->condition('type', 'module')
-    ->condition('status', 1);
-     $result = $module_list->execute();
-
-  while($record = $result->fetchAssoc()) {
-    $module = $record['name'];
-    if (!drupal_get_path('module', $module)) {
-      db_delete('system')
-        ->condition('name', $module)
-        ->condition('type', 'module')
-        ->execute();
-    }
-  }
+  remove_missing_modules_entry_from_DB();
 }
