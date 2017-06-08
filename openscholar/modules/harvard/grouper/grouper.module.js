@@ -9,11 +9,16 @@
   m.directive('grouper', ['$http', function ($http) {
     var groups = [];
 
+    var status = {
+      loading: true,
+    }
     $http.get(Drupal.settings.paths.api + '/grouper').then(function (resp) {
       console.log(resp);
+      status.loading = false;
       Array.prototype.push.apply(groups, resp.data.data); // this adds group elements without creating a new array instance
     }, function (errorResp) {
       console.log(errorResp);
+      status.loading = false;
     });
     return {
       scope: {
@@ -21,6 +26,7 @@
       },
       templateUrl: Drupal.settings.paths.grouper + '/grouper.template.html',
       link: function (scope, elem, attrs) {
+        scope.status = status;
         scope.Groups = function () {
           return groups;
         }
