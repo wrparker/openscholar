@@ -14,7 +14,6 @@ function os_site_creation_library() {
     'version' => OS_SITE_CREATION_FORM,
     'js' => array(
       $self.'/misc/osSiteCreation.module.js' => array(),
-      $self.'/misc/os_site_creation.js' => array(),
       $self.'/misc/messages.min.js' => array(),
       array(
         'data' => array(
