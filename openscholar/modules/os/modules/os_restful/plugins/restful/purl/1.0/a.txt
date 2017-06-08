@@ -1,1 +1,0 @@
-a:6:{s:17:"individualScholar";s:3:"xxx";s:20:"projectLabSmallGroup";N;s:16:"departmentSchool";N;s:5:"vsite";s:1:"0";s:13:"contentOption";s:21:"os_department_minimal";s:13:"__application";a:3:{s:9:"rest_call";b:1;s:10:"csrf_token";s:43:"0Mk3cWCRTLthrH-gE3Sh2a3D9nP0ihRnzqd4euCa0HM";s:12:"access_token";N;}}
