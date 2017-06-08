@@ -1,5 +1,8 @@
-var siteCreationApp = angular.module('siteCreationApp', ['ngMessages', 'SiteCreationForm']);
-siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $location, $rootScope) {
+  var siteCreationApp = angular.module('siteCreationApp', ['ngMessages', 'SiteCreationForm'])
+  .config(function (){
+    paths = Drupal.settings.paths
+  });
+  siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $rootScope) {
 
   //Set default value for vsite
   $scope.vsite = {
@@ -46,29 +49,25 @@ siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $location
   //Get all values and save them in localstorage for use
   $scope.saveAllValues = function() {
     var formdata = {};
-    formdata["individualScholar"] = $scope.individualScholar;
-    formdata["projectLabSmallGroup"] = $scope.projectLabSmallGroup;
-    formdata["departmentSchool"] = $scope.departmentSchool;
-    formdata["vsite"] = $scope.vsite.value;
-    formdata["contentOption"] = $scope.contentOption.value;
+    formdata = {
+      individualScholar: $scope.individualScholar,
+      projectLabSmallGroup: $scope.projectLabSmallGroup,
+      departmentSchool: $scope.departmentSchool,
+      vsite: $scope.vsite.value,
+      contentOption: $scope.contentOption.value,
+     };
 
     // Get sub site parent id
     if (typeof $rootScope.siteCreationFormId !== 'undefined') {
       var splitId = $rootScope.siteCreationFormId.split('add-subsite-');
       if (splitId.length > 1) {
-        formdata["parent"] = splitId[1];
+        formdata = {parent: splitId[1]};
       }
     }
 
     $scope.btnDisable = true;
-
     //Ajax call to save formdata
-    $http({
-      method : "POST",
-      url : "sitecreation/savedata",
-      data : "formdata=" + angular.toJson(formdata),
-      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).then(function mySuccess(response) {
+    $http.post(paths.api + '/purl/', formdata).then(function (response) {
       $scope.successData = response.data;
     });
   }
@@ -88,9 +87,9 @@ siteCreationApp.directive('formcheckDirective', ['$http', function($http) {
           //Ajax call to get all existing sites
           $http({
             method : "GET",
-            url : "sitecreation/validate/"+ngModelValue,
+            url :  paths.api + '/purl/' + ngModelValue,
           }).then(function mySuccess(response) {
-            responseData = response.data;
+            responseData = response.data.data;
             if (responseData == "Invalid"){
               siteCreationCtrl.$setValidity('isinvalid', false);
             }
