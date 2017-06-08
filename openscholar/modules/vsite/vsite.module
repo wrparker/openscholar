@@ -4069,8 +4069,10 @@ function vsite_oembed_uri_fragments($uri) {
  * @see _hwpi_get_ancestry().
  */
 function vsite_get_ancestry() {
+  $sites = array();
+
   if (!$vsite = spaces_get_space()) {
-    return array();
+    return $sites;
   }
 
   // First, looks for parent vsites and adds them to hierarchy.
@@ -4091,22 +4093,21 @@ function vsite_get_ancestry() {
   if (is_array($items) && !empty($items)) {
     $tid = $items[0]['tid'];
     $items = field_get_items('taxonomy_term', taxonomy_term_load($tid), 'field_site_url');
+
     if (isset($items[0])) {
       $site_url = $items[0];
+
       while ($site_url) {
         $sites[$site_url['url']] = $site_url['title'];
         $parents = taxonomy_get_parents($tid);
+
         if (empty($parents)) {
           break;
         }
+
         $tid = array_shift(array_keys($parents));
         $items = field_get_items('taxonomy_term', taxonomy_term_load($tid), 'field_site_url');
-        if (isset($items[0])) {
-          $site_url = $items[0];
-        }
-        else {
-          $site_url = FALSE;
-        }
+        $site_url = isset($items[0]) ? $items[0] : FALSE;
       }
     }
   }
