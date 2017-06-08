@@ -106,7 +106,7 @@ function getClient() {
   $client->setApprovalPrompt('force');
 
   $vsite = vsite_get_vsite();
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
+  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
   $client->setRedirectUri($redirectUri);
 
@@ -139,7 +139,7 @@ function os_events_get_access_token_with_auth_code() {
   $vsite = vsite_get_vsite();
 
   # So we go back to a reachable page
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
+  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
 
   $client->setState('1');
@@ -166,7 +166,7 @@ function os_events_gcal_create_calendar() {
 
   // Redirect URI is required to be absolute
   $vsite = vsite_get_vsite($_SESSION['og_context']['gid']);
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") .
+  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
   $client->setRedirectUri($redirectUri);
 
@@ -1261,7 +1261,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
       $client = getClient();
       $vsite = vsite_get_vsite();
-      $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "https") . 
+      $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
                         "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
       $client->setRedirectUri($redirectUri);
       $authUrl = $client->createAuthUrl($client->getScopes());
