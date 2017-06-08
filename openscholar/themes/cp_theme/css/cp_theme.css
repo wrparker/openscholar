@@ -107,7 +107,7 @@ html.js input.throbbing {
     bottom: -7px;
     right: 15px;
 }
-
+.apps-help-link,
 .revision-suffix.help-link a:after,
 .help-link.ng-binding a:after {
     padding: 5px 25px 5px 0;
@@ -339,7 +339,7 @@ div.ctools-modal-content a.close img {
     top: 1px;
     display: none;
 }
-
+.center-this,
 div.ctools-modal-content .modal-content .modal-throbber-wrapper {
     text-align: center;
 }
