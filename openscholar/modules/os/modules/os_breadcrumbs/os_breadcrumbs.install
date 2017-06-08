@@ -33,7 +33,7 @@ function os_breadcrumbs_update_7000() {
   while ($record = $result->fetchAssoc()) {
     $vsite = vsite_get_vsite($record['nid']);
     $theme = $vsite->controllers->variable->get('theme_default');
-    if (_is_hwpi_theme($theme)) {
+    if (is_hwpi_theme($theme)) {
       $vsite->controllers->variable->set($name, $value);
       $count++;
     }

@@ -195,7 +195,7 @@ function os_menu_alter(&$items) {
  *
  * @return bool
  */
-function _is_hwpi_theme($theme_name = NULL) {
+function is_hwpi_theme($theme_name = NULL) {
   if (is_null($theme_name)) {
     $theme_name = $GLOBALS['theme'];
   }

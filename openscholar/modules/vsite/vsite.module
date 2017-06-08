@@ -4059,3 +4059,57 @@ function vsite_oembed_uri_fragments($uri) {
     }
   }
 }
+
+/**
+ * Get vsite ancestry.
+ *
+ * @return array
+ *   List of vsites which are the parent of the current vsite.
+ *
+ * @see _hwpi_get_ancestry().
+ */
+function vsite_get_ancestry() {
+  if (!$vsite = spaces_get_space()) {
+    return array();
+  }
+
+  // First, looks for parent vsites and adds them to hierarchy.
+  $vsite_original = $vsite;
+  $group = $vsite->group;
+  while (isset($group->field_group_parent) && $group->field_group_parent) {
+    $items = field_get_items('node', $group, 'field_group_parent');
+    $vsite = vsite_get_vsite($items[0]['target_id']);
+    if(!is_object($vsite) || !isset($vsite->group)) {
+      break;
+    }
+    $group = $vsite->group;
+    $sites[$vsite->get_absolute_url()] = $group->title;
+  }
+
+  // Then, looks for site organization terms and adds them to hierarchy.
+  $items = field_get_items('node', $vsite_original->group, 'field_organization');
+  if (is_array($items) && !empty($items)) {
+    $tid = $items[0]['tid'];
+    $items = field_get_items('taxonomy_term', taxonomy_term_load($tid), 'field_site_url');
+    if (isset($items[0])) {
+      $site_url = $items[0];
+      while ($site_url) {
+        $sites[$site_url['url']] = $site_url['title'];
+        $parents = taxonomy_get_parents($tid);
+        if (empty($parents)) {
+          break;
+        }
+        $tid = array_shift(array_keys($parents));
+        $items = field_get_items('taxonomy_term', taxonomy_term_load($tid), 'field_site_url');
+        if (isset($items[0])) {
+          $site_url = $items[0];
+        }
+        else {
+          $site_url = FALSE;
+        }
+      }
+    }
+  }
+
+  return $sites;
+}
