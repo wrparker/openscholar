@@ -49,9 +49,6 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
    * Callback save to create site.
    */
   function save_site() {
-    $fp = fopen("D:\openscholar\github\openscholar\openscholar\modules\os\modules\os_restful\plugins\\restful\purl\\1.0\a.txt","a");
-    fwrite($fp, serialize($this->request));
-    fclose($fp);
     ctools_include('user', 'os');
     ctools_include('vsite', 'vsite');
     $values = &drupal_static('vsite_register_form_values');
