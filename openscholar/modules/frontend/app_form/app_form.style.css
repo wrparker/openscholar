@@ -11,8 +11,39 @@
   background-color: white;
   padding: 10px;
   z-index: 1;
+  width:85px;
+  top:-22px;
+  left:-28px;
+  border:1px solid #ccc;
+  box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.privacy-popup:hover {
+  cursor:pointer;
 }
 
 .privacy-popup-selector.selected {
   font-weight: bold;
 }
+
+
+
+.privacy-popup::after{
+    content: "";
+    position: absolute;
+   right:-25px;
+
+
+   
+    box-sizing: border-box;
+    
+    border: 1em solid black;
+    border-color: transparent transparent #FFF #FFF;
+    
+    transform-origin: 0 0;
+    transform: rotate(-135deg);
+    
+    box-shadow: -2px 2px 2px 0 rgba(0, 0, 0, 0.4);
+  }
+  
+
