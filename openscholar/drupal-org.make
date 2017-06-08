@@ -595,7 +595,7 @@ libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/opensch
 libraries[angularSlideables][type] = "libraries"
 libraries[angularSlideables][download][type] = "file"
 libraries[angularSlideables][download][url] = "https://raw.githubusercontent.com/EricWVGG/AngularSlideables/master/angularSlideables.js"
-libraries[angularSlideables][download][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/719c14a04c389e75c16c9f5cf3da59a22a640d5d/patches/angularSlideables-wrap_file_in_jQuery_function_scope.patch"
+libraries[angularSlideables][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/719c14a04c389e75c16c9f5cf3da59a22a640d5d/patches/angularSlideables-wrap_file_in_jQuery_function_scope.patch"
 
 ; YUI js libraries
 libraries[yui][type] = "libraries"
