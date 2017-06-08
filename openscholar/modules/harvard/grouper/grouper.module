@@ -150,16 +150,13 @@ function grouper_get_field_instance($entity_type, $bundle) {
  * Implements hook_user_login().
  */
 function grouper_user_login(&$edit, $account) {
-  if (!is_array($account->field_grouper_path)) {
-    // get the pin of the user's account
+  // get the pin of the user's account
+  $huid = pinserver_authenticate_get_user_huid($account->uid);
 
-    // call grouper service for all groups this user can see
+  // call grouper service for all groups this user can see
 
-    // set them to the user account
+  // set them to the user account
 
-    // register user to be cheecked again in cron after... some amount of time
-
-  }
 }
 
 /**
