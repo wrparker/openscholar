@@ -58,6 +58,42 @@ table {
     font-size: 1em;
 }
 
+/* TABLE STYES SHOULD FOLLOW THESE RULES */
+table.apps-table  {
+  border-collapse: collapse;
+  border:none;
+}
+.apps-table th {
+    border:none;
+  border-bottom: 3px solid #ccc;
+  padding-right: 1em; /* LTR */
+  text-align: left; /* LTR */
+  background:#fff;
+text-transform:none;
+font-weight:bold;
+}
+.apps-table tbody {
+  border-top: 1px solid #ccc;
+}
+.apps-table tr.even,
+.apps-table tr.odd {
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+  border-left:none;
+  border-right:none;
+  padding: 0.1em 0.6em;
+}
+
+.apps-table td {
+ 
+  padding: 0.77em 0.6em;
+}
+
+.apps-table tr td:last-child {
+    border-right: none;
+}
+
+
 input.form-text,
 textarea,
 .redirect-add-form input {
@@ -384,11 +420,18 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 }
 
 
+#overlay-close-wrapper,
 .ui-dialog .ui-dialog-titlebar-close {
     float: right;
     margin: -8px 0;
     border: 0;
     cursor: pointer;
+}
+
+#overlay-close-wrapper {
+   
+    margin: -30px 15px;
+   
 }
 
 .ui-state-default .ui-icon,
