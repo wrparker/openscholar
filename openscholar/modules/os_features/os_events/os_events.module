@@ -476,14 +476,14 @@ function os_events_os_entity_view_modes() {
 }
 
 /**
- * hook os_widget
+ * Implements hook_os_widget().
  *
- * Events blocks that can be used on an OpenScholar site
+ * Events blocks that can be used on an OpenScholar site.
  */
 function os_events_os_widget() {
   $items = array();
 
-  //Mini calendar that displays events by month
+  // Mini calendar that displays events by month.
   $items['views-os_events-block_1'] = array(
     'module' => 'views',
     'delta' => 'os_events-block_1',
@@ -495,9 +495,12 @@ function os_events_os_widget() {
   return $items;
 }
 
-// TODO: Remove when os_layout_get is refactored to handle widget titles better
+/**
+ * Implements hook_os_widget_alter().
+ */
 function os_events_os_widget_alter(&$widget) {
   if ($widget['delta'] == 'os_events-block_1') {
+    // Remove when os_layout_get is refactored to handle widget titles better.
     $widget['info'] = t('Mini Calendar');
   }
 }
