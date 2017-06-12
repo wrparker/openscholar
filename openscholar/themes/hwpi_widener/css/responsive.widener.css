@@ -33,7 +33,7 @@
         color: #333 !important;
     }
     #menu-bar #block-os-primary-menu ul ul a {
-        color: #FFF;
+        color: #FFF !important;
     }
     #menu-bar #block-os-primary-menu a:hover,
     #menu-bar #block-os-primary-menu a:focus {
