@@ -65,9 +65,7 @@ h2.block-title,
 .section-nav .leaf.menu-depth-3 > a,
 .section-nav .leaf.menu-depth-4 > a,
 .section-nav .leaf.menu-depth-5 > a,
-.section-nav .leaf.menu-depth-6 > a,
-.sidebar .block h2.block-title,
-.sidebar {
+.section-nav .leaf.menu-depth-6 > a {
     background: #f3f2f1 !important;
 }
 
@@ -185,7 +183,7 @@ h2.block-title,
     background: #696259;
 }
 #layout_3_1_overlay .slide-copy {
-    background: #3B6E8F;
+    background: repeat scroll 0 0 rgba(59, 110, 143, 0.8);
 }
 @-moz-document url-prefix() {
     #menu-bar ul.nice-menu .menuparent.over > a::before, #menu-bar ul.nice-menu .menuparent a:hover::before, #menu-bar ul.nice-menu .menuparent a.active::before, #menu-bar ul.nice-menu .menuparent a::before {
