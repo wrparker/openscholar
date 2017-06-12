@@ -1348,9 +1348,17 @@ function os_search_solr_form_boxes_box_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function os_search_solr_os_layout_get_alter($context, &$blocks) {
-
-  // Legacy block replaced with os_search_solr-solr_search_box
+  // Legacy block replaced with os_search_solr-solr_search_box.
   $blocks = array_filter($blocks, function ($item) {
-    return $item['delta'] != 'site-search';
+
+    if ($item['module'] == 'os_search_solr' && $item['delta'] == 'solr_search_box') {
+      return FALSE;
+    }
+
+    if ($item['delta'] != 'site-search') {
+      return TRUE;
+    }
+
+    return FALSE;
   });
 }
