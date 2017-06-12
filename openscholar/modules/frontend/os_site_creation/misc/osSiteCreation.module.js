@@ -1,12 +1,12 @@
 (function () {
 
-  var m = angular.module('SiteCreationForm', ['angularModalService', 'ngMessages'])
+  var m = angular.module('SiteCreationForm', ['angularModalService', 'ngMessages', 'os-buttonSpinner'])
   .config(function (){
     rootPath = Drupal.settings.paths.siteCreationModuleRoot;
     paths = Drupal.settings.paths
   });
 
-  m.controller('siteCreationCtrl', function($scope, $http, $rootScope) {
+  m.controller('siteCreationCtrl', ['$scope', '$http', '$rootScope', 'buttonSpinnerStatus', function($scope, $http, $rootScope, bss) {
 
   //Set default value for vsite
   $scope.vsite = {
@@ -70,12 +70,14 @@
     }
 
     $scope.btnDisable = true;
+    bss.SetState('site_creation_form', true);
     //Ajax call to save formdata
     $http.post(paths.api + '/purl', formdata).then(function (response) {
       $scope.successData = response.data;
+      $scope.navigatePage('page2','page3');
     });
   }
-});
+}]);
   /**
    * Open modals for the site creation forms
    */
