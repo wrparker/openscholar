@@ -5,7 +5,6 @@ body * {
 body {
     font-weight: 300;
 }
-
 .section-nav .menu-depth-1 > a {
     font-size: 1.2em;
 }
@@ -34,14 +33,12 @@ h2.block-title,
 .node-type-person #content-column .node-person h2.block-title {
     margin-bottom: 17px;
 }
-
 .node-type-page .breadcrumb {
     padding-bottom: 2em;
 }
 .breadcrumb span {
     margin: 0 3px;
 }
-
 #menu-bar ul.nice-menu .menuparent.over > a,
 #menu-bar ul.nice-menu .menuparent a:hover,
 #menu-bar ul.nice-menu .menuparent a.active,
@@ -51,8 +48,6 @@ h2.block-title,
 #header {
     background: #FFF;
 }
-
-
 .section-nav ul.menu li,
 .section-nav .expanded.menu-depth-2 > a,
 .section-nav .menu-depth-1 > a,
@@ -66,8 +61,6 @@ h2.block-title,
 .section-nav .leaf.menu-depth-6 > a {
     background: #f3f2f1 !important;
 }
-
-
 .rslides_tabs li,
 #layout_16_9_side .slide,
 #footer {
@@ -78,7 +71,6 @@ h2.block-title,
 .comment-wrapper {
     border-top: none;
 }
-
 a.rslides_nav {
     background-color: #857b6f;
 }
@@ -125,7 +117,6 @@ h2.block-title,
 .section-nav a[class="active-trail active active"] {
     color: #333 !important;
 }
-
 #boxes-box-os_pages_section_nav,
 .section-nav ul.menu li a {
     border-color: transparent;
