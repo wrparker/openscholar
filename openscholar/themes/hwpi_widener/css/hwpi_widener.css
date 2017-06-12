@@ -34,9 +34,7 @@ h2.block-title,
 .node-type-person #content-column .node-person h2.block-title {
     margin-bottom: 17px;
 }
-.sidebar .block.section-nav {
-    margin-bottom: 0;
-}
+
 .node-type-page .breadcrumb {
     padding-bottom: 2em;
 }
@@ -80,10 +78,7 @@ h2.block-title,
 .comment-wrapper {
     border-top: none;
 }
-#header,
-#branding_footer {
-    border-top: 1px solid #333;
-}
+
 a.rslides_nav {
     background-color: #857b6f;
 }
@@ -117,7 +112,6 @@ h2.block-title,
 .sidebar .block h2.block-title {
     font-size: 1.2em;
     padding: 0;
-    background-color: #fff;
     letter-spacing: 0;
     font-weight: 500;
 }
