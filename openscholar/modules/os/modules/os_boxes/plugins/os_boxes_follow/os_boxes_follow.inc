@@ -384,6 +384,11 @@ function os_follow_default_networks() {
       'domain' => 'soundcloud.com',
      'offset' => 436,
     ),
+    'Google+'    => array(
+      'title' => t('Google+'),
+      'domain' => 'plus.google.com',
+      'offset' => 722,
+    ),
   );
 
   return $networks;

@@ -592,6 +592,11 @@ libraries[angular_select2][download][type] = "get"
 libraries[angular_select2][download][url] = "https://github.com/angular-ui/ui-select/archive/v0.12.0.zip"
 libraries[angular_select2][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/ad2fd2d198e91ac9a77eacbae996579e55510a3a/patches/angular_select-7024-async.patch"
 
+libraries[angularSlideables][type] = "libraries"
+libraries[angularSlideables][download][type] = "file"
+libraries[angularSlideables][download][url] = "https://raw.githubusercontent.com/EricWVGG/AngularSlideables/master/angularSlideables.js"
+libraries[angularSlideables][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/719c14a04c389e75c16c9f5cf3da59a22a640d5d/patches/angularSlideables-wrap_file_in_jQuery_function_scope.patch"
+
 ; YUI js libraries
 libraries[yui][type] = "libraries"
 libraries[yui][download][type] = "file"
