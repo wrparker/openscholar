@@ -472,6 +472,7 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .ui-dialog {
     padding: 0;
     top:10% !important;
+    font-size: 14px; 
 }
 
 .ui-dialog.ap-settings-form .ui-dialog-content {
