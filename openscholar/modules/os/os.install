@@ -982,6 +982,14 @@ function os_update_7051() {
 }
 
 /**
+ * Remove drush errors and warnings for
+ * "The following module is missing from the file system"
+ */
+function os_update_7052() {
+  remove_missing_modules_entry_from_DB();
+}
+
+/**
  * Enable the os_site_creation module for new site creation forms.
  */
 function os_update_7053() {
