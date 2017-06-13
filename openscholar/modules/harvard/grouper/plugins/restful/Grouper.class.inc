@@ -28,12 +28,13 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
       return $cache->data;
     }
     else {
-      $grouper_url = variable_get('grouper_url', 'https://grouper-ws.stage.iam.harvard.edu/grouper-ws/servicesRest/v2_3_000/groups');
+      $grouper_url = variable_get('grouper_url', 'https://grouper-ws.stage.iam.harvard.edu/grouper-ws/servicesRest/v2_3_000/grouperPrivileges');
       $request_body = array(
-        'WsrestFindGroupsLiterequest' => array(
+        'WsRestFindGroupsLiterequest' => array(
           'actAsSubjectIdentifier' => $huid,
-          'group_name' => '%',
-          'queryFilterType' => 'FIND_BY_GROUP_NAME_APPROXIMATE',
+          'privilegeType' => 'access',
+          'privilegeName' => 'view',
+          'subjectIdentifier' => $huid,
           'stemName' => 'harvard'
         )
       );

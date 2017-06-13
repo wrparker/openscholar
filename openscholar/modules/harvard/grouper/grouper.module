@@ -154,8 +154,39 @@ function grouper_user_login(&$edit, $account) {
   $huid = pinserver_authenticate_get_user_huid($account->uid);
 
   // call grouper service for all groups this user can see
+  $grouper_url = variable_get('grouper_url', 'https://grouper-ws.stage.iam.harvard.edu/grouper-ws/servicesRest/v2_3_000/grouperPrivileges');
+  $request_body = array(
+    'WsRestFindGroupsLiterequest' => array(
+      'actAsSubjectIdentifier' => $huid,
+      'privilegeType' => 'access',
+      'privilegeName' => 'view',
+      'subjectIdentifier' => $huid,
+      'stemName' => 'harvard'
+    )
+  );
+
+  $options = array(
+    'data' => $request_body,
+    'method' => 'POST'
+  );
+
+  $response = drupal_http_request($grouper_url, $options);
+  if ($response->code == 200) {
+    $raw_data = '';
+  }
+  else {
+    // TODO: Remove when the service is actually working
+    $raw_data = file_get_contents(drupal_get_path('module', 'grouper').'/test_data.json');
+  }
+
+  $cleaned = json_decode($raw_data);
 
   // set them to the user account
+  $groups = $cleaned->WsFindGroupsResults->groupResults;
+
+  foreach ($groups as $g) {
+
+  }
 
 }
 
