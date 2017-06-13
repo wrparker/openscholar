@@ -97,6 +97,7 @@ function os_restful_entity_property_info_alter(&$info) {
 
   $info['file']['properties']['name']['setter callback'] = 'entity_property_verbatim_set';
   $info['file']['properties']['timestamp']['setter callback'] = 'entity_property_verbatim_set';
+  $info['file']['properties']['changed']['setter callback'] = 'entity_property_verbatim_set';
 }
 
 /**

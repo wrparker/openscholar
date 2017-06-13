@@ -231,10 +231,15 @@
         };
 
         this.edit = function (entity, ignore) {
+
+          entity.changed =  parseInt(Date.now()/1000);
+          ignore.splice(ignore.indexOf('changed'), 1);
+
           if (!entity[idProp]) {
             this.add(entity);
             return;
           }
+
           ignore = ignore || [];
           ignore.push(idProp);
 

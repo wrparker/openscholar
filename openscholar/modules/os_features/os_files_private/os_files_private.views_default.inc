@@ -41,6 +41,7 @@ function os_files_private_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
+    'changed' => 'changed',
     'timestamp' => 'timestamp',
     'id' => 'id',
     'title' => 'title',
@@ -84,6 +85,13 @@ function os_files_private_views_default_views() {
     'filesize' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -299,6 +307,7 @@ function os_files_private_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
+    'changed' => 'changed',
     'timestamp' => 'timestamp',
     'id' => 'id',
     'title' => 'title',
@@ -342,6 +351,13 @@ function os_files_private_views_default_views() {
     'filesize' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -523,6 +539,13 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
   $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
+  /* Field: Content: Updated date */
+  $handler->display->display_options['fields']['changed']['id'] = 'changed';
+  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['field'] = 'changed';
+  $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
+  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
+  $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
   /* Field: File Usage: Entity ID */
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'file_usage';

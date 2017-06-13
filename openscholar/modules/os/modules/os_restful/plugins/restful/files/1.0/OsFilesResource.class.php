@@ -226,7 +226,7 @@ class OsFilesResource extends OsRestfulEntityCacheableBase {
     );
 
     $info['changed'] = array(
-      'callback' => array($this, 'getChanged'),
+      'property' => 'changed',
     );
 
     $info['description'] = array(
