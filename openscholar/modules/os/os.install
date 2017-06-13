@@ -980,3 +980,10 @@ function os_update_7051() {
 
   return t('Enabled OS content revisions module.');
 }
+
+/**
+ * Enable the os_site_creation module for new site creation forms.
+ */
+function os_update_7053() {
+  module_enable(array('os_site_creation'));
+}
