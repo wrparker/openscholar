@@ -84,6 +84,7 @@ function os_events_settings() {
  * @return Google_Client the authorized client object
  */
 function getClient() {
+  global $is_https;
   
   $path = libraries_get_path('google-api-php-client');
   include_once "$path/vendor/autoload.php";
@@ -106,7 +107,7 @@ function getClient() {
   $client->setApprovalPrompt('force');
 
   $vsite = vsite_get_vsite();
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
+  $redirectUri = (($is_https) ? "https" : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
   $client->setRedirectUri($redirectUri);
 
@@ -125,6 +126,7 @@ function getClient() {
 }
 
 function os_events_get_access_token_with_auth_code() {
+  global $is_https;
 
   if (!isset($_GET['code'])) {
     error_log("Did not receive a Google auth code in the query string with which to create an access code.");
@@ -139,7 +141,7 @@ function os_events_get_access_token_with_auth_code() {
   $vsite = vsite_get_vsite();
 
   # So we go back to a reachable page
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
+  $redirectUri = (($is_https) ? "https" : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
 
   $client->setState('1');
@@ -160,13 +162,14 @@ function os_events_get_access_token_with_auth_code() {
 }
 
 function os_events_gcal_create_calendar() {
+  global $is_https;
 
   // Get the API client and construct the service object.
   $client = getClient();
 
   // Redirect URI is required to be absolute
   $vsite = vsite_get_vsite($_SESSION['og_context']['gid']);
-  $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") .
+  $redirectUri = (($is_https) ? "https" : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
   $client->setRedirectUri($redirectUri);
 
@@ -1243,6 +1246,8 @@ function os_events_preprocess_calendar_datebox(&$vars) {
  * Implements hook_views_pre_view().
  */
 function os_events_views_pre_view(&$view, &$display_id, &$args) {
+  global $is_https;
+
   if ($view->name != 'os_events') {
     return;
   }
@@ -1261,7 +1266,7 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
 
       $client = getClient();
       $vsite = vsite_get_vsite();
-      $redirectUri = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : "http") . 
+      $redirectUri = (($is_https) ? "https" : "http") . 
                         "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
       $client->setRedirectUri($redirectUri);
       $authUrl = $client->createAuthUrl($client->getScopes());
