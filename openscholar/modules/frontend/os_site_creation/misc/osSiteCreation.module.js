@@ -8,7 +8,7 @@
   /**
    * Open modals for the site creation forms
    */
-  m.directive('siteCreationForm', ['ModalService', function (ModalService) {
+  m.directive('siteCreationForm', ['ModalService', '$rootScope', function (ModalService, $rootScope) {
     var dialogOptions = {
       minWidth: 900,
       minHeight: 300,
@@ -16,6 +16,7 @@
       position: 'center',
       dialogClass: 'site-creation-form',
       title: 'Create your web site',
+      dialogClass: 'site-creation-form'
     };
 
     function link(scope, elem, attrs) {
@@ -23,6 +24,7 @@
       elem.bind('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        $rootScope.siteCreationFormId = attrs.id;
 
         ModalService.showModal({
           controller: 'siteCreationFormController',
@@ -32,6 +34,7 @@
           }
         })
         .then(function (modal) {
+          dialogOptions.title = scope.title;
           dialogOptions.close = function (event, ui) {
             modal.element.remove();
           }
