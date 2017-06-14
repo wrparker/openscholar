@@ -1,0 +1,225 @@
+#site-creation-container{
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 12px;
+  line-height: 1.4;
+  margin: auto;
+  width: 60%;
+  padding: 20px;
+}
+
+#site-creation-container #header-container-page-1,
+#site-creation-container #header-container-page2{
+  padding: 5px;
+}
+
+#site-creation-container #header-container-group-1,
+#site-creation-container #header-container-group-2,
+#site-creation-container #header-container-group-1-page2,
+#site-creation-container #header-container-group-2-page2{
+  overflow: hidden;
+}
+
+#site-creation-container #header-container-group-3,
+#site-creation-container #header-container-group-3-page-2{
+  margin: 15px 5px 5px;
+}
+
+#site-creation-container .step{
+  padding: 3px 10px;
+  float: left;
+  width: 30%;
+}
+
+#site-creation-container .clear{
+  clear: both;
+}
+
+#site-creation-container .center{
+  text-align:center;
+}
+
+#site-creation-container #body-container{
+  height: 382px;
+}
+
+#site-creation-container #body-container-group-1{
+  margin: 15px 5px 5px;
+  height: 130px;
+  overflow: hidden;
+}
+
+#site-creation-container #body-container-page2{
+  margin: 15px 5px 5px;
+  height: 393px;
+  overflow: hidden;
+}
+
+#site-creation-container #body-container-group-2{
+  margin: 5px;
+  overflow: hidden;
+  border: 2px solid #CCC;
+  background-color: #EEE;
+}
+
+#site-creation-container #body-container-group-page-2{
+  margin: 130px 5px;
+  overflow: hidden;
+  border: 2px solid #CCC;
+  background-color: #EEE;
+}
+
+#site-creation-container .visibility{
+  float: left;
+  margin: 3px;
+  padding: 4px;
+  vertical-align: bottom;
+}
+
+#site-creation-container .right{
+  float: right;
+}
+
+#site-creation-container .left{
+  float: left;
+}
+
+#site-creation-container .enlarged-text{
+  font-size: 14px;
+}
+
+#site-creation-container .site-type{
+  padding: 3px 10px;
+  display:inline-block;
+  float: left;
+  width: 30%;
+}
+
+#site-creation-container a, 
+#site-creation-container a:visited{
+  text-decoration: none;
+}
+
+#site-creation-container a:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#site-creation-container a.button{
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  background: none;
+  text-decoration: none;
+  background-color: #696969;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container a:hover.button{
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  background: none;
+  text-decoration: none;
+  background-color: #3f3f3f;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container #footer-container {
+  overflow: hidden;
+}
+
+#site-creation-container #footer-container div#pre {
+  float: left;
+  padding: 4px 12px;
+  padding: 4px 12px;
+  width: 400px;
+}
+
+#site-creation-container #footer-container div#nxt {
+  float: left;
+  text-align: right;
+  padding: 4px 12px;
+  padding: 4px 12px;
+  width: 400px;
+}
+
+#site-creation-container .popup{
+  font-size: 11px;
+  border: 1px solid #CCC;
+  margin: 3px 5px;
+  padding: 5px;
+  height: 78px;
+}
+
+#site-creation-container .error-msg{
+  color: red; padding: 5px;
+}
+
+#site-creation-container .stepEnable {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container .stepDisable {
+  background-color: #CCC;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container .preNxt {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container .preNxt:disabled{
+  background-color: #CCC;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+}
+
+#site-creation-container p{
+  margin: 1em 0;
+  padding: 0;
+}
+
+#site-creation-container input[type=text]{
+  border: 2px solid #CCC;
+}

@@ -1,0 +1,109 @@
+var siteCreationApp = angular.module('siteCreationApp', ['ngMessages', 'SiteCreationForm']);
+siteCreationApp.controller('siteCreationCtrl', function($scope, $http, $location, $rootScope) {
+
+  //Set default value for vsite
+  $scope.vsite = {
+    value: '0'
+  };
+  
+  //Toggle open/close for 'who can view your site'
+  $scope.showAll = false;
+  $scope.toggleFunc = function() {
+    $scope.showAll = !$scope.showAll;
+  };
+  
+  //Reset value for other 'Type of site' based on selection
+  $scope.clearRest = function(field) {
+    if (field != 'individualScholar') {
+      $scope.individualScholar = null;
+    }
+    if (field != 'projectLabSmallGroup') {
+      $scope.projectLabSmallGroup = null;
+    }
+    if (field != 'departmentSchool') {
+      $scope.departmentSchool = null;
+    }
+  }
+
+  //Set status of next button to disabled initially
+  $scope.btnDisable = true;
+  
+  //Navigate between screens
+  $scope.page1 = true;
+  $scope.navigatePage = function(pagefrom, pageto) {
+    $scope[pagefrom] = false;
+    $scope[pageto] = true;
+  }
+  
+  //Set default value for Content Option
+  $scope.contentOption = {
+    value: 'os_department_minimal'
+  };
+
+  //Site URL
+  $scope.baseURL = $location.protocol() + '://' + $location.host() + '/';
+  
+  //Get all values and save them in localstorage for use
+  $scope.saveAllValues = function() {
+    var formdata = {};
+    formdata["individualScholar"] = $scope.individualScholar;
+    formdata["projectLabSmallGroup"] = $scope.projectLabSmallGroup;
+    formdata["departmentSchool"] = $scope.departmentSchool;
+    formdata["vsite"] = $scope.vsite.value;
+    formdata["contentOption"] = $scope.contentOption.value;
+
+   // Get sub site parent id
+    if (typeof $rootScope.siteCreationFormId !== 'undefined') {
+      var splitId = $rootScope.siteCreationFormId.split('add-subsite-');
+      if (splitId.length > 1) {
+        formdata["parent"] = splitId[1];
+      }
+    }
+
+    $scope.btnDisable = true;
+    //Ajax call to save formdata
+    $http({
+      method : "POST",
+      url : "sitecreation/savedata",
+      data : "formdata=" + angular.toJson(formdata),
+      headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then(function mySuccess(response) {
+      $scope.successData = response.data;
+    });
+  }
+});
+
+//Validate form for existing site names
+siteCreationApp.directive('formcheckDirective', ['$http', function($http) {
+  var responseData;
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attr, siteCreationCtrl) {
+      function formValidation(ngModelValue) {
+        siteCreationCtrl.$setValidity('isinvalid', true);
+        siteCreationCtrl.$setValidity('sitename', true);
+        scope.btnDisable = true;
+        if(ngModelValue){
+          //Ajax call to get all existing sites
+          $http({
+            method : "GET",
+            url : "sitecreation/validate/"+ngModelValue,
+          }).then(function mySuccess(response) {
+            responseData = response.data;
+            if (responseData == "Invalid"){
+              siteCreationCtrl.$setValidity('isinvalid', false);
+            }
+            else if (responseData == "Not-Available") {
+              siteCreationCtrl.$setValidity('sitename', false);
+            }
+            else{
+              scope.btnDisable = false;
+            }
+          });
+        }
+        return ngModelValue;
+      }
+      siteCreationCtrl.$parsers.push(formValidation);
+    }
+  };
+}]);
