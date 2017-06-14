@@ -73,7 +73,7 @@
     bss.SetState('site_creation_form', true);
     //Ajax call to save formdata
     $http.post(paths.api + '/purl', formdata).then(function (response) {
-      $scope.successData = response.data;
+      $scope.successData = response.data.data.data;
       $scope.navigatePage('page2','page3');
     });
   }
@@ -137,18 +137,16 @@
         siteCreationCtrl.$setValidity('isinvalid', true);
         siteCreationCtrl.$setValidity('sitename', true);
         scope.btnDisable = true;
+        var baseUrl = Drupal.settings.paths.api;
         if(ngModelValue){
           //Ajax call to get all existing sites
-          $http({
-            method : "GET",
-            url :  paths.api + '/purl/' + ngModelValue,
-          }).then(function mySuccess(response) {
+          $http.get(baseUrl + '/purl/' + ngModelValue).then(function mySuccess(response) {
             responseData = response.data.data;
-            if (responseData == "Invalid"){
+            if (responseData.msg == "Invalid"){
               siteCreationCtrl.$setValidity('sitename', true);
               siteCreationCtrl.$setValidity('isinvalid', false);
             }
-            else if (responseData == "Not-Available") {
+            else if (responseData.msg == "Not-Available") {
               siteCreationCtrl.$setValidity('isinvalid', true);
               siteCreationCtrl.$setValidity('sitename', false);
             }
