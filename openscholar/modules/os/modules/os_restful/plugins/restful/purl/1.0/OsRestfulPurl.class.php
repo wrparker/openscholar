@@ -31,16 +31,19 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
    * Checking for existing sites.
    */
   public function check_exiting_sites($siteValue) {
+
     //Validate new vsite URL
+    $return['msg'] = '';
     if (strlen($siteValue) < 3 || !valid_url($siteValue)) {
-      return("Invalid");
+      $return['msg'] = 'Invalid';
     }
     else if (($purl = purl_load(array('value' => $siteValue, 'provider' => 'spaces_og'), TRUE)) || menu_get_item($siteValue)) {
-      return("Not-Available");
+      $return['msg'] = "Not-Available";
     }
     else {
-      return("Available");
+      $return['msg'] = "Available";
     }
+    return $return;
   }
 
 
@@ -131,10 +134,8 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
       if ($new_user) {
         os_role_grant($site_owner->uid, 'vsite admin', $vsite->nid);
       }
-
       // If we have gotten to this point, then the vsite registration was success.
       // Clears the errors.
-      drupal_get_messages('error');
     }
     else {
       $commands[] = _vsite_register_form_error();
@@ -148,7 +149,6 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
       batch_process();
     }
 
-    print $commands[0]['data'];
-    exit;
+    return($commands[0]);
   }
 }
