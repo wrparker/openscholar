@@ -234,7 +234,7 @@ input.form-submit, a.button, .ui-dialog button, .ui-dialog.ap-settings-form inpu
     border-radius: 3px;
 }
 
-.ui-dialog button {
+.ui-dialog .media-browser-pane .results ~ button {
     margin-right: 0;
     border: none;
     border-bottom: none;
