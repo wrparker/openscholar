@@ -46,7 +46,7 @@ h2.block-title,
 .pager.mini-pager {
     font-size: .8em;
 }
-#boxes-box-site_info h2  {
+#boxes-box-site_info h2 {
     font-style: italic;
 }
 #footer .footer-login {
@@ -128,7 +128,6 @@ h3 {
     background-image: none;
     text-shadow: none;
 }
-
 .sidebar .block:nth-child(2) {
     border-color: #81b9c3;
 }
@@ -139,7 +138,6 @@ h3 {
 .sidebar .block:nth-child(4) {
     border-color: #3A4B68;
 }
-
 .front .region-content-second,
 #citation-wrapper,
 body.node-type-biblio .biblio-export,
@@ -201,7 +199,6 @@ body.node-type-biblio .biblio-export,
 .bg-eight #menu-bar {
     background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
-
 .block-boxes-os_boxes_twitterfeed h2.block-title {
     background: url('images/sprite.png?456') 0 -55px no-repeat;
     font-size: 0;
@@ -251,16 +248,17 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent {
     padding-right: 0;
 }
-
+#menu-bar ul.nice-menu .menuparent.over > a:before,
+#menu-bar ul.nice-menu .menuparent a:hover:before,
+#menu-bar ul.nice-menu .menuparent a.active:before,
 #menu-bar ul.nice-menu .menuparent a:before {
     background-position: -12px -562px;
 }
-
-
+#menu-bar ul.nice-menu .menuparent a:hover:before {
+    background-position: -12px -565px;
+}
 #menu-bar ul.nice-menu .menuparent > a:before {
-  
     height: 12px;
-  
 }
 #footer {
     background-color: #3e464d;
@@ -299,6 +297,3 @@ a:visited {
 .logged-in .view-content ~ .item-list ul.pager li {
     border: none !important;
 }
-
-
-
