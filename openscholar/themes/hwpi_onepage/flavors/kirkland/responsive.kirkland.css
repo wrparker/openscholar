@@ -55,4 +55,24 @@ font-size:1em;
   .mobile-buttons a {
     color: #000!important;
   }
+  #boxes-box-site_info h1 {
+        font-size: 28px;
+    }
+    #menu-bar ul.nice-menu a {
+        font-size: 16px;
+    }
+}
+@media (max-width: 768px) {
+   
+ 
+   
+   
+    #menu-bar,
+    #menu-bar.fixed {
+        border-bottom: none;
+    }
+    #menu-bar #block-os-primary-menu a.active {
+        background-color: #303030!important;
+    }
+}
 }

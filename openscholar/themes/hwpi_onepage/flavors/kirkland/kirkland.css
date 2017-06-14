@@ -128,9 +128,7 @@ h3 {
     background-image: none;
     text-shadow: none;
 }
-.item-list .pager li {
-    padding: 0.2em;
-}
+
 .sidebar .block:nth-child(2) {
     border-color: #81b9c3;
 }
@@ -253,6 +251,17 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent {
     padding-right: 0;
 }
+
+#menu-bar ul.nice-menu .menuparent a:before {
+    background-position: -12px -562px;
+}
+
+
+#menu-bar ul.nice-menu .menuparent > a:before {
+  
+    height: 12px;
+  
+}
 #footer {
     background-color: #3e464d;
     border-top: 4px solid #999;
@@ -290,50 +299,6 @@ a:visited {
 .logged-in .view-content ~ .item-list ul.pager li {
     border: none !important;
 }
-@-moz-document url-prefix() {}
-/* RESPONSIVE CSS - UNTIL I CAN FIGURE OUT WHY GARYKING RESP CSS FILE WONT LOAD */
 
-@media (max-width: 1024px) {
-    #boxes-box-site_info h1 {
-        font-size: 28px;
-    }
-    #menu-bar ul.nice-menu a {
-        font-size: 16px;
-    }
-}
-/*--------------------------------------------------------*/
 
-@media (max-width: 768px) {
-   
-    .block-boxes-os_boxes_columns.front-top-cloumn .at-panel,
-    .block-boxes-os_boxes_columns .at-panel {
-        padding: 0;
-    }
-    .front .block-boxes-os_boxes_twitterfeed {
-        padding: 10px 10px 20px 10px;
-    }
-    #main-content-header,
-    h1#page-title {
-        width: 100%;
-    }
-    .front .block-boxes-os_sv_list_box {
-        width: 97% !important;
-    }
-    .region.region-footer-first {
-        width: 45% !important;
-    }
-    .region.region-footer {
-        width: 54% !important;
-    }
-   
-    #menu-bar,
-    #menu-bar.fixed {
-        border-bottom: none;
-    }
-    #menu-bar #block-os-primary-menu a.active {
-        background-color: #303030!important;
-    }
-}
-img.file-icon {
-    width: 16px;
-}
+
