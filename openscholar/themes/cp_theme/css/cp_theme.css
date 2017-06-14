@@ -234,6 +234,16 @@ input.form-submit, a.button, .ui-dialog button, .ui-dialog.ap-settings-form inpu
     border-radius: 3px;
 }
 
+.ui-dialog button {
+    margin-right: 0;
+    border: none;
+    border-bottom: none;
+    color: #4E84C4;
+    padding: 0 5px;
+    background: none;
+    font-weight: bold;
+}
+
 /* SAVE BUTTON SPINNER */
 .spinner,
 .spinner:after {
