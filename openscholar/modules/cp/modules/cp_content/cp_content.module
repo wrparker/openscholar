@@ -100,6 +100,26 @@ function cp_content_views_data_alter(&$data){
       ),
     );
   }
+
+  if(!isset($data['file_managed']['changed'])){
+    $data['file_managed']['changed'] = array(
+      'title' => t('Updated Date'),
+      'help' => t('The timestamp of the latest update to the file or file metadata.'),
+      'field' => array(
+        'handler' => 'views_handler_field_date',
+        'click sortable' => TRUE,
+      ),
+      'sort' => array(
+        'handler' => 'views_handler_sort_date',
+      ),
+      'filter' => array(
+        'handler' => 'views_handler_filter_date',
+      ),
+      'argument' => array(
+        'handler' => 'views_handler_argument_string',
+      ),
+    );
+  }
 }
 
 /**
