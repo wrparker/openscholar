@@ -635,9 +635,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
   $handler->display->display_options['fields']['changed']['field'] = 'changed';
-  // $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
-  // $handler->display->display_options['fields']['changed']['date_format'] = 'long';
-  // $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
