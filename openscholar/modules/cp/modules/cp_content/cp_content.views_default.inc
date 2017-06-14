@@ -252,12 +252,6 @@ function cp_content_views_default_views() {
       'label' => '',
     ),
   );
-  /* Field: Content: Updated date */
-  $handler->display->display_options['fields']['changed']['id'] = 'changed';
-  $handler->display->display_options['fields']['changed']['table'] = 'node';
-  $handler->display->display_options['fields']['changed']['field'] = 'changed';
-  $handler->display->display_options['fields']['changed']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -639,11 +633,11 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
   /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
-  $handler->display->display_options['fields']['changed']['table'] = 'node';
+  $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
   $handler->display->display_options['fields']['changed']['field'] = 'changed';
-  $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
-  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
-  $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
+  // $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
+  // $handler->display->display_options['fields']['changed']['date_format'] = 'long';
+  // $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
   /* Field: File: Edit link */
   $handler->display->display_options['fields']['edit']['id'] = 'edit';
   $handler->display->display_options['fields']['edit']['table'] = 'file_managed';
@@ -669,13 +663,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
   $handler->display->display_options['fields']['nothing_1']['label'] = 'Manage';
   $handler->display->display_options['fields']['nothing_1']['alter']['text'] = '<a file-editor-modal fid="[fid]" href="#" views-close="reload(result)">Edit</a> [delete]';
-  /* Field: Content: Updated date */
-  $handler->display->display_options['fields']['changed']['id'] = 'changed';
-  $handler->display->display_options['fields']['changed']['table'] = 'node';
-  $handler->display->display_options['fields']['changed']['field'] = 'changed';
-  $handler->display->display_options['fields']['changed']['relationship'] = 'file_to_node';
-  $handler->display->display_options['fields']['changed']['date_format'] = 'long';
-  $handler->display->display_options['fields']['changed']['second_date_format'] = 'os_time';
   $handler->display->display_options['filter_groups']['groups'] = array(
     1 => 'AND',
     2 => 'OR',
