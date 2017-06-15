@@ -43,7 +43,7 @@ if (!class_exists('purl_vsite_path')) {
 
           if (!is_string($vsite_domain)) {
             $vsite_domain = FALSE;
-          }
+          } 
 
           global $base_url;
           // HTTP_HOST includes port, but we want to remove it to make our comparisons with purl_base_domain.
