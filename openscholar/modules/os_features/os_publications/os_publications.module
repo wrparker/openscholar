@@ -1049,6 +1049,8 @@ function os_publications_biblio_entry_alter(&$entry, $node) {
     $image = '';
   }
   $entry['entry']['#markup'] = _os_publications_biblio_entry_alter($entry['entry']['#markup'], $node);
+  $entry['#node'] = $node;
+  $entry['#entity_type'] = 'node';
   // Attach the abstract slider.
   _os_publications_attach_abstract($entry, $node, 'entry');
   // Attach the notes if the user chooses to show them.
@@ -1099,20 +1101,6 @@ function _os_publications_biblio_entry_alter($markup, $node) {
     }
   }
   $insert = strrpos($html, '</div>');
-
-  // Since the biblio_url is wiped out in the CSL file, get the url back from
-  // the node.
-  if (!empty($node->biblio_url)) {
-    $biblio_url = $node->biblio_url;
-    $biblio_url_title = !empty($node->biblio_url_title) ? $node->biblio_url_title : t("Publisher's Version");
-    $new_biblio_url = l($biblio_url_title,$biblio_url);
-    if ($insert === FALSE) {
-      $html .= ' ' . $new_biblio_url;
-    }
-    else {
-      $html = substr_replace($html, ' ' . $new_biblio_url, $insert, 0);
-    }
-  }
 
   // Adding og_vocabulary to the output
   if (variable_get('os_taxonomy_display_term_under_content_biblio', 0)) {

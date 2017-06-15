@@ -105,7 +105,7 @@ function os_pages_strongarm() {
       'weight' => '6',
       'has_required' => FALSE,
       'title' => 'Revision information',
-      'collapsed' => 1,
+      'collapsed' => 0,
       'hidden' => 0,
     ),
     'os_seo' => array(
@@ -208,6 +208,7 @@ function os_pages_strongarm() {
   $strongarm->name = 'node_options_page';
   $strongarm->value = array(
     0 => 'status',
+    1 => 'revision',
   );
   $export['node_options_page'] = $strongarm;
 
@@ -231,6 +232,20 @@ function os_pages_strongarm() {
   $strongarm->name = 'pathauto_node_page_pattern';
   $strongarm->value = '[node:title]';
   $export['pathauto_node_page_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'enable_revisions_page';
+  $strongarm->value = TRUE;
+  $export['enable_revisions_page'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'restrict_node_revision_number_for_page';
+  $strongarm->value = 10;
+  $export['restrict_node_revision_number_for_page'] = $strongarm;
 
   return $export;
 }

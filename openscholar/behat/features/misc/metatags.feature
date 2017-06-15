@@ -9,7 +9,7 @@ Feature:
   @api @misc_second
   Scenario: Testing custom metatags.
     Given I am logging in as "john"
-      And I edit the page meta data of "about" in "john"
+      And I edit the node "about" in the group "john"
       And I fill in "Meta description" with "custom tag value"
       And I press "Save"
      Then I visit "john/about"
@@ -50,7 +50,7 @@ Feature:
       And I visit "john"
      When I open the admin panel to "Appearance"
       And I click on the "Favicon" control
-     Then I should see "A 16x16 .ico file to be displayed in browser shortcut icons"
+     Then I should see "A 16x16 .png file to be displayed in browser shortcut icons"
 
   @api @misc_second
   Scenario: Testing metatags settings form in a department site.

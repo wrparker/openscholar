@@ -1,6 +1,6 @@
 Feature: Testing OpenScholar layout.
 
-  @javascript
+  @javascript @frontend
   Scenario: Test the drag&drop for the layout.
     Given I am logging in as "admin"
      When I visit "/john/cp/build/layout/os_front?destination=home"

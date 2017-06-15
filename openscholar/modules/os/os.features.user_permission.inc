@@ -428,6 +428,7 @@ function os_user_default_permissions() {
       'administrator' => 'administrator',
       'manager' => 'manager',
       'vsite admin' => 'vsite admin',
+      'content editor' => 'content editor',
     ),
     'module' => 'node',
   );
@@ -517,6 +518,7 @@ function os_user_default_permissions() {
       'administrator' => 'administrator',
       'manager' => 'manager',
       'vsite admin' => 'vsite admin',
+      'content editor' => 'content editor',
     ),
     'module' => 'node',
   );
@@ -573,7 +575,11 @@ function os_user_default_permissions() {
   $permissions['view revisions'] = array(
     'name' => 'view revisions',
     'roles' => array(
-      'authenticated user' => 'authenticated user',
+      'administrator' => 'administrator',
+      'content editor' => 'content editor',
+      'manager' => 'manager',
+      'vsite admin' => 'vsite admin',
+      'vsite user' => 'vsite user',
     ),
     'module' => 'node',
   );
