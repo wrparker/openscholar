@@ -4,4 +4,3 @@ version = 0.1
 
 dependencies[] = os_restful
 dependencies[] = os_common
-dependencies[] = vsite
