@@ -7,8 +7,10 @@ Feature:
       And I wait for page actions to complete
      When I visit "/"
       And I click "Create Your Site Here"
-      And I fill in "edit-domain" with "mysite"
+      And I click on the "Individual Scholar" control
+      And I fill in "individual-scholar" with "mysite"
       And I sleep for "10"
-      And I press "edit-submit"
-      And I wait for page actions to complete
+      And I press "Next"
+      And I click on the "Next" control
+      And I sleep for "10"
      Then I should see "Success! The new site has been created."
