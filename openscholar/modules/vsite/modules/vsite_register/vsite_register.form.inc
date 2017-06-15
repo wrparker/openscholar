@@ -8,7 +8,7 @@
 /**
  * Form builder for the vsite register form found at "site/register".
  */
-function vsite_register_form($form, &$state) {
+function vsite_register_form_old($form, &$state) {
   global $base_url;
   global $user;
   $form = array();
