@@ -254,9 +254,7 @@ a:visited {
 #menu-bar ul.nice-menu .menuparent a:before {
     background-position: -12px -562px;
 }
-#menu-bar ul.nice-menu .menuparent a:hover:before {
-    background-position: -12px -565px;
-}
+
 #menu-bar ul.nice-menu .menuparent > a:before {
     height: 12px;
 }
