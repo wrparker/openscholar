@@ -184,11 +184,17 @@ function vsite_register_block_view($delta = '') {
         'id' => 'get-your-site-block',
       ),
     );
+    if ($text == 'Create Your Site Here') {
+      $markup = '<site-creation-form>' . l($text, $path, $options) . '</site-creation-form>';
+    } else {
+      $markup = l($text, $path, $options);
+    }
     $block['content'] = array(
       'content' => array(
-        '#markup' => '<site-creation-form>' . l($text, $path, $options) . '</site-creation-form>',
+        '#markup' => $markup,
       ),
     );
+
   }
 
   return $block;
@@ -438,3 +444,16 @@ function vsite_register_mail_alter(&$message) {
     $message['body'][4] = t("-@site_name", $params);
   }
  }
+
+ /**
+ * Display Site Creation button only
+ */
+function vsite_register_form($form, &$state) {
+
+  $form['html'] = array(
+    '#type' => 'markup',
+    '#markup' => '<site-creation-form><a>Create Your Site Here</a></site-creation-form>',
+  );
+
+  return $form;
+}
