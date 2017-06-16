@@ -794,17 +794,17 @@ function vsite_vsite_exists_access($vsites = array()) {
   // First, checks that the site would be created on the correct domain.
   // If this function is being called on the site register form...
   $path_site_register = (bool) ($_GET['q'] == 'site/register');
-  if ($path_site_register) {
+  //if ($path_site_register) {
     // Checks that the form is being accessed from the purl base domain.
     global $base_url;
     // Checks that this site is being created on sitewide domain.
     $purl_base_domain = variable_get('purl_base_domain', '');
     // If the domain is NOT the purl base domain, alerts user and denies access.
     if ($base_url != $purl_base_domain) {
-      drupal_set_message(t('You may not register new sites on custom domains.'), 'warning');
+      //drupal_set_message(t('You may not register new sites on custom domains.'), 'warning');
       return FALSE;
     }
-  }
+  //}
 
   // Next, checks this user's permissions.
   // Finds if user has permission to create at least 1 group node type.
@@ -857,12 +857,12 @@ function vsite_vsite_exists_access($vsites = array()) {
     // Sets an error message if the user is accessing the site register form.
     if ($path_site_register) {
       // Clear message queue.
-      drupal_get_messages();
-      drupal_set_message(t('You have already created the maximum of %num OpenScholar !sites. !link', array(
+      //drupal_get_messages();
+      /*drupal_set_message(t('You have already created the maximum of %num OpenScholar !sites. !link', array(
         '%num' => count($vsites),
         '!sites' => count($vsites) > 1 ? 'sites' : 'site',
         '!link' => l(t('Go to your site' . (count($vsites) > 1 ? 's.' : '.')), count($vsites) > 1 ? 'user' : $vsites[0]->get_absolute_url())
-      )), 'error');
+      )), 'error');*/
     }
 
     return FALSE;

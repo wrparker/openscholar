@@ -136,21 +136,30 @@
       function formValidation(ngModelValue) {
         siteCreationCtrl.$setValidity('isinvalid', true);
         siteCreationCtrl.$setValidity('sitename', true);
+        siteCreationCtrl.$setValidity('permission', true);
         scope.btnDisable = true;
         var baseUrl = Drupal.settings.paths.api;
         if(ngModelValue){
           //Ajax call to get all existing sites
           $http.get(baseUrl + '/purl/' + ngModelValue).then(function mySuccess(response) {
             responseData = response.data.data;
-            if (responseData.msg == "Invalid"){
+            if (responseData.msg == "Not-Permissible") {
+              siteCreationCtrl.$setValidity('permission', false);
+              siteCreationCtrl.$setValidity('sitename', true);
+              siteCreationCtrl.$setValidity('isinvalid', true);
+            }
+            else if (responseData.msg == "Invalid"){
+              siteCreationCtrl.$setValidity('permission', true);
               siteCreationCtrl.$setValidity('sitename', true);
               siteCreationCtrl.$setValidity('isinvalid', false);
             }
             else if (responseData.msg == "Not-Available") {
+              siteCreationCtrl.$setValidity('permission', true);
               siteCreationCtrl.$setValidity('isinvalid', true);
               siteCreationCtrl.$setValidity('sitename', false);
             }
             else{
+              siteCreationCtrl.$setValidity('permission', true);
               siteCreationCtrl.$setValidity('isinvalid', true);
               siteCreationCtrl.$setValidity('sitename', true);
               scope.btnDisable = false;
