@@ -2336,9 +2336,9 @@ function vsite_site_contact() {
   if (empty($allow_contact)) {
     $output = t('You are not allowed to contact this user.');
   }
-  elseif (! flood_is_allowed('contact', variable_get('contact_hourly_threshold', 100))) {
+  elseif (! flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
     $output = t('You cannot contact more than %number users per hour. Please try again later.', array(
-      '%number' => variable_get('contact_hourly_threshold', 100)
+      '%number' => variable_get('contact_hourly_threshold', 3)
     ));
   }
   else {
