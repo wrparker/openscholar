@@ -31,7 +31,11 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
    * Checking for existing sites.
    */
   public function check_exiting_sites($siteValue) {
-
+    // Checking site creation permission
+    if (!vsite_vsite_exists_access() || (function_exists('pinserver_user_has_associated_pin') && !os_pinserver_auth_vsite_register_form_page())) {
+      $return['msg'] = "Not-Permissible";
+      return $return;
+    }
     //Validate new vsite URL
     $return['msg'] = '';
     if (strlen($siteValue) < 3 || !valid_url($siteValue)) {
@@ -52,6 +56,11 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
    * Callback save to create site.
    */
   function save_site() {
+    // Checking site creation permission
+    if (!vsite_vsite_exists_access() || (function_exists('pinserver_user_has_associated_pin') && !os_pinserver_auth_vsite_register_form_page())) {
+      $commands[] = "Not-Permissible";
+      return($commands[0]);
+    }
     ctools_include('user', 'os');
     ctools_include('vsite', 'vsite');
     $values = &drupal_static('vsite_register_form_values');

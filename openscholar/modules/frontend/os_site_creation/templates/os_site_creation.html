@@ -33,6 +33,7 @@
                 <span><input type="text" name="individualScholar" ng-model="individualScholar" formcheck-Directive ng-keyup="clearRest('individualScholar');" id="individual-scholar"></span>
               </div>
               <div ng-messages="siteCreationform.individualScholar.$error">
+                <div class="error-msg" ng-message="permission">You don't have permission to create site</div>
                 <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
@@ -48,6 +49,7 @@
                 <span><input type="text" name="projectLabSmallGroup" ng-model="projectLabSmallGroup" formcheck-Directive ng-keyup="clearRest('projectLabSmallGroup');" id="project-lab-small-group"></span>
               </div>
               <div ng-messages="siteCreationform.projectLabSmallGroup.$error">
+                <div class="error-msg" ng-message="permission">You don't have permission to create site</div>
                 <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
@@ -63,6 +65,7 @@
                 <span><input type="text" name="departmentSchool" ng-model="departmentSchool" formcheck-Directive ng-keyup="clearRest('departmentSchool');" id="department-school"></span>
               </div>
               <div ng-messages="siteCreationform.departmentSchool.$error">
+                <div class="error-msg" ng-message="permission">You don't have permission to create site</div>
                 <div class="error-msg" ng-message="isinvalid">Invalid URL specified</div>
                 <div class="error-msg" ng-message="sitename">Site name is already taken</div>
               </div>
