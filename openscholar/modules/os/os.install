@@ -980,10 +980,19 @@ function os_update_7051() {
 
   return t('Enabled OS content revisions module.');
 }
+
+/**
+ * Remove drush errors and warnings for
+ * "The following module is missing from the file system"
+ */
+function os_update_7052() {
+  remove_missing_modules_entry_from_DB();
+}
+
 /**
  * Enable os_orcid module.
  */
-function os_update_7052() {
+function os_update_7053() {
   module_enable(array('os_orcid'));
   // place it behind os_publications and citation_distribute modules
   db_update('system')

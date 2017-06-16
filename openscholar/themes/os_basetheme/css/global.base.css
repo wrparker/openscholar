@@ -668,6 +668,7 @@ ul ul ul ul {
 .os_events_export_links {
     float: right;
     text-align: right;
+    padding: 5px;
 }
 .os_events_export_links .first {
     float: left;
@@ -748,6 +749,9 @@ div.register-link-teaser .register {
     display: block;
     font-style: italic;
     color: #6D6D6D;
+}
+.os-events-signup-full {
+    padding: 0 5px 5px 0;
 }
 .node-event.article .field-name-field-default-email.field-label-above {
     float: left;
