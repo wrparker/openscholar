@@ -989,6 +989,7 @@ function os_update_7052() {
   remove_missing_modules_entry_from_DB();
 }
 
+
 /**
  * Enable os_orcid module.
  */
