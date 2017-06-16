@@ -199,13 +199,7 @@ body.node-type-biblio .biblio-export,
 .bg-eight #menu-bar {
     background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
-.block-boxes-os_boxes_twitterfeed h2.block-title {
-    background: url('images/sprite.png?456') 0 -55px no-repeat;
-    font-size: 0;
-    height: 50px;
-    width: 64px;
-    padding: 0;
-}
+
 .tweets-pulled-listing li {
     margin: 10px 0 25px;
 }
@@ -220,6 +214,11 @@ a:visited {
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
 }
+
+#menu-bar ul.nice-menu .menuparent a {
+    padding-right:14px;
+}
+
 #menu-bar ul.nice-menu a {
     color: #444;
     border-bottom: 3px solid #fff;

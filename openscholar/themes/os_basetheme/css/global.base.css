@@ -1083,13 +1083,20 @@ ul.no-event-export {
     font-weight: normal;
     margin: 0;
     min-height: 0;
-    background-color: #000;
+    color: #000;
     width: 15px;
     height: 14px;
     border-radius: 10px;
-    font-size: 30px;
+    font-size: 45px;
     line-height: 12px;
     padding: 0;
+}
+
+
+.block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides_tabs .rslides_here a {
+  
+    color: #ccc;
+   
 }
 .block-boxes-os_boxes_widget_slider #layout_16_9_side .rslides li {
     list-style: none;
