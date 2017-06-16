@@ -26,7 +26,7 @@ fi
 composer global require drush/drush
 mkdir ~/.drush
 printf "disable_functions =\nmemory_limit = 256M\ndate.timezone = \"America/New_York\"" > ~/.drush/php.ini
-drush --version
+drush --version 2> /dev/null || exit 1
 npm install -g bower
 
 echo $CI_BRANCH

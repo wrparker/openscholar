@@ -279,7 +279,7 @@ img.file-icon {
 .content-left.content-right.content-bottom .region-content-first .sv-list-video.sv-list-view-teaser .file-info,
 .content-left.content-right.content-bottom .region-content-second .sv-list-video.sv-list-view-teaser .file-info,
 .content-left.content-right.content-bottom .region-content-bottom .sv-list-video.sv-list-view-teaser .file-info,
-.sidebar .sv-list-video.sv-list-view-teaser .file-info,
+.sidebar .sv-list-video.sv-list-view-teaser .file-video,
 #content-column .sv-list-video.sv-list-view-teaser img,
 #content-column .sv-list-image.sv-list-view-teaser .file-image img {
     margin-bottom: 20px;
@@ -363,6 +363,7 @@ p {
 #columns p:last-child {
     margin: 0 0px .4em;
 }
+#content-column .block-boxes-os_boxes_columns .sv-list-video.sv-list-view-teaser img, 
 span.os-cvlinkwrap {
     margin-bottom: 0;
 }
@@ -667,6 +668,7 @@ ul ul ul ul {
 .os_events_export_links {
     float: right;
     text-align: right;
+    padding: 5px;
 }
 .os_events_export_links .first {
     float: left;
@@ -747,6 +749,9 @@ div.register-link-teaser .register {
     display: block;
     font-style: italic;
     color: #6D6D6D;
+}
+.os-events-signup-full {
+    padding: 0 5px 5px 0;
 }
 .node-event.article .field-name-field-default-email.field-label-above {
     float: left;
@@ -1053,10 +1058,6 @@ ul.no-event-export {
     width: 200px;
     left: -110px;
     font-size: 12px;
-}
-.node-content .node-readmore {
-    display: inline-block;
-    clear: both;
 }
 /*For widget slider*/
 
