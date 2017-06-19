@@ -118,7 +118,7 @@ function os_classes_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 600,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_text_trimmed',
         'weight' => 3,
       ),
       'title' => array(

@@ -2700,9 +2700,9 @@ function vsite_preprocess_html(&$vars){
   // If we aren't in a vsite, or if this vsite hasn't uploaded a custom favicon.
   if (empty($uri)) {
     $theme = variable_get('theme_default');
-    $uri = drupal_get_path('theme', $theme) . '/favicon.ico';
+    $uri = drupal_get_path('theme', $theme) . '/favicon.png';
     if (!file_exists($uri)) {
-      $uri = drupal_get_path('theme', 'os_basetheme') . '/favicon.ico';
+      $uri = drupal_get_path('theme', 'os_basetheme') . '/favicon.png';
     }
   }
 
