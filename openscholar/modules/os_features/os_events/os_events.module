@@ -106,7 +106,6 @@ function getClient() {
   $client->setAccessType('online');
   $client->setApprovalPrompt('force');
 
-  $vsite = vsite_get_vsite();
   $redirectUri = (($is_https) ? "https" : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
   $client->setRedirectUri($redirectUri);
@@ -137,9 +136,6 @@ function os_events_get_access_token_with_auth_code() {
 
   $client = getClient();
 
-  // This redirect URI has to be the same as the one we used for requesting the auth code (in fetchAccessTokenWithRefreshToken)
-  $vsite = vsite_get_vsite();
-
   # So we go back to a reachable page
   $redirectUri = (($is_https) ? "https" : "http") .
                     "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
@@ -169,8 +165,7 @@ function os_events_gcal_create_calendar() {
 
   // Redirect URI is required to be absolute
   $vsite = vsite_get_vsite($_SESSION['og_context']['gid']);
-  $redirectUri = (($is_https) ? "https" : "http") .
-                    "://" . $_SERVER['HTTP_HOST'] . '/' . $vsite->group->purl . '/calendar';
+  $redirectUri = url('/calendar');
   $client->setRedirectUri($redirectUri);
 
   $calendarService = new Google_Service_Calendar($client);
@@ -1265,7 +1260,6 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     if ($google_credentials && $google_client_secret) {
 
       $client = getClient();
-      $vsite = vsite_get_vsite();
       $redirectUri = (($is_https) ? "https" : "http") . 
                         "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
       $client->setRedirectUri($redirectUri);
