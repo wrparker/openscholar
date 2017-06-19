@@ -401,12 +401,13 @@ function cp_content_views_default_views() {
     'filemime' => 'filemime',
     'filesize' => 'filesize',
     'timestamp' => 'timestamp',
-    'referencing_nodes' => 'referencing_nodes',
+    'changed' => 'changed',
     'edit' => 'edit',
     'delete' => 'delete',
+    'referencing_nodes' => 'referencing_nodes',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
+  $handler->display->display_options['style_options']['default'] = 'changed';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -453,7 +454,9 @@ function cp_content_views_default_views() {
       'separator' => '',
       'empty_column' => 0,
     ),
-    'referencing_nodes' => array(
+    'changed' => array(
+      'sortable' => 1,
+      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -464,6 +467,11 @@ function cp_content_views_default_views() {
       'empty_column' => 0,
     ),
     'delete' => array(
+      'align' => '',
+      'separator' => '',
+      'empty_column' => 0,
+    ),
+    'referencing_nodes' => array(
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
