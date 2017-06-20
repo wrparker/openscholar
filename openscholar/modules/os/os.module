@@ -3761,3 +3761,30 @@ function os_preprocess_pager(&$variables, $hook) {
     $variables['tags'][4] = 'last';
   }
 }
+
+/**
+ * Check for valid .
+ */
+function os_redirect_load_by_source_existing_url_alter(&$source) {
+  dsm($source);
+  $vsite = vsite_get_vsite();
+  //dsm($vsite);
+  if(drupal_valid_path($source)) {
+    $vsite = vsite_get_vsite();
+    $provider = $vsite->purl_provider;
+    // For vsite with custom domain name
+    if ($provider == 'vsite_domain') {
+      $request = parse_url($_SERVER['REQUEST_URI']);
+      $source = ltrim($request["path"], '/');
+    }
+    // For vsite without custom domain name
+    elseif ($provider == 'spaces_og') {
+      $request = parse_url($_SERVER['REQUEST_URI']);
+      dpm($request);
+      $request_split = array_values(array_filter(explode('/', $request["path"])));
+      unset($request_split[0]);
+      $source_uri = implode('/', $request_split);
+      $source = $source_uri;
+    }
+  }
+}
