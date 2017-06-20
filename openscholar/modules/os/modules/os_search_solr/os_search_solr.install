@@ -32,7 +32,7 @@ function os_search_solr_install() {
   	$status = 1;
   	$weight = 0;
   	$facet_array = array('created' => 'created','bundle' => 'bundle','sm_og_group_ref' => 'sm_og_group_ref');
-	// Get the searcher info.
+	  // Get the searcher info.
     $searcher_array = facetapi_get_searcher_info();
     foreach($searcher_array as $search) {
       if(array_key_exists('name', $search)) {
@@ -61,6 +61,7 @@ function os_search_solr_install() {
     }
   }
 
+  drupal_flush_all_caches();
 }
 
 /**

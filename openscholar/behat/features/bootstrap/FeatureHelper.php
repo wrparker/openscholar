@@ -43,6 +43,7 @@ class FeatureHelp {
     'Upcoming events' => 'os_sv_list_box',
     'All Posts' => 'os_sv_list_box',
     'Cache time test' => 'os_boxes_cache_test',
+    'Solr search' => 'os_search_solr_search_box',
   );
 
   /**

@@ -856,7 +856,6 @@ class FeatureContext extends DrupalContext {
 
     print "\n" . 'I visit "/' . $vsite . '#overlay=' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"' . "\n";
 
-
     foreach ($hash as $form_elements) {
       switch ($form_elements[2]) {
         case 'select list':
@@ -1549,7 +1548,6 @@ class FeatureContext extends DrupalContext {
    */
   public function iSearchFor($item) {
     return array(
-      new Step\When('I visit "john"'),
       new Step\When('I fill in "search_block_form" with "'. $item . '"'),
       new Step\When('I press "Search"'),
     );
