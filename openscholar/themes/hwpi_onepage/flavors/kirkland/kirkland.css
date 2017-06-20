@@ -49,11 +49,21 @@ h2.block-title,
 #boxes-box-site_info h2 {
     font-style: italic;
 }
+h2.block-title,
 #footer .footer-login {
     color: #ffffff;
 }
 .region-header-third ul.nice-menu a {
     color: #215990;
+}
+h1#page-title,
+h2.block-title {
+    color: #545454;
+}
+.biblio-title a,
+a,
+a:visited {
+    color: #065DB2;
 }
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
@@ -64,10 +74,7 @@ h2.block-title,
     background: url('images/menu-bg.png') left bottom repeat-x #FFF;
     padding-top: 6px;
 }
-h1#page-title,
-h2.block-title {
-    color: #545454;
-}
+
 .breadcrumb,
 .breadcrumb a,
 .sidebar h2.block-title,
@@ -193,11 +200,7 @@ body.node-type-biblio .biblio-export,
 .tweets-pulled-listing li {
     margin: 10px 0 25px;
 }
-.biblio-title a,
-a,
-a:visited {
-    color: #065DB2;
-}
+
 #menu-bar ul.nice-menu ul {
     background: #32526e;
 }

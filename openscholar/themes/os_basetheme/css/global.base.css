@@ -623,12 +623,8 @@ ul ul ul ul {
     position: relative;
 }
 .cal-export {
-    padding: 5px 25px 5px 5px;
-    border: 1px solid #e4e4e4;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    background: url('../images/scholarbase-sprite.png?abf') no-repeat 57px -958px #f3f3f1;
+    padding: 0 25px 0 0;
+    background: url('../images/scholarbase-sprite.png?abf') no-repeat 54px -963px;
 }
 .cal-export:hover {
     cursor: pointer;
