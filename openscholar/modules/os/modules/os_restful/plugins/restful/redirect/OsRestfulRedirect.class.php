@@ -29,8 +29,6 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
           )
         ),
       );
-      // Build the full URL for drupal
-      $full_redirect_url = $vsite->group->purl . '/' .$redirect->source;
     }
 
     // check that there there are no redirect loops
