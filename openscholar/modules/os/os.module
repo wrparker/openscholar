@@ -3763,12 +3763,10 @@ function os_preprocess_pager(&$variables, $hook) {
 }
 
 /**
- * Check for valid .
+ * Implements hook_redirect_load_by_source_existing_url_alter
  */
 function os_redirect_load_by_source_existing_url_alter(&$source) {
-  dsm($source);
   $vsite = vsite_get_vsite();
-  //dsm($vsite);
   if(drupal_valid_path($source)) {
     $vsite = vsite_get_vsite();
     $provider = $vsite->purl_provider;
@@ -3780,7 +3778,6 @@ function os_redirect_load_by_source_existing_url_alter(&$source) {
     // For vsite without custom domain name
     elseif ($provider == 'spaces_og') {
       $request = parse_url($_SERVER['REQUEST_URI']);
-      dpm($request);
       $request_split = array_values(array_filter(explode('/', $request["path"])));
       unset($request_split[0]);
       $source_uri = implode('/', $request_split);

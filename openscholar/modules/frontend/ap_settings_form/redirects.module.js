@@ -68,7 +68,7 @@
     this.Count = 0;
   }]);
 
-  m.directive('redirects', ['$http', 'RedirectService', 'buttonSpinnerStatus', function($http, rs, bss) {
+  m.directive('redirects', ['$http', 'RedirectService', 'buttonSpinnerStatus', '$sce', function($http, rs, bss, $sce) {
     var hasRegistered = false;
     return {
       template: '<div class="messages" ng-show="status.length || errors.length"><div class="dismiss" ng-click="status.length = 0; errors.length = 0;">X</div>' +
@@ -123,6 +123,7 @@
 
         scope.newRedirectPath = '';
         scope.newRedirectTarget = '';
+        scope.errors = [];
         scope.addRedirect = function () {
           rs.Create(scope.newRedirectPath, scope.newRedirectTarget).then(function (r) {
             scope.newRedirectPath = '';

@@ -1,19 +1,12 @@
 diff --git a/redirect.module b/redirect.module
-index 5cdaa85..9ec94d9 100644
+index 9f7a256..362cd01 100644
 --- a/redirect.module
 +++ b/redirect.module
-@@ -563,6 +563,14 @@ function redirect_load_by_source($source, $language = LANGUAGE_NONE, array $quer
-   $fetch_alias ->condition('source', $source, '=');
-   $source_id = $fetch_alias->execute()->fetchField();
- 
-+  if ($source_id) {
-+    $source_id_split = explode('/', $source_id);
-+    unset ($source_id_split[0]);
-+    $source_id_to_match = implode('/', $source_id_split);
-+  }
-+  if($source_id_to_match) {
-+    $source = $source_id_to_match;
-+  }
- 
-   // Logic changes to activate redirect for existing path ends
- 
+@@ -557,6 +557,7 @@ function redirect_load_by_hash($hash, $reset = FALSE) {
+  * @ingroup redirect_api
+  */
+ function redirect_load_by_source($source, $language = LANGUAGE_NONE, array $query = array()) {
++  drupal_alter('redirect_load_by_source_existing_url', $source);
+   // Run a case-insensitive query for matching RIDs first.
+   $rid_query = db_select('redirect');
+   $rid_query->addField('redirect', 'rid');

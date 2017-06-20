@@ -29,13 +29,8 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
           )
         ),
       );
-
       // Build the full URL for drupal
-      if ($vsite->purl_provider == 'spaces_og') {
-        $full_redirect_url = $vsite->group->purl . '/' .$redirect->source;
-      } else {
-        $full_redirect_url = $redirect->source;
-      } 
+      $full_redirect_url = $vsite->group->purl . '/' .$redirect->source;
     }
 
     // check that there there are no redirect loops
@@ -50,11 +45,21 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
       }
     }
 
+    // Saving to DB
     redirect_save($redirect);
-    $redirect->msg = $redirect->source;
-    // Check whether this is an exiting url and add a message to after adding
-    if (drupal_valid_path($redirect->source)) {
-      $redirect->msg = 'This page already exists, this will add redirction to ' . $redirect->source . ' page.';
+
+    // Build full drupal system url
+    if (isset($vsite->group->purl)) {
+      $full_redirect_url = $vsite->group->purl . '/' .$redirect->source;
+    } else {
+      $full_redirect_url = $redirect->source;
+    }
+
+    // Initiate the return message
+    $redirect->msg = '';
+    // Check for exiting url and then add a message
+    if (drupal_valid_path(drupal_get_normal_path($full_redirect_url))) {
+      $redirect->msg = 'This page already exists, this will add redirction to "' . $redirect->source . '" page.';
     }
 
     return $this->renderRedirect($redirect);
