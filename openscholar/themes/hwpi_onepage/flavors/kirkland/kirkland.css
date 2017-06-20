@@ -163,6 +163,13 @@ body.node-type-biblio .biblio-export,
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
     border-top: 4px solid #ff884d;
 }
+
+.ui-tabs .ui-tabs-panel {
+    border: 1px solid #EAEAE6;
+   
+}
+
+
 .node-biblio table.os-files-other-list {
     margin-bottom: 0;
 }
