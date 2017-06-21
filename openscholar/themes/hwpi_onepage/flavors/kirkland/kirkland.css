@@ -49,7 +49,7 @@ h2.block-title,
 #boxes-box-site_info h2 {
     font-style: italic;
 }
-h2.block-title,
+#footer h2.block-title,
 #footer .footer-login {
     color: #ffffff;
 }
@@ -99,6 +99,15 @@ a:visited {
     border-width: 3px;
     padding: 15px 0 0 0;
 }
+
+.sidebar .block.block-boxes-os_boxes_sectionnav,
+.sidebar .block#block-os-primary-menu,
+.sidebar .block#block-os-secondary-menu,
+.sidebar .block.os-custom-menu {
+    padding: 0;
+}
+
+
 .sidebar h2.block-title {
     padding: 0 0 15px 0;
 }
@@ -166,7 +175,7 @@ body.node-type-biblio .biblio-export,
     border-top: none;
 }
 .ui-tabs ul.ui-tabs-nav li.first {
-    border-right: 1px solid #EAEAE6;
+    border-left: 1px solid #EAEAE6;
 }
 .ui-tabs ul.ui-tabs-nav li.last {
     border-right: 1px solid #EAEAE6;
