@@ -38,6 +38,7 @@ function ap_settings_form_library() {
       array('os_common', 'angular-modal-service'),
       array('os_common', 'formElement'),
       array('os_common', 'buttonSpinner'),
+      array('media_browser', 'imagecrop_field'),
       array('ap_settings_form', 'redirect'),
       array('ap_settings_form', 'display_type'),
     )
