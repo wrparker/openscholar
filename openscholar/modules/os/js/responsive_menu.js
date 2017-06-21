@@ -29,31 +29,10 @@
         }
       };
 
-      // Keep track on the clicked links.
-      var clicked = {};
-
-      if (!isMobile.any()) {
-        return;
+      if (isMobile.any()) {
+        // On mobile, don't call the menu open functionality.
+        $.fn.showSuperfishUl = function() {}
       }
-
-      // $('ul.nice-menu.nice-menu-down .menuparent a').bind('click dblclick mousedown mouseenter mouseleave', function(e){
-      //   var event_id = e.type + "-" + this.toString();
-      //   if (clicked[event_id] != undefined) {
-      //     return;
-      //   }
-      //   clicked[event_id] = true;
-      //   event.preventDefault();
-      // });
-
-      // works only on IOS, Android have some issues.
-      $('ul.nice-menu.nice-menu-down .menuparent a').click(function(event) {
-        if (clicked[this] != undefined) {
-          return;
-        }
-
-        clicked[this] = true;
-        event.preventDefault();
-      });
     }
   };
 
