@@ -793,7 +793,7 @@ class FeatureContext extends DrupalContext {
     $privacy_level = array(
       'Public on the web.' => 0,
       'Anyone with the link.' => 2,
-      'Invite only during site creation.' => 1,
+      'Site members only.' => 1,
     );
 
     return array(
