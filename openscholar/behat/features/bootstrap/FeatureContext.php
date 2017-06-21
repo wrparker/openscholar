@@ -933,7 +933,7 @@ class FeatureContext extends DrupalContext {
 
     $metasteps = array();
     // @TODO: Don't use the hard coded address - remove john from the address.
-    $this->visit('john/os/widget/boxes/' . $delta . '/edit');
+    $this->visit(FeatureHelp::getVsitePurl($this->nid) . '/os/widget/boxes/' . $delta . '/edit');
 
     // @TODO: Use XPath to fill the form instead of giving the type of the in
     // the scenario input.
@@ -3931,4 +3931,12 @@ JS;
       );
     }
   }
+
+  /**
+   * @Given /^I set the default site to "([^"]*)"$/
+   */
+  public function iSetTheDefaultSiteTo($site) {
+    $this->nid = FeatureHelp::getNodeId($site);
+  }
+
 }

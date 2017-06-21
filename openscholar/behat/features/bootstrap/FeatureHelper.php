@@ -514,6 +514,18 @@ class FeatureHelp {
   }
 
   /**
+   * Get vsite PURL.
+   *
+   * @param $nid
+   *   The vsite ID.
+   * @return mixed
+   *   The PURL.
+   */
+  static public function getVsitePurl($nid) {
+    return node_load($nid)->purl;
+  }
+
+  /**
    * Get the node ID by title in a given VSite.
    */
   static public function getNodeIdInVsite($title, $vsite) {
