@@ -8,6 +8,10 @@
     "angular-modal-service": "0.6.6",
     "angular-indexed-db": "1.1.4",
     "angular-ui-sortable": "0.13.x",
-    "ng-file-upload": "3.2.4"
-  }
+    "ng-file-upload": "3.2.4",
+    "jcrop": "~0.9.12"
+  },
+  "ignoredDependencies": [
+    "jQuery"
+  ]
 }
