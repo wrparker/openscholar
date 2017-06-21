@@ -75,13 +75,19 @@
           scope.selectedFiles = [];
         }
 
-        if (Array.isArray(scope.$parent.value)) {
-          for (i = 0; i < scope.$parent.value.length; i++) {
-            service.fetchOne(scope.$parent.value[i]).then(generateFunc(i));
-          }
-        }
-        else if (scope.$parent.value) {
-          service.fetchOne(scope.$parent.value).then(generateFunc(0));
+        if (ngModelController) {
+          ngModelController.$render = function () {
+
+            var value = ngModelController.$viewValue;
+            if (Array.isArray(value)) {
+              for (i = 0; i < value.length; i++) {
+                service.fetchOne(value[i]).then(generateFunc(i));
+              }
+            }
+            else if (value) {
+              service.fetchOne(value).then(generateFunc(0));
+            }
+          };
         }
 
         if (scope.selectedFiles.length == 0 && Drupal.settings.mediaBrowserField != undefined) {
@@ -190,9 +196,11 @@
           return scope.selectedFiles.length >= scope.cardinality;
         }
 
-        var label = elem.parent().find(' label');
-        elem.parent().find(' > *').not(elem).remove();
-        elem.before(label);
+        if (!ngModelController) {
+          var label = elem.parent().find(' label');
+          elem.parent().find(' > *').not(elem).remove();
+          elem.before(label);
+        }
       }
 
       if (mbModal.requirementsMet()) {
