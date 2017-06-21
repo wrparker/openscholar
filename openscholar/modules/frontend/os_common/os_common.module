@@ -293,6 +293,20 @@ function os_common_library() {
     )
   );
 
+  $info['jcrop'] = array(
+    'title' => 'jCrop',
+    'version' => '0.9.13',
+    'js' => array(
+      libraries_get_path('jcrop') . '/js/jquery.Jcrop.js' => array()
+    ),
+    'css' => array(
+      libraries_get_path('jcrop').'/css/jquery.Jcrop.css',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery')
+    )
+  );
+
   $info['TaxonomyWidget'] = array(
     'title' => 'Angular Taxonomy Widget',
     'version' => '1.0',
