@@ -530,3 +530,11 @@ div.ctools-modal-content #os-mailchimp-form .fieldset-legend {
 div.ctools-modal-content #os-mailchimp-form .form-item label {
     float: none;
 }
+
+[image-crop-field] .image-crop-selection-wrapper img {
+  max-width: initial;
+}
+
+[image-crop-field] .image-crop-selection-wrapper img.imagecrop-selection {
+  max-width: 100%;
+}
