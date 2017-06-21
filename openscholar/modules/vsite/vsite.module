@@ -2378,7 +2378,6 @@ function vsite_contact_mail_owner($form, &$form_state, $recipient){
     $form['name'] = array(
       '#type' => 'item',
       '#title' => t('From'),
-      '#markup' => t('Anonymous')
     );
 
     $form['sender_firstname'] = array(
