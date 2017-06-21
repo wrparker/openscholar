@@ -103,33 +103,41 @@ function os_profiles_cp_settings() {
 
   $purl = vsite_get_purl();
 
+  $instance = field_info_instance('node', 'field_person_photo', 'person');
+  if ($instance['widget']['settings']['resolution']) {
+    list($width, $height) = explode('x', $instance['widget']['settings']['resolution']);
+  }
+  else {
+    $width = 100;
+    $height = 100;
+  }
+
+  $dimensions = variable_get('os_profiles_default_image_properties', array(
+    'x' => 0,
+    'y' => 0,
+    'height' => $height,
+    'width' => $width,
+    'ratio' => $width/$height,
+  ));
+
+  $default_value = array(
+    'fid' => variable_get('os_profiles_default_image_file', NULL),
+    'dimensions' => $dimensions
+  );
+
   $allowed_file_types = array('gif png jpg jpeg');
   $settings['os_profiles_default_image_file'] = $template + array(
     'form' => array(
-      '#type' => 'managed_file',
-      '#custom_directive' => 'media-browser-field',
+      '#custom_directive' => 'image-crop-field',
       '#custom_directive_parameters' => array(
-        'cardinality' => 1,
-        'panes' => array('upload', 'library'),
-        'droppable_text' => t('Drag your file here'),
-        'upload_text' => t('Upload file.'),
-        'max-filesize' => '100kb',
-        'extensions' => $allowed_file_types,
-        'types' => 'image',
+        'height' => $height,
+        'width'  => $width,
+        'ng-show' => "\$parent.formData['os_profiles_disable_default_image'] == 'upload'"
       ),
-      '#process' => array('_os_profiles_default_image_process'),
+      '#default_value' => $default_value,
       '#title' => t(''),
       '#description' => t('The default image will be used if a profile photo is not available. Instead, you can upload your own default image.<br/>Position the cropping tool over it if necessary. Allowed file types: <strong> @allowed_file_types </strong>', array('@allowed_file_types' => $allowed_file_types)),
-      '#default_value' => variable_get('os_profiles_default_image_file', NULL),
-      '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
-      '#upload_validators' => array(
-        'file_validate_extensions' => $allowed_file_types,
-      ),
-      '#states' => array(
-        'visible' => array(
-          ':input[name="os_profiles_disable_default_image"]' => array('value' => 'upload'),
-        ),
-      ),
+      '#rest_submit' => 'os_profiles_rest_submit_imagecrop',
     ),
   );
 
