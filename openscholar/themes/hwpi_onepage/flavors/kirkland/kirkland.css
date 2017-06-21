@@ -74,7 +74,6 @@ a:visited {
     background: url('images/menu-bg.png') left bottom repeat-x #FFF;
     padding-top: 6px;
 }
-
 .breadcrumb,
 .breadcrumb a,
 .sidebar h2.block-title,
@@ -145,31 +144,33 @@ h3 {
 .sidebar .block:nth-child(4) {
     border-color: #3A4B68;
 }
-.front .region-content-second, 
-#citation-wrapper, 
-body.node-type-biblio .biblio-export, 
-.ui-state-default:hover, 
-.ui-widget-content .ui-state-default:hover, 
-.ui-widget-header .ui-state-default:hover, 
- .ui-state-default, 
- .ui-widget-content .ui-state-default, 
- .ui-widget-header .ui-state-default {
+.front .region-content-second,
+#citation-wrapper,
+body.node-type-biblio .biblio-export,
+.ui-state-default:hover,
+.ui-widget-content .ui-state-default:hover,
+.ui-widget-header .ui-state-default:hover,
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
     border-top: none;
     border-right: none;
     border-bottom: none;
     border: none;
 }
-
 .ui-tabs ul.ui-tabs-nav li.ui-tabs-active {
     border-top: 4px solid #ff884d;
 }
-
 .ui-tabs .ui-tabs-panel {
     border: 1px solid #EAEAE6;
-   
+    border-top: none;
 }
-
-
+.ui-tabs ul.ui-tabs-nav li.first {
+    border-right: 1px solid #EAEAE6;
+}
+.ui-tabs ul.ui-tabs-nav li.last {
+    border-right: 1px solid #EAEAE6;
+}
 .node-biblio table.os-files-other-list {
     margin-bottom: 0;
 }
@@ -203,22 +204,18 @@ body.node-type-biblio .biblio-export,
 .bg-eight #menu-bar {
     background: url('images/bg8.jpg') center bottom -180px no-repeat #FFF;
 }
-
 .tweets-pulled-listing li {
     margin: 10px 0 25px;
 }
-
 #menu-bar ul.nice-menu ul {
     background: #32526e;
 }
 #menu-bar.fixed {
     border-bottom: 1px solid #32526e;
 }
-
 #menu-bar ul.nice-menu .menuparent a {
-    padding-right:14px;
+    padding-right: 14px;
 }
-
 #menu-bar ul.nice-menu a {
     color: #444;
     border-bottom: 3px solid #fff;
@@ -253,7 +250,6 @@ body.node-type-biblio .biblio-export,
 #menu-bar ul.nice-menu .menuparent a:before {
     background-position: -12px -562px;
 }
-
 #menu-bar ul.nice-menu .menuparent > a:before {
     height: 12px;
 }
