@@ -37,6 +37,19 @@ function media_browser_library() {
     )
   );
 
+  $info['imagecrop_field'] = array(
+    'title' => 'Image Crop Field',
+    'version' => '0.1',
+    'description' => 'Field for cropping an image to an arbitrary size.',
+    'js' => array(
+      drupal_get_path('module', 'media_browser') . '/misc/ImageCropField.module.js' => array(),
+    ),
+    'dependencies' => array(
+      array('media_browser', 'media_browser_field'),
+      array('os_common', 'jcrop'),
+    )
+  );
+
   return $info;
 }
 
