@@ -2,7 +2,7 @@
 (function ($) {
 
   /**
-   * When the user is on a mobile device we need to adjust the UX menu.
+   * When the user is on a mobile device we need to disable the super fish menu.
    */
   Drupal.behaviors.RepsponsiveMenu = {
     attach: function (context) {
