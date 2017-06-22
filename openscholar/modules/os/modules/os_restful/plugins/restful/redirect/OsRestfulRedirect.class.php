@@ -57,7 +57,7 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
     $redirect->msg = '';
     // Check for exiting url and then add a message
     if (drupal_valid_path(drupal_get_normal_path($full_redirect_url))) {
-      $redirect->msg = 'This page already exists, this will add redirction to "' . $redirect->source . '" page.';
+      $redirect->msg = 'The url already exists. If this is unintended, the redirected can be deleted below.';
     }
 
     return $this->renderRedirect($redirect);
