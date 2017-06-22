@@ -176,12 +176,13 @@ function hwpi_basetheme_process_node(&$build) {
  */
 function hwpi_basetheme_node_view_alter(&$build) { 
 
-  // Persons, heavily modify the output to match the HC designs
+  // Persons, heavily modify the output to match the HC designs.
   if ($build['#node']->type == 'person') {
 
-    // Note that Contact and Website details will print wrappers and titles regardless of any field content.
-    // This is kind of deliberate to avoid having to handle the complexity of dealing with the layout or
-    // setting messages etc.
+    // Note that Contact and Website details will print wrappers and titles
+    // regardless of any field content. This is kind of deliberate to avoid
+    // having to handle the complexity of dealing with the layout or setting
+    // messages etc.
 
     $block_zebra = 0;
 
@@ -191,14 +192,15 @@ function hwpi_basetheme_node_view_alter(&$build) {
       $build['contact_details']['#suffix'] = '</div></div>';
       $build['contact_details']['#weight'] = 51;
 
-      // Contact Details > address
+      // Contact Details > address.
       if (isset($build['field_address'])) {
         $build['field_address']['#label_display'] = 'hidden';
         $build['contact_details']['field_address'] = $build['field_address'];
         $build['contact_details']['field_address'][0]['#markup'] = str_replace("\n", '<br>', $build['contact_details']['field_address'][0]['#markup']);
         unset($build['field_address']);
       }
-      // Contact Details > email
+
+      // Contact Details > email.
       if (isset($build['field_email'])) {
         $build['field_email']['#label_display'] = 'hidden';
         $email_plain = mb_strtolower($build['field_email'][0]['#markup']);
@@ -210,7 +212,8 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $build['contact_details']['field_email']['#weight'] = 50;
         unset($build['field_email']);
       }
-      // Contact Details > phone
+
+      // Contact Details > phone.
       if (isset($build['field_phone'])) {
         $build['field_phone']['#label_display'] = 'hidden';
         $phone_plain = $build['field_phone'][0]['#markup'];
@@ -222,7 +225,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['field_phone']);
       }
 
-      // Contact Details > office hours
+      // Contact Details > office hours.
       if (isset($build['field_office_hours'])) {
         $build['field_office_hours']['#label_display'] = 'hidden';
         $office_hours = trim($build['field_office_hours'][0]['#markup']);
@@ -249,7 +252,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['body']);
       }
 
-      //join titles
+      // Join titles.
       $title_field = &$build['field_professional_title'];
       if ($title_field) {
         $keys = array_filter(array_keys($title_field), 'is_numeric');
@@ -260,12 +263,12 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $title_field[0] = array('#markup' => implode('<br />', $titles));
       }
 
-      // We dont want the other fields on teasers
+      // We don't want the other fields on teasers.
       if (in_array($build['#view_mode'], array('teaser', 'slide_teaser','no_image_teaser'))) {
 
         unset($build['contact_details']['#prefix'], $build['contact_details']['#suffix']);
 
-        //move title, website. body
+        // Move title, website. body.
         $build['pic_bio']['body']['#weight'] = 5;
         foreach (array(0=>'field_professional_title', 15=>'field_website') as $weight => $field) {
           if (isset($build[$field])) {
@@ -275,7 +278,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
           }
         }
 
-        //hide the rest
+        // Hide the rest.
         foreach (array('field_address') as $field) {
           if (isset($build[$field])) {
             unset($build[$field]);
@@ -335,7 +338,7 @@ function hwpi_basetheme_node_view_alter(&$build) {
         unset($build['field_website']);
       }
 
-      //Don't show an empty contact details section.
+      // Don't show an empty contact details section.
       if (!element_children($build['contact_details'])) {
         unset($build['contact_details']);
       }
@@ -407,10 +410,11 @@ function hwpi_basetheme_field_display_node_alter(&$display, $context) {
 
       if (isset($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) &&
           (strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value2']) - strtotime($context['entity']->field_date[LANGUAGE_NONE][0]['value']) > 24*60*60)) {
-        return; //event is more than one day long - keep both dates visible
+        // Event is more than one day long - keep both dates visible.
+        return;
       }
 
-      //hide the date - it's already visible in the shield
+      // Hide the date - it's already visible in the shield.
       $display['settings']['format_type'] = 'os_time';
     }
   }
