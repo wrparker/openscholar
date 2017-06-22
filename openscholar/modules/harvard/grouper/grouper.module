@@ -253,3 +253,31 @@ function grouper_node_access($node, $op, $account) {
     return NODE_ACCESS_DENY;
   }
 }
+
+/**
+ * Implements hook_post_features_rebuild().
+ */
+function grouper_post_features_rebuild($component) {
+  if ($component == 'field_base') {
+    $group_types = og_get_all_group_bundle('node');
+
+    foreach ($group_types as $bundle => $display_name) {
+      $instance = grouper_get_field_instance('node', $bundle);
+      field_create_instance($instance);
+    }
+  }
+}
+
+/**
+ * Implements hook_pre_features_disable_feature().
+ */
+function grouper_pre_features_disable_feature($component) {
+  if ($component == 'field_base') {
+    $group_types = og_get_all_group_bundle('node');
+
+    foreach ($group_types as $bundle) {
+      $instance = field_info_instance('node', 'field_grouper_path', $bundle);
+      field_delete_instance($instance);
+    }
+  }
+}
