@@ -780,10 +780,9 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
     $vsite = vsite_get_vsite();
      // Loading logged in user's user object for full name.
      $account_modifier = user_load($user->uid);
-     watchdog('account_modifier','<pre>'.print_r($account_modifier,TRUE).'</pre>');
-
      $account_modifier_full_name = $account_modifier->field_first_name[LANGUAGE_NONE][0]['value'] . ' ' . $account_modifier->field_last_name[LANGUAGE_NONE][0]['value'];
-     $purl_base_domain = variable_get('purl_base_domain');
+     global $base_url;
+     $purl_base_domain = $base_url;
 
      // Checking if this vsite has a custom domain or not.
      $custom_domain = db_select('purl', 'p')
@@ -801,7 +800,7 @@ function cp_user_og_ui_add_users_submit(&$form, &$form_state) {
      $params['!site-url'] = !empty($custom_domain) ? 'http://' . $custom_domain : $purl_base_domain . '/' . $vsite->group->purl;
      $params['!account-modifier-email'] = $account_modifier->mail;
      $params['!user-firstname'] = $account->field_first_name[LANGUAGE_NONE][0]['value'];
-     $params['!sitewide-name'] = variable_get('site_name', 'Harvard Web Publishing');
+     $params['!sitewide-name'] = variable_get('site_name', 'OpenScholar');
      $params['headers']['Cc'] = $account_modifier->mail;
      drupal_mail('cp_user', 'os_user_add_to_group', $to, LANGUAGE_NONE, $params, $from);
    }
