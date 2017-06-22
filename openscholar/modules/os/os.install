@@ -988,3 +988,30 @@ function os_update_7051() {
 function os_update_7052() {
   remove_missing_modules_entry_from_DB();
 }
+
+/**
+ * Copy og:image metatag configs to twitter:image
+ */
+function os_update_7053() {
+  $metatag_config_instances = array(
+    "node:news",
+    "node:person",
+    "node:department",
+    "node:personal",
+    "node:project",
+    "node:biblio",
+  );
+
+  $i = 0;
+  foreach ($metatag_config_instances as $mci) {
+    $c = metatag_config_load($mci, $include_global = TRUE);
+    if (isset($c->config['og:image'])) {
+      $c->config['twitter:image'] = $c->config['og:image'];
+      metatag_config_save($c);
+      $i++;
+    }
+  }
+
+  $message = t('Added @new_metatags new twitter:image metatags to metatag configuration.', array('@new_metatags' => $i));
+  return $message;
+}
