@@ -1,5 +1,5 @@
---- file_entity.admin.inc
-+++ file_entity.admin.inc
+--- a/file_entity.admin.inc
++++ b/file_entity.admin.inc
 @@ -372,6 +372,7 @@
        'size' => format_size($file->filesize),
        'author' => theme('username', array('account' => user_load($file->uid))),
@@ -8,8 +8,8 @@
  
      );
      // Build a list of all the accessible operations for the current file.
---- file_entity.file_api.inc
-+++ file_entity.file_api.inc
+--- a/file_entity.file_api.inc
++++ b/file_entity.file_api.inc
 @@ -686,6 +686,7 @@
      // This is gagged because some uris will not support it.
      $file->filesize = @filesize($uri);
@@ -18,8 +18,8 @@
      $file->status = FILE_STATUS_PERMANENT;
    }
  
---- file_entity.module
-+++ file_entity.module
+--- a/file_entity.module
++++ b/file_entity.module
 @@ -1278,6 +1278,7 @@
  
    $variables['id'] = drupal_html_id('file-'. $file->fid);
