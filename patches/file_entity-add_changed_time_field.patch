@@ -9,12 +9,11 @@
      'operations' => array('data' => t('Operations')),
    );
  
-@@ -371,7 +371,7 @@
-       'type' => $file_type ? check_plain($file_type->label) : FILE_TYPE_NONE,
+@@ -372,6 +372,7 @@
+
        'size' => format_size($file->filesize),
        'author' => theme('username', array('account' => user_load($file->uid))),
--      'timestamp' => format_date($file->timestamp, 'short'),
-+      'timestamp' => format_date($file->changed, 'short'),
+       'timestamp' => format_date($file->timestamp, 'short'),
 +      'changed' => format_date($file->changed, 'short'),
      );
      // Build a list of all the accessible operations for the current file.
