@@ -1,3 +1,5 @@
+diff --git a/file_entity.admin.inc b/file_entity.admin.inc
+index 452c5ac..aa673f4 100644
 --- a/file_entity.admin.inc
 +++ b/file_entity.admin.inc
 @@ -372,6 +372,7 @@
@@ -8,6 +10,8 @@
  
      );
      // Build a list of all the accessible operations for the current file.
+diff --git a/file_entity.file_api.inc b/file_entity.file_api.inc
+index 452c5ac..aa673f4 100644
 --- a/file_entity.file_api.inc
 +++ b/file_entity.file_api.inc
 @@ -686,6 +686,7 @@
@@ -18,6 +22,8 @@
      $file->status = FILE_STATUS_PERMANENT;
    }
  
+diff --git a/file_entity.module b/file_entity.module
+index 452c5ac..aa673f4 100644
 --- a/file_entity.module
 +++ b/file_entity.module
 @@ -1278,6 +1278,7 @@
