@@ -1,10 +1,42 @@
 --- a/file_entity.admin.inc
 +++ b/file_entity.admin.inc
-@@ -372,6 +372,7 @@
+@@ -311,7 +311,7 @@
+     'type' => array('data' => t('Type'), 'field' => 'fm.type'),
+     'size' => array('data' => t('Size'), 'field' => 'fm.filesize'),
+     'author' => t('Author'),
+-    'timestamp' => array('data' => t('Updated'), 'field' => 'fm.timestamp', 'sort' => 'desc'),
++    'timestamp' => array('data' => t('Updated'), 'field' => 'fm.changed', 'sort' => 'desc'),
+     'operations' => array('data' => t('Operations')),
+   );
+ 
+@@ -371,7 +371,7 @@
+       'type' => $file_type ? check_plain($file_type->label) : FILE_TYPE_NONE,
        'size' => format_size($file->filesize),
        'author' => theme('username', array('account' => user_load($file->uid))),
-       'timestamp' => format_date($file->timestamp, 'short'),
+-      'timestamp' => format_date($file->timestamp, 'short'),
++      'timestamp' => format_date($file->changed, 'short'),
 +      'changed' => format_date($file->changed, 'short'),
- 
      );
      // Build a list of all the accessible operations for the current file.
+     $operations = array();
+
+--- a/file_entity.file_api.inc
++++ b/file_entity.file_api.inc
+@@ -686,6 +686,7 @@
+     // This is gagged because some uris will not support it.
+     $file->filesize = @filesize($uri);
+     $file->timestamp = REQUEST_TIME;
++    $file->changed = REQUEST_TIME;
+     $file->status = FILE_STATUS_PERMANENT;
+   }
+ 
+--- a/file_entity.module
++++ b/file_entity.module
+@@ -1278,6 +1278,7 @@
+ 
+   $variables['id'] = drupal_html_id('file-'. $file->fid);
+   $variables['date']      = format_date($file->timestamp);
++  $variables['changed']      = format_date($file->changed);
+   $account = user_load($file->uid);
+   $variables['name']      = theme('username', array('account' => $account));
+ 

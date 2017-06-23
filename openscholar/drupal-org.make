@@ -141,7 +141,6 @@ projects[file_entity][download][branch] = 7.x-2.x
 projects[file_entity][download][revision] = 68ab8ed52f9bb993e8f3c541b89420637e440609
 projects[file_entity][patch][] = "http://drupal.org/files/file_entity.1834902-3.dimension_overrides.patch"
 projects[file_entity][patch][] = "http://drupal.org/files/filter-by-file-schema-type-1881356-12.patch"
-projects[file_entity][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/70cdaff79e340e7008389ae6183201e3924c96d3/patches/file_entity.admin-change_timestamp.patch"
 projects[file_entity][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/d16eb6e08ef8a9ac237c0664b82db0c7d2452609/patches/file_entity-add_changed_time_field.patch"
 
 
