@@ -67,7 +67,7 @@ function gkplus_nodeorder_form($js = NULL, $tid = NULL) {
 
   if ($form_state['submitted'] && form_get_errors() == FALSE) {
     $output = array();
-    $output[] = ctools_ajax_command_reload();
+    $output[] = ctools_modal_command_dismiss();
   }
   print ajax_render($output);
   exit;
@@ -129,7 +129,6 @@ function gkplus_nodeorder_admin_display_form($form, &$form_state, $tid) {
 
   $form['#theme'] = 'nodeorder_admin_display_form';
   $form['#submit'] = array('nodeorder_admin_display_form_submit');
-  $form['#attached']['js'][] = drupal_get_path('module', 'gkplus') . '/js/gkplus.js';
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save order'),

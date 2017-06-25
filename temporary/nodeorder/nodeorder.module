@@ -70,6 +70,30 @@ function nodeorder_theme() {
 }
 
 /**
+ * Process main blocks administration form submission.
+ */
+function nodeorder_admin_display_form_submit($form, &$form_state) {
+  $tid = $form['#term']->tid;
+
+  foreach ($form_state['values'] as $key => $node) {
+    // Only take form elements that are blocks.
+    if (is_array($node) && array_key_exists('weight', $node)) {
+      $nid = $form[$key]['#node']->nid;
+      db_update('taxonomy_index')->fields(array('weight' => $node['weight']))
+        ->condition('tid', $tid)
+        ->condition('nid', $nid)
+        ->execute();
+    }
+  }
+
+  drupal_set_message(t('The node orders have been updated.'));
+  cache_clear_all();
+
+  return;
+}
+
+
+/**
  * Implements hook_form_FORM_ID_alter() for taxonomy_overview_terms().
  */
 function nodeorder_form_taxonomy_overview_terms_alter(&$form, $form_state) {
