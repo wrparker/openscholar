@@ -108,6 +108,10 @@ function _hwpi_get_ancestry() {
 
   // Hard-codes "HARVARD.EDU" as the highest parent item.
   $sites['http://www.harvard.edu'] = 'HARVARD.EDU';
+
+  // Allow other modules to change HWPI ancestry  sites.
+  drupal_alter('hwpi_ancestry', $sites);
+
   return $sites;
 }
 
