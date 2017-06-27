@@ -744,6 +744,8 @@ function _os_process_node_links_comment_add_class(&$vars) {
 function os_preprocess_page(&$vars) {
   global $user;
 
+  drupal_add_js(drupal_get_path('module', 'os') . '/js/responsive_menu.js');
+
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.
