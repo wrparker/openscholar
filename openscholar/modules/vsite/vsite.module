@@ -2614,7 +2614,6 @@ function vsite_mail($key, &$message, $params){
           'absolute' => TRUE,
           'language' => $language,
         ))));
-      $message['headers']['Sender'] = $message['headers']['From'] = $params['user']->mail;
       break;
   }
 }

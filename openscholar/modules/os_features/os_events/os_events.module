@@ -2360,14 +2360,6 @@ function os_events_mail_alter(&$message) {
     // Set the sender and return-path headers.
     $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
   }
-  else {
-
-    // Set default value of the "From" field.
-    $message['headers']['From'] = $message['from'] = variable_get('site_from_email',$defaultMail);
-
-    //Set the sender and return-path headers.
-    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
-  }
 
   //Adding the footer physical address for all emails
   $message['body'][] = '';
