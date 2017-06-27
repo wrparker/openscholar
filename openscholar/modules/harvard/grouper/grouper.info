@@ -5,6 +5,7 @@ package = Other
 dependencies[] = features
 dependencies[] = os_common
 dependencies[] = vsite_access
+dependencies[] = pinserver_authenticate
 features[features_api][] = api:2
 features[field_base][] = field_grouper_path
 features[field_instance][] = user-user-field_grouper_path

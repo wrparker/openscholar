@@ -6,9 +6,11 @@
 function grouper_cp_settings() {
   $forms = array();
 
+  $user = $GLOBALS['user'];
+
   $forms['grouper'] = array(
     'form' => array(
-      '#access' => user_access('manage grouper groups'),
+      //'#access' => spaces_access_admin() && !!pinserver_authenticate_get_user_huid($user->uid),
       '#custom_directive' => 'grouper',
       '#custom_directive_parameters' => array(
         'ng-show' => "\$parent.formData.vsite_private == 5"

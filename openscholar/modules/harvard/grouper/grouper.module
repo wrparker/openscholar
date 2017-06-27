@@ -48,7 +48,7 @@ function grouper_library_alter(&$libraries, $module) {
  * Implements hook_vsite_access_privacy_values_alter().
  */
 function grouper_vsite_access_privacy_values_alter(&$options) {
-  if (user_access('manage grouper groups')) {
+  if (spaces_access_admin()) {
     $options[5] = t('Groups within the Harvard Community <br><span class="description">Only select groups at harvard can view your site.</span>');
   }
 }
@@ -57,7 +57,7 @@ function grouper_vsite_access_privacy_values_alter(&$options) {
  * Implements hook_page_build().
  */
 function grouper_page_build(&$page) {
-  if (user_access('manage grouper groups')) {
+  if (spaces_access_admin()) {
     os_common_angular_apps('grouper');
   }
 }
@@ -70,6 +70,11 @@ function grouper_permission() {
 
   $perms['manage grouper groups'] = array(
     'title' => t('Manage Grouper Groups'),
+  );
+
+  // This permission exists for user 1 and support roles
+  $perms['bypass grouper restriction'] = array(
+    'title' => t('Bypass Grouper Restrictions')
   );
 
   return $perms;
@@ -209,6 +214,10 @@ function grouper_user_can_access($group = null, $user = null) {
 
   if (!isset($user)) {
     $user = $GLOBALS['user'];
+  }
+
+  if (user_access('bypass grouper restriction')) {
+    return true;
   }
 
   // if the site has no groups defined, don't deny access
