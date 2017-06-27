@@ -38,6 +38,15 @@ function gkplus_menu() {
 }
 
 /**
+ * Implements hook_preprocess_page().
+ */
+function gkplus_preprocess_page($vairables) {
+  drupal_add_js(drupal_get_path('module', 'gkplus') . '/js/gkplus.js', array(
+    'scope' => 'footer',
+  ));
+}
+
+/**
  * Page callback; provides nodeorder form for a given taxonomy term.
  *
  * @ingroup nodeorder
