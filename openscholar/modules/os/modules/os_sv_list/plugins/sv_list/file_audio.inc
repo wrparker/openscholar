@@ -12,7 +12,7 @@ $plugin = array(
   'bundle' => array('audio'),
 );
 
-class sv_list_file_audio extends sv_list_plugin  {
+class sv_list_file_audio extends sv_list_plugin {
   /**
    * @function entities_alter
    * 
