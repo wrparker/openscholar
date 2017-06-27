@@ -2373,13 +2373,11 @@ function os_events_mail_alter(&$message) {
     if (!isset($message['headers']['Sender'])) {
       $message['headers']['Sender'] = variable_get('site_from_email',$defaultMail);
     }
-
     // Set default value of the "Return-Path" field.
     if (!isset($message['headers']['Return-Path'])) {
       $message['headers']['Return-Path'] = variable_get('site_from_email',$defaultMail);
     }
   }
-
 
   //Adding the footer physical address for all emails
   $message['body'][] = '';
