@@ -1908,7 +1908,7 @@ label[for=cp-title-bulk] {
 }
 .cp-popover-wrapper {
     padding: 0 20px;
-    right: 25px;
+    right: 85px;
     border: 1px solid #EAEAEA;
     position: absolute;
     border-radius: 4px;
@@ -1916,7 +1916,9 @@ label[for=cp-title-bulk] {
     min-height: 20px;
     background: #FFF;
     z-index: 10;
-    top: -10px;
+}
+.cp-popover-wrapper ul li {
+    list-style: none;
 }
 .cp-popover-wrapper.left::before {
     content: ' ';
