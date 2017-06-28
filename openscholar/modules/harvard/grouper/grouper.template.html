@@ -1,5 +1,5 @@
-<div>
-    <div class="grouper-header-bar" ng-click="ShowPanel(true)">Edit Groups<span ng-if="!status.loading && !ShowPanel() && selected.length">{{SelectedGroupNames()}}</span><span ng-if="status.loading">Loading Groups. Please wait.</span></div>
+<div ng-cloak>
+    <div class="grouper-header-bar" ng-click="ShowPanel(true)">{{selected.length ? 'Edit Groups' : 'Add Groups'}}<span ng-if="!status.loading && !ShowPanel() && selected.length">{{SelectedGroupNames()}}</span><span ng-if="status.loading">Loading Groups. Please wait.</span></div>
     <div class="grouper-panel" ng-if="ShowPanel()">
         <fieldset>
             <legend>Selected Groups</legend>
