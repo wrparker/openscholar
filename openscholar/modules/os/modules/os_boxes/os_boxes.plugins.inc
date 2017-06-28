@@ -2,7 +2,7 @@
 
 function _os_boxes_boxes_plugins() {
   $info = array();
-  $path = drupal_get_path('module', 'os_boxes').'/plugins/';
+  $path = drupal_get_path('module', 'os_boxes') . '/plugins/';
 
   $info['os_boxes_default'] = array(
     'handler' => array(
@@ -308,6 +308,19 @@ function _os_boxes_boxes_plugins() {
       ),
     );
   }
+
+  $info['os_boxes_calendar'] = array(
+    'title' => 'Mini Calendar',
+    'description' => 'A blank slate to fill with what',
+    'tags' => array('Misc'),
+    'handler' => array(
+      'class' => 'os_boxes_calendar',
+      'file' => 'os_boxes_calendar.inc',
+      'path' => $path . '/os_boxes_calendar',
+      'parent' => 'os_boxes_default',
+    ),
+    'weight' => -4,
+  );
 
   return $info;
 }

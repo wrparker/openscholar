@@ -501,7 +501,7 @@ function os_events_os_widget() {
 function os_events_os_widget_alter(&$widget) {
   if ($widget['delta'] == 'os_events-block_1') {
     // Remove when os_layout_get is refactored to handle widget titles better.
-    $widget['info'] = t('Mini Calendar');
+    $widget['info'] = t('Mini Calendar(deprecated)');
   }
 }
 
