@@ -744,6 +744,8 @@ function _os_process_node_links_comment_add_class(&$vars) {
 function os_preprocess_page(&$vars) {
   global $user;
 
+  drupal_add_js(drupal_get_path('module', 'os') . '/js/responsive_menu.js');
+
   // Session timeout checking will be only for logged in users.
   if ($user->uid) {
     // Obtaining session lifetime value from php configuration.
@@ -3769,5 +3771,26 @@ function os_preprocess_pager(&$variables, $hook) {
     $variables['tags'][1] = '«';
     $variables['tags'][3] = '»';
     $variables['tags'][4] = 'last';
+  }
+}
+
+/**
+ * Remove missing module database entry when the
+ * module is missing from the code base
+ */
+function remove_missing_modules_entry_from_DB() {
+  $module_list = db_select('system', 's')
+    ->fields('s', array('name'))
+    ->condition('type', 'module');
+     $result = $module_list->execute();
+
+  while($record = $result->fetchAssoc()) {
+    $module = $record['name'];
+    if (!drupal_get_path('module', $module)) {
+      db_delete('system')
+        ->condition('name', $module)
+        ->condition('type', 'module')
+        ->execute();
+    }
   }
 }
