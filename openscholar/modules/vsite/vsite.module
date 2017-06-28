@@ -968,7 +968,7 @@ function vsite_admin_paths_alter(&$paths){
 /**
  * Implements hook_vsite_og_node_type_info().
  */
-function vsite_vsite_og_node_type_info(){
+function vsite_vsite_og_node_type_info() {
   return array(
     'personal' => 'group',
     'project' => 'group',
@@ -2378,7 +2378,6 @@ function vsite_contact_mail_owner($form, &$form_state, $recipient){
     $form['name'] = array(
       '#type' => 'item',
       '#title' => t('From'),
-      '#markup' => t('Anonymous')
     );
 
     $form['sender_firstname'] = array(
@@ -2580,7 +2579,6 @@ function vsite_mail($key, &$message, $params){
     case 'user_mail' :
     case 'user_copy' :
       $user = $params['user'];
-      $account = $params['account'];
       $vsite = $params['vsite'];
       $message['subject'] = $params['subject'] . ' [via ' . variable_get('site_name', 'Drupal') . ']';
       $message['body'][] = $params['message'];
@@ -2616,6 +2614,7 @@ function vsite_mail($key, &$message, $params){
           'absolute' => TRUE,
           'language' => $language,
         ))));
+      $message['from'] = $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
       break;
   }
 }
@@ -2700,9 +2699,9 @@ function vsite_preprocess_html(&$vars){
   // If we aren't in a vsite, or if this vsite hasn't uploaded a custom favicon.
   if (empty($uri)) {
     $theme = variable_get('theme_default');
-    $uri = drupal_get_path('theme', $theme) . '/favicon.ico';
+    $uri = drupal_get_path('theme', $theme) . '/favicon.png';
     if (!file_exists($uri)) {
-      $uri = drupal_get_path('theme', 'os_basetheme') . '/favicon.ico';
+      $uri = drupal_get_path('theme', 'os_basetheme') . '/favicon.png';
     }
   }
 
