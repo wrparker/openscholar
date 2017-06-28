@@ -1722,7 +1722,7 @@ function vsite_load_user_sites($user_id) {
     $node = node_load($site->group->nid);
     $items = array();
     $items[] = l($node->title, $site->get_absolute_url());
-    
+
     // Prepare them for theme_list_item.
     $sites_array[] = theme('item_list', array('items' => $items, 'attributes' => array('class' => array('inline'))));
   }
@@ -4055,6 +4055,29 @@ function vsite_oembed_uri_fragments($uri) {
     // if this file exists in this vsite already, add nothing. We don't want to cause duplicates.
     if (!isset($file->{OG_AUDIENCE_FIELD}) || $file->{OG_AUDIENCE_FIELD}[LANGUAGE_NONE][0]['target_id'] != $vsite->id) {
       return array($vsite->group->purl);
+    }
+  }
+}
+
+/**
+ * Implements hook_redirect_load_by_source_existing_url_alter
+ */
+function os_redirect_load_by_source_existing_url_alter(&$source) {
+  if(drupal_valid_path($source)) {
+    $vsite = vsite_get_vsite();
+    $provider = $vsite->purl_provider;
+    // For vsite with custom domain name
+    if ($provider == 'vsite_domain') {
+      $request = parse_url($_SERVER['REQUEST_URI']);
+      $source = ltrim($request["path"], '/');
+    }
+    // For vsite without custom domain name
+    elseif ($provider == 'spaces_og') {
+      $request = parse_url($_SERVER['REQUEST_URI']);
+      $request_split = array_values(array_filter(explode('/', $request["path"])));
+      unset($request_split[0]);
+      $source_uri = implode('/', $request_split);
+      $source = $source_uri;
     }
   }
 }

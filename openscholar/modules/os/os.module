@@ -3775,29 +3775,6 @@ function os_preprocess_pager(&$variables, $hook) {
 }
 
 /**
- * Implements hook_redirect_load_by_source_existing_url_alter
- */
-function os_redirect_load_by_source_existing_url_alter(&$source) {
-  $vsite = vsite_get_vsite();
-  if(drupal_valid_path($source)) {
-    $vsite = vsite_get_vsite();
-    $provider = $vsite->purl_provider;
-    // For vsite with custom domain name
-    if ($provider == 'vsite_domain') {
-      $request = parse_url($_SERVER['REQUEST_URI']);
-      $source = ltrim($request["path"], '/');
-    }
-    // For vsite without custom domain name
-    elseif ($provider == 'spaces_og') {
-      $request = parse_url($_SERVER['REQUEST_URI']);
-      $request_split = array_values(array_filter(explode('/', $request["path"])));
-      unset($request_split[0]);
-      $source_uri = implode('/', $request_split);
-      $source = $source_uri;
-    }
-  }
-}
-/**
  * Remove missing module database entry when the
  * module is missing from the code base
  */
