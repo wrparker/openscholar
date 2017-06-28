@@ -1835,4 +1835,6 @@ body.page-node-revisions .node {
 .form-type-radio label {
   cursor: pointer
 }
-
+div.no-bold {
+    font-weight: normal;
+}
