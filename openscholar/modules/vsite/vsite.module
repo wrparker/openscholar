@@ -4062,7 +4062,7 @@ function vsite_oembed_uri_fragments($uri) {
 /**
  * Implements hook_redirect_load_by_source_existing_url_alter
  */
-function os_redirect_load_by_source_existing_url_alter(&$source) {
+function vsite_redirect_load_by_source_existing_url_alter(&$source) {
   if(drupal_valid_path($source)) {
     $vsite = vsite_get_vsite();
     $provider = $vsite->purl_provider;
