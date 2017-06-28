@@ -560,43 +560,87 @@ function nodeorder_move_in_category($direction, $nid, $tid) {
 function nodeorder_can_be_ordered($node) {
   $cid = 'nodeorder:can_be_ordered:' . $node->type;
 
-  if (($cache = cache_get($cid)) && !empty($cache->data)) {
-    return $cache->data;
+  // Integrates with og_vocab module; caches on a per-group basis.
+  if (module_exists('og_vocab')) {
+    $group_cids = array();
+
+    if (og_is_group_content_type('node', $node->type)) {
+      $group_audience_field_items = field_get_items('node', $node, OG_AUDIENCE_FIELD, $node->language);
+
+      if ($group_audience_field_items) {
+        foreach ($group_audience_field_items as $item) {
+          $group_cids[] = $cid . ':og_group_ref_' . $item['target_id'];
+        }
+      }
+    }
+    elseif (og_is_group('node', $node)) {
+      $group_cids[] = $cid . ':og_group_ref_' . $node->nid;
+    }
+
+    foreach ($group_cids as $group_cid) {
+      if (($cache = cache_get($group_cid)) && !empty($cache->data)) {
+        return $cache->data;
+      }
+    }
   }
   else {
-    $can_be_ordered = FALSE;
-
-    $fields = field_info_fields();
-    $nodeorder_vocabularies = array();
-    foreach ($fields as $field_name => $field) {
-      if ($field['type'] != 'taxonomy_term_reference'
-       || empty($field['bundles']['node'])
-       || !in_array($node->type, $field['bundles']['node'])) {
-        continue;
-      }
-
-      foreach ($field['settings']['allowed_values'] as $allowed_values) {
-        $nodeorder_vocabularies[] = $allowed_values['vocabulary'];
-      }
+    if (($cache = cache_get($cid)) && !empty($cache->data)) {
+      return $cache->data;
     }
-    if (!empty($nodeorder_vocabularies)) {
-      $result = db_select('taxonomy_vocabulary', 'v')
-        ->condition('v.module', 'nodeorder')
-        ->condition('v.machine_name', $nodeorder_vocabularies, 'IN')
-        ->fields('v', array('vid'))
-        ->execute()
-        ->fetchColumn();
-
-      if ($result) {
-        $can_be_ordered = TRUE;
-      }
-    }
-
-    // Permanently cache the value for easy reuse.
-    cache_set($cid, $can_be_ordered, 'cache');
-
-    return $can_be_ordered;
   }
+
+  $can_be_ordered = FALSE;
+
+  $fields = field_info_fields();
+  $nodeorder_vocabularies = array();
+  foreach ($fields as $field_name => $field) {
+    // Integrates with og_vocab module; gets term data as entityreference.
+    if (module_exists('og_vocab')
+      && $field['field_name'] == OG_VOCAB_FIELD
+      && !empty($field['bundles']['node'])
+      && in_array($node->type, $field['bundles']['node'])
+    ) {
+
+      $items = field_get_items('node', $node, OG_VOCAB_FIELD, 'und');
+      if ($items) {
+        foreach ($items as $item) {
+          $term = taxonomy_term_load($item['target_id']);
+          $nodeorder_vocabularies[] = $term->vid;
+        }
+      }
+    }
+
+    if ($field['type'] != 'taxonomy_term_reference'
+      || empty($field['bundles']['node'])
+      || !in_array($node->type, $field['bundles']['node'])
+    ) {
+      continue;
+    }
+
+    foreach ($field['settings']['allowed_values'] as $allowed_values) {
+      $nodeorder_vocabularies[] = $allowed_values['vocabulary'];
+    }
+  }
+
+  if (!empty($nodeorder_vocabularies)) {
+    $result = db_select('taxonomy_vocabulary', 'v')->condition('v.module', 'nodeorder')->condition('v.vid', $nodeorder_vocabularies, 'IN')->fields('v', array('vid'))->execute()->fetchColumn();
+
+    if ($result) {
+      $can_be_ordered = TRUE;
+    }
+  }
+
+  // Caches the value permanently for easy reuse.
+  if (module_exists('og_vocab')) {
+    foreach ($group_cids as $group_cid) {
+      cache_set($group_cid, $can_be_ordered, 'cache');
+    }
+  }
+  else {
+    cache_set($cid, $can_be_ordered, 'cache');
+  }
+
+  return $can_be_ordered;
 }
 
 /**
