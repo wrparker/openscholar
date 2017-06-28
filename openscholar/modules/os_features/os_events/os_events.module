@@ -106,10 +106,6 @@ function getClient() {
   $client->setAccessType('online');
   $client->setApprovalPrompt('force');
 
-  $redirectUri = (($is_https) ? "https" : "http") .
-                    "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
-  $client->setRedirectUri($redirectUri);
-
   // Load previously authorized credentials from a file.
   $credentialsPath = CREDENTIALS_PATH;
 
@@ -119,7 +115,7 @@ function getClient() {
   }
 
   $client->setAccessToken($accessToken);
-  $client->setRedirectUri($_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code');
+  $client->setRedirectUri($_SERVER['REQUEST_SCHEME'] . "://" . url('/get-google-access-token-with-auth-code'));
 
   return $client;
 }
@@ -135,12 +131,8 @@ function os_events_get_access_token_with_auth_code() {
   }
 
   $client = getClient();
-
-  # So we go back to a reachable page
-  $redirectUri = (($is_https) ? "https" : "http") .
-                    "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
-
   $client->setState('1');
+  $redirectUri = (($is_https) ? "https" : "http") . "://" . url('/get-google-access-token-with-auth-code');
   $client->setRedirectUri($redirectUri);
 
   // Exchange authorization code for an access token.
@@ -211,7 +203,7 @@ function os_events_gcal_create_calendar() {
   }
 
   drupal_set_message("Calendar export completed", 'Success');
-  drupal_goto('/' . $vsite->group->purl . '/calendar');
+  drupal_goto(url('/calendar'));
 }
 
 /**
