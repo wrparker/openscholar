@@ -115,7 +115,9 @@ function getClient() {
   }
 
   $client->setAccessToken($accessToken);
-  $client->setRedirectUri($_SERVER['REQUEST_SCHEME'] . "://" . url('/get-google-access-token-with-auth-code'));
+  $_base_path = rtrim(ltrim(base_path(), '/'), '/');
+  $base_path = ((strlen($_base_path) == 0) ? '' : '/' . $_base_path);
+  $client->setRedirectUri((($is_https) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $base_path . '/get-google-access-token-with-auth-code');
 
   return $client;
 }
@@ -132,8 +134,9 @@ function os_events_get_access_token_with_auth_code() {
 
   $client = getClient();
   $client->setState('1');
-  $redirectUri = (($is_https) ? "https" : "http") . "://" . url('/get-google-access-token-with-auth-code');
-  $client->setRedirectUri($redirectUri);
+  $_base_path = rtrim(ltrim(base_path(), '/'), '/');
+  $base_path = ((strlen($_base_path) == 0) ? '' : '/' . $_base_path);
+  $client->setRedirectUri((($is_https) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $base_path . '/get-google-access-token-with-auth-code');
 
   // Exchange authorization code for an access token.
   $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
@@ -1252,9 +1255,9 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
     if ($google_credentials && $google_client_secret) {
 
       $client = getClient();
-      $redirectUri = (($is_https) ? "https" : "http") . 
-                        "://" . $_SERVER['HTTP_HOST'] . '/get-google-access-token-with-auth-code';
-      $client->setRedirectUri($redirectUri);
+      $_base_path = rtrim(ltrim(base_path(), '/'), '/');
+      $base_path = ((strlen($_base_path) == 0) ? '' : '/' . $_base_path);
+      $client->setRedirectUri((($is_https) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $base_path . '/get-google-access-token-with-auth-code');
       $authUrl = $client->createAuthUrl($client->getScopes());
       $buttons['Google'] = $authUrl;
     }
