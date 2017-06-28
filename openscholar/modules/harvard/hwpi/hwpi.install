@@ -118,7 +118,7 @@ function openscholar_update_7007() {
 /**
  * Change Help Documenation screenshot
  */
-function hwpi_update_7009() {
+function hwpi_update_7008() {
   $nid = variable_get('vsite_register_welcome_message', 0);
    if ($nid > 0) {
     $node = node_load($nid);
