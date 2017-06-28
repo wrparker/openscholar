@@ -1,3 +1,4 @@
 .select2-container .select2-choice .select2-arrow b {
-    display: none;
+    display: none !important;
 }
+
