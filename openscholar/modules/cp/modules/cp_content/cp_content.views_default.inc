@@ -400,7 +400,6 @@ function cp_content_views_default_views() {
     'nothing' => 'nothing',
     'filemime' => 'filemime',
     'filesize' => 'filesize',
-    'timestamp' => 'timestamp',
     'changed' => 'changed',
     'edit' => 'edit',
     'delete' => 'delete',
@@ -443,13 +442,6 @@ function cp_content_views_default_views() {
     'filesize' => array(
       'sortable' => 1,
       'default_sort_order' => 'asc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'timestamp' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'desc',
       'align' => '',
       'separator' => '',
       'empty_column' => 0,
@@ -630,15 +622,6 @@ function cp_content_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'os_time';
-  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
   /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'file_managed';
