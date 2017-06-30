@@ -283,7 +283,7 @@
                 </else>
               </choose>
             </group>
-            <text variable="page" prefix=", " form="short"/>
+            <text variable="page" prefix=", Pp. " form="short"/>
           </if>
           <else-if variable="issue">
             <group delimiter=" " prefix=", ">
