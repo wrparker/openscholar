@@ -42,14 +42,12 @@ function os_files_private_views_default_views() {
     'filemime' => 'filemime',
     'filesize' => 'filesize',
     'changed' => 'changed',
-    'timestamp' => 'timestamp',
     'id' => 'id',
     'title' => 'title',
     'edit' => 'edit',
     'delete' => 'delete',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -90,13 +88,6 @@ function os_files_private_views_default_views() {
       'empty_column' => 0,
     ),
     'changed' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'desc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'timestamp' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -186,15 +177,6 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'os_time';
-  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'long';
   /* Field: File Usage: Entity ID */
   $handler->display->display_options['fields']['id']['id'] = 'id';
   $handler->display->display_options['fields']['id']['table'] = 'file_usage';
@@ -308,14 +290,12 @@ function os_files_private_views_default_views() {
     'filemime' => 'filemime',
     'filesize' => 'filesize',
     'changed' => 'changed',
-    'timestamp' => 'timestamp',
     'id' => 'id',
     'title' => 'title',
     'edit' => 'edit',
     'delete' => 'delete',
     'nothing_1' => 'nothing_1',
   );
-  $handler->display->display_options['style_options']['default'] = 'timestamp';
   $handler->display->display_options['style_options']['info'] = array(
     'fid' => array(
       'sortable' => 0,
@@ -356,13 +336,6 @@ function os_files_private_views_default_views() {
       'empty_column' => 0,
     ),
     'changed' => array(
-      'sortable' => 1,
-      'default_sort_order' => 'desc',
-      'align' => '',
-      'separator' => '',
-      'empty_column' => 0,
-    ),
-    'timestamp' => array(
       'sortable' => 1,
       'default_sort_order' => 'desc',
       'align' => '',
@@ -532,13 +505,6 @@ function os_files_private_views_default_views() {
   $handler->display->display_options['fields']['filesize']['table'] = 'file_managed';
   $handler->display->display_options['fields']['filesize']['field'] = 'filesize';
   $handler->display->display_options['fields']['filesize']['element_label_colon'] = FALSE;
-  /* Field: File: Upload date */
-  $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['table'] = 'file_managed';
-  $handler->display->display_options['fields']['timestamp']['field'] = 'timestamp';
-  $handler->display->display_options['fields']['timestamp']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['timestamp']['date_format'] = 'medium';
-  $handler->display->display_options['fields']['timestamp']['second_date_format'] = 'os_time';
   /* Field: Content: Updated date */
   $handler->display->display_options['fields']['changed']['id'] = 'changed';
   $handler->display->display_options['fields']['changed']['table'] = 'node';
