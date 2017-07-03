@@ -904,6 +904,6 @@ function os_files_update_7025() {
 /**
  * Flush image cache.
  */
-function os_files_update_7026() {
-  image_style_flush('os_files_xxlarge');
+function os_files_update_7027() {
+  image_style_flush(image_style_load('os_files_xxlarge'));
 }
