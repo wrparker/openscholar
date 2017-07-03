@@ -1850,7 +1850,7 @@ body.page-node-revisions .node {
   padding: 7px 10px 17px;
   position: relative;
   white-space: nowrap;
-  z-index: 100;
+  z-index: 99;
   background: #EFEFEF !important;
   border-bottom: 2px solid #C4C2C2;
   height: 24px;
