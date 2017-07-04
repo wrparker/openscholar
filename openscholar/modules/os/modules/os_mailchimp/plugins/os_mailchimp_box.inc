@@ -95,11 +95,11 @@ class os_boxes_mailchimp extends os_boxes_default {
       
       case 'mailchimp_form':
         $info = (_os_mailchimp_get_list_info(variable_get('os_mailchimp_vsite_api_key', '')));
-        if ($info['data']) {
-          foreach ($info['data'] as $list_info) {
-            if ($list_info['id'] == $this->options['list']) {
+        if ($info['lists']) {
+          foreach ($info['lists'] as $list_info) {
+            if ($list_info->id == $this->options['list']) {
               $block['content'] = t('<iframe src="@url" width="@width", height="@height"></iframe>', array(
-                '@url' => $list_info['subscribe_url_long'],
+                '@url' => $list_info->subscribe_url_long,
                 '@width' => "640px",
                 '@height' => (intval($this->options['mailchimp_iframe_height']) > 0) ? $this->options['mailchimp_iframe_height'] : $defaults['mailchimp_iframe_height'],
               ));
