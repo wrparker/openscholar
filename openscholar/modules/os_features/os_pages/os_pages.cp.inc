@@ -16,8 +16,9 @@ function os_pages_cp_settings() {
   );
 
   $importer_menu_title = array(
-    'node_page' => 'Create Page',
+    'page_title' => 'Page',
   );
+  $form_id = "node_edit_form";
 
   // create form elements
 
@@ -26,7 +27,7 @@ function os_pages_cp_settings() {
         '#default_value' => '',
         '#title' => t('Title'),
         '#weight' => 1,
-        '#column' => 'left-node-page',
+        '#column' => 'left',
       );
 
   $form_settings_node_body = array(
@@ -34,7 +35,7 @@ function os_pages_cp_settings() {
         '#default_value' => '',
         '#title' => t('Body'),
         '#weight' => 1,
-        '#column' => 'left-node-page',
+        '#column' => 'left',
       );
 
   $form_settings_upload = array(
@@ -51,7 +52,7 @@ function os_pages_cp_settings() {
             //'types' => $extension_types,
           ),
           '#weight' => 5,
-          '#column' => 'left-node-page',
+          '#column' => 'left',
           '#class' => array('csv-import-fields', 'os-importer-file-upload-wrapper'),
           '#upload_location' => $purl ? "public://{$purl}/files" : "public://",
           '#upload_validators' => array(
@@ -65,40 +66,40 @@ function os_pages_cp_settings() {
         '#options' => $import_format_option,
         '#default_value' => '',
         '#title' => '',
-        '#prefix' => "<div class='node-page-fieldset-header'>Publishing options </br>(Published to this site)</div>",
-        '#column' => 'right-node-page',
+        '#prefix' => "<div class='page-fieldset-header'><p>Publishing options</p></div>",
+        '#column' => 'right',
       );
 
   $form_settings_url_alias_checkbox = array(
         '#type' => 'checkbox',
         '#default_value' => '',
         '#title' => t('Generate automatic URL alias'),
-        '#prefix' => "<div class='node-page-fieldset-header'>URL path settings</br>(Automatic alias)</div>",
+        '#prefix' => "<div class='page-fieldset-header'><p>URL path settings</p></div>",
         '#description' => t('Uncheck this to create a custom alias below.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
   $form_settings_url_alias_path = array(
         '#type' => 'textfield',
         '#default_value' => '',
         '#title' => t('URL alias'),
         '#description' => t('Uncheck this to create a custom alias below.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
   $form_settings_menu_settings = array(
         '#type' => 'checkbox',
         '#default_value' => '',
         '#title' => t('Provide a menu link'),
-        '#prefix' => "<div class='node-page-fieldset-header'>Menu settings</br>(Not in menu)</div>",
-        '#column' => 'right-node-page',
+        '#prefix' => "<div class='page-fieldset-header'><p>Menu settings</p></div>",
+        '#column' => 'right',
       );
 
   $form_settings_post_created = array(
         '#type' => 'textfield',
         '#default_value' => '',
         '#title' => t('Posted by'),
-        '#prefix' => "<div class='node-page-fieldset-header'>Post Created/Edited By</br>(By admin)</div>",
+        '#prefix' => "<div class='page-fieldset-header'><p>Post Created/Edited By</p></div>",
         '#description' => t('You may change this if posting on behalf of someone else.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
 
   $form_settings_post_created_on = array(
@@ -106,15 +107,15 @@ function os_pages_cp_settings() {
         '#default_value' => '',
         '#title' => t('Posted on'),
         '#description' => t('Format: 2017-06-30 17:24:00 +0530. The date </br> format is YYYY-MM-DD and +0530 is the time </br> zone offset from UTC. Leave blank to use the time </br> of form submission.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
 
   $form_settings_revision = array(
         '#type' => 'checkbox',
         '#default_value' => '',
         '#title' => t('Create new revision'),
-        '#prefix' => "<div class='node-page-fieldset-header'>Revision information</div>",
-        '#column' => 'right-node-page',
+        '#prefix' => "<div class='page-fieldset-header'><p>Revision information</p></div>",
+        '#column' => 'right',
       );
 
   $form_settings_revision_log = array(
@@ -122,25 +123,25 @@ function os_pages_cp_settings() {
         '#default_value' => '',
         '#title' => t('Revision log message'),
         '#description' => t('Provide an explanation of the changes you are </br> making. This will help other authors understand </br> your motivations.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
 
   $form_settings_seo = array(
         '#type' => 'textarea',
         '#default_value' => '',
         '#title' => t('Meta description'),
-        '#prefix' => "<div class='node-page-fieldset-header'>Search Engine Optimization (SEO)</div>",
+        '#prefix' => "<div class='page-fieldset-header'><p>Search Engine Optimization (SEO)</p></div>",
         '#description' => t('Best if 150 characters or less. Used as a meta </br> description tag and instead of trimmed body in </br> certain lists.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
 
   $form_settings_css = array(
         '#type' => 'textfield',
         '#default_value' => '',
         '#title' => t("Apply css class name to this page's body tag"),
-        '#prefix' => "<div class='node-page-fieldset-header'>Apply css</div>",
+        '#prefix' => "<div class='page-fieldset-header'><p>Apply css</p></div>",
         '#description' => t('Warning: this is to be used for custom themeing </br> purpose only.'),
-        '#column' => 'right-node-page',
+        '#column' => 'right',
       );
 
 
@@ -148,8 +149,8 @@ function os_pages_cp_settings() {
 
   $settings['page_title'] = array(
     'group' => array(
-      '#id' => 'node_page',
-      '#title' => $importer_menu_title['node_page'],
+      '#id' => $form_id,
+      '#title' => $importer_menu_title['page_title'],
       '#weight' => -7,
       '#menu_parent' => 'add',
     ),
@@ -158,18 +159,18 @@ function os_pages_cp_settings() {
 
   $settings['page_body'] = array(
     'group' => array(
-      '#id' => 'node_page',
-      '#title' => $importer_menu_title['node_page'],
+      '#id' => $form_id,
+      '#title' => $importer_menu_title['page_title'],
       '#weight' => -7,
       '#menu_parent' => 'add',
     ),
     'form' => $form_settings_node_body
   );
 
-  $settings['os_page_file_upload'] = array(
+  $settings['file_upload'] = array(
      'group' => array(
-        '#id' => 'node_page',
-        '#title' => $importer_menu_title['node_page'],
+        '#id' => $form_id,
+        '#title' => $importer_menu_title['page_title'],
         '#weight' => -6,
         '#menu_parent' => 'add',
       ),
@@ -177,100 +178,100 @@ function os_pages_cp_settings() {
       );
 
 
-  $settings['node_page_publishing'] = array(
+  $settings['page_publishing'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => 'Page',
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_checkboxex,
         );
 
-  $settings['node_page_url_alias_checkbox'] = array(
+  $settings['page_url_alias_checkbox'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_url_alias_checkbox,
         );
 
-  $settings['node_page_url_alias_path'] = array(
+  $settings['page_url_alias_path'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_url_alias_path,
         );
 
-  $settings['node_page_menu_settings'] = array(
+  $settings['page_menu_settings'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_menu_settings,
         );
 
-  $settings['node_page_post_created'] = array(
+  $settings['page_post_created'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_post_created,
         );
 
-  $settings['node_page_post_created_on'] = array(
+  $settings['page_post_created_on'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_post_created_on,
         );
 
-  $settings['node_page_post_revision'] = array(
+  $settings['page_post_revision'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_revision,
         );
 
-  $settings['node_page_post_revision_log'] = array(
+  $settings['page_post_revision_log'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_revision_log,
         );
 
-  $settings['node_page_seo'] = array(
+  $settings['page_seo'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
           'form' => $form_settings_seo,
         );
 
-  $settings['node_page_css'] = array(
+  $settings['page_css'] = array(
           'group' => array(
-            '#id' => 'node_page',
-            '#title' => $importer_menu_title['node_page'],
+            '#id' => $form_id,
+            '#title' => $importer_menu_title['page_title'],
             '#weight' => -4,
             '#menu_parent' => 'add'
           ),
