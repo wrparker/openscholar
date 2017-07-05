@@ -188,9 +188,6 @@ function os_menu_alter(&$items) {
   $items['user/autocomplete']['access arguments'] = array(
     'access user autocomplete',
   );
-
-  // Apply CP theme for book revision page.
-  $items['node/%node/revisions']['theme callback'] = 'cp_theme_name';
 }
 
 function os_in_readonly_mode($page) {
@@ -1103,10 +1100,6 @@ function os_form_node_form_alter(&$form, $form_state) {
   // Removes "Promoted to front page" checkbox.
   unset($form['options']['promote']);
 
-  // Removes "Revision information" fieldset.
-  $form['revision_information']['#access'] = FALSE;
-
-
   $form['path']['pathauto']['#description'] = t('Uncheck this to create a custom alias below.');
   if (isset($form['field_upload']['und']['add_more']['#value'])) {
     $form['field_upload']['und']['add_more']['#value'] = t('Add media');
@@ -1118,7 +1111,10 @@ function os_form_node_form_alter(&$form, $form_state) {
   unset($form['additional_settings']);
   foreach (element_children($form) as $c) {
     if (isset($form[$c]['#type']) && $form[$c]['#type'] == 'fieldset' && isset($form[$c]['#group'])) {
-      $form[$c]['#collapsed'] = true;
+      // exception to collapsed settings for fieldsets
+      if ($c != "revision_information") {
+        $form[$c]['#collapsed'] = true;
+      }
     }
     unset($form[$c]['#group']);
   }
@@ -1802,6 +1798,13 @@ function os_node_view_alter(&$build) {
       '#weight' => 1000,
     );
   }
+
+  if ($build['#view_mode'] == 'teaser') {
+    if (!empty($build['#node']->readMoreAdded)) {
+      // We added a read more in another place. Don't add it again.
+      unset($build['links']['node']['#links']['node-readmore']);
+    }
+  }
 }
 
 /**
@@ -1835,21 +1838,16 @@ function os_contextual_links_view_alter(&$element, $items) {
     $link['query']['destination'] = $redirect;
   }
 
-  if (!user_access('view revisions')) {
-    // User can't view revisions.
+  $node = $element['#element']['#node'];
+
+  if (!node_access('update', $node)) {
+    // User doesn't have access to revisions.
     return;
   }
-
-  $node = $element['#element']['#node'];
 
   if (count(node_revision_list($node)) == 1) {
     // Do not display the revisions tab if the node doesn't have any revisions.
     return FALSE;
-  }
-
-  if (!og_moderation_node_revision_access($node)) {
-    // User has no access to the revisions.
-    return;
   }
 
   $element['#links']['node-revisions'] = array(
@@ -3701,37 +3699,58 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
     case 'os_text_trimmed':
 
       foreach ($items as $delta => $item) {
-        $text = text_summary($item['value'], $item['format'], $display['settings']['trim_length']);
 
-        // Remove the ellipsis we got from the text summary.
-        if (strpos($text, '…') !== 0) {
-          $text = str_replace('…', '', $text);
-        }
+        // We will use default views trim text to trim content.Because it works
+        // better in case of first paragrapgh is huge.
+        $alter = array(
+          'html' => FALSE,
+          'max_length' => $display['settings']['trim_length'],
+          'word_boundary' => TRUE,
+        );
+        $text = views_trim_text($alter, $item['safe_value']);
 
         $read_more = function($entity_type, $entity, &$text) {
           $uri = entity_uri($entity_type, $entity);
-          $text .= '… ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('html' => true));
+          $text .= ' ' . l(t('Read more <span class="element-invisible"> about @title</span>', array('@title' => entity_label($entity_type, $entity))), $uri['path'], array('attributes' => array('class' => array('node-readmore')), 'html' => true));
         };
 
-        $delimiter = strpos($item['value'], '<!--break-->') !== FALSE && strpos($text, '<!--break-->') === FALSE;
+        // We need to varify if there is any breake tag available in the content
+        // if yes then we will use text summary function to trim texts.
+        $delimiter = strpos($item['safe_value'], '<!--break-->');
 
         if ($delimiter) {
-          // We have a break tag in the original value but the trimmed text
-          // function removed the break tag. In that case show the read more
-          // button.
-          $read_more($entity_type, $entity, $text);
+          // Checks if there is a break tag inserted at the end of the content.
+          // If this is the case, there is no need to add a "read more" link.
+          $split_break_tag = explode('<!--break-->', $item['safe_value'], 2);
+          // Only checks for a trailing break tag if all the following are true:
+          // 1. There is a break tag in the body.
+          // 2. There is HTML text after the break tag.
+          if (isset($split_break_tag[1])) {
+            $text_after_break = strip_tags(trim($split_break_tag[1]), '<img><iframe><embed><object><param>');
+          }
+          $text = text_summary($item['safe_value'], $item['format'], $display['settings']['trim_length']);
+          // Remove the ellipsis we got from the text summary.
+          if (strpos($text, '…') !== 0) {
+            $text = str_replace('…', ' ', $text);
+          }
+          // Only display read more link if there is a content after break tag.
+          if (!empty(drupal_strlen($text_after_break))) {
+            $read_more($entity_type, $entity, $text);
+          }
         }
         else {
           // No break tag but the original text is longer than the trimmed text.
           // In case we have a break tag, even in the trimmed text, we will not
           // provide a read more link since another function will handle that
           // for us.
-          if (strlen($item['value']) != strlen($text) && strpos($text, '<!--break-->') === FALSE) {
+          if (strlen($item['safe_value']) != strlen($text) && strpos($text, '<!--break-->') === FALSE) {
             $read_more($entity_type, $entity, $text);
           }
         }
+        $element[$delta] = array('#markup' => $text);
 
-        $element[$delta] = array('#markup' => '<div class="os-trim-text">' . $text . '</div>');
+        // Add a flag on the node for adding our own "Read more" text.
+        $entity->readMoreAdded = TRUE;
       }
 
       break;
@@ -3750,5 +3769,26 @@ function os_preprocess_pager(&$variables, $hook) {
     $variables['tags'][1] = '«';
     $variables['tags'][3] = '»';
     $variables['tags'][4] = 'last';
+  }
+}
+
+/**
+ * Remove missing module database entry when the
+ * module is missing from the code base
+ */
+function remove_missing_modules_entry_from_DB() {
+  $module_list = db_select('system', 's')
+    ->fields('s', array('name'))
+    ->condition('type', 'module');
+     $result = $module_list->execute();
+
+  while($record = $result->fetchAssoc()) {
+    $module = $record['name'];
+    if (!drupal_get_path('module', $module)) {
+      db_delete('system')
+        ->condition('name', $module)
+        ->condition('type', 'module')
+        ->execute();
+    }
   }
 }

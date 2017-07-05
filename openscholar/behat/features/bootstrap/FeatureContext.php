@@ -151,6 +151,7 @@ class FeatureContext extends DrupalContext {
     $element->fillField('Password', $password);
     $submit = $element->findButton('Log in');
     $submit->click();
+    $this->user = user_load_by_name($username);
     sleep(3);
   }
 
@@ -213,6 +214,197 @@ class FeatureContext extends DrupalContext {
           throw new Exception("Unable to log in as a user who $can $permission.");
         }
       }
+    }
+  }
+
+  /**
+   * @Given /^I create a new "([^"]*)" with title "([^"]*)" in the "([^"]*)" site$/
+   */
+  public function iCreateANewWithTitleInTheSite ($content_type, $title, $vsite_name) {
+    $content_type = str_replace(" ", "_", $content_type);
+    $query = new EntityFieldQuery();
+    $results = $query->entityCondition('entity_type', 'node')
+                    ->propertyCondition('title', $title)
+                    ->propertyCondition('type', str_replace('-', '_', $content_type))
+                    ->execute();
+
+    if (!empty($results['node'])) {
+      FeatureHelp::deleteNode($title);
+    }
+    $entity = $this->createEntity($content_type, $title);
+
+    // Set the group ref
+    $vid = FeatureHelp::getNodeId($vsite_name);
+    $wrapper = entity_metadata_wrapper('node', $entity);
+    $wrapper->{OG_AUDIENCE_FIELD}->set(array($vid));
+    entity_save('node', $entity);
+  }
+
+  /**
+   * @Given /^I create a revision of "([^"]*)" where I change the "([^"]*)" to "([^"]*)"$/
+   */
+  public function iCreateARevisionOfWhereIChangeTheTo ($node_title, $field_name, $new_field_value) {
+    // grab first row returns when querying DB for node with the passed title
+    $query = db_select('node', 'n')
+            ->fields('n', array('nid', 'vid'))
+            ->condition('n.title', $node_title, '=');
+    $results = $query->execute()->fetchAllAssoc('nid');
+    $row = array_pop($results);
+
+    $node = node_load($row->nid, $row->vid);
+
+    $node->revision = TRUE;
+    $node->is_current = TRUE;
+    $node->status = 1;
+    $node->log = "setting $field_name to '$new_field_value'";
+    $node->revision_moderation = FALSE;
+    $node->{$field_name} = $new_field_value;
+    $node = node_submit($node);
+    node_save($node);
+  }
+
+  /**
+   * @Then /^I should not be permitted to "([^"]*)" revisions for "([^"]*)"$/
+   */
+  public function iShouldNotBePermittedToRevisionsFor($action, $node_title) {
+    if (!in_array($action, ['Delete', 'Revert'])) {
+      throw new Exception('The action ' . $action . ' does not supported by the step.');
+    }
+
+    if (node_access('update', FeatureHelp::getNodeId($node_title), $this->user)) {
+      throw new Exception('The user is not forbidden from revision page of the node');
+    }
+  }
+
+  /**
+   * @Given /^I revert "([^"]*)" to revision "(\d+)"$/
+   */
+  public function iRevertToRevision($node_title, $revision_num) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Given /^I delete revision "(\d+)" of "([^"]*)"$/
+   */
+  public function iDeleteRevisionof($revision_num, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'] . "/revisions";
+    $this->visit($url);
+
+    $xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Delete']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    $link = $elements[$revision_num - 1];
+
+    if (!$link) {
+      throw new Exception(sprintf("Could not find revision %d for '%s'.", $revision_num, $node_title));
+    }
+    $link->press();
+
+    // lastly, click the submit button on the confirm modal
+    return array(
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Then /^I should not be able to see the "([^"]*)" contextual link for "([^"]*)"$/
+   */
+  public function iShouldNotBeAbleToSeeTheContextualLink($linktext, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='$linktext']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (count($elements)) {
+      throw new Exception(sprintf("%s node page contains the '%s' contextual link.", $node_title, $linktext));
+    }
+  }
+
+  /**
+   * @Then /^I should be able to see "(\d+)" revisions for "([^"]*)"$/
+   */
+  public function iShouldBeAbleToSeeRevisionsFor($number_of_revisions, $node_title) {
+    $query = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->fields('p', array('id','value'))
+      ->condition('n.title', $node_title, '=');
+    $query->innerJoin('og_membership', 'ogm', 'ogm.etid = n.nid');
+    $query->innerJoin('purl', 'p', 'p.id = ogm.gid');
+    $node_rows = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!count($node_rows)) {
+      throw new Exception(sprintf("Could not find node with title of '%s'.", $node_title));
+    }
+    $node_row = array_pop($node_rows);
+
+    // check to make sure the "revisions" link is available on the node view page
+    $url = "/". $node_row['value'] . "/node/" . $node_row['nid'];
+    $this->visit($url);
+    $revisions_url = $url . "/revisions";
+
+    $xpath = "//div[@id='columns']//ul[contains(@class, 'contextual-links')]//a[text()='Revisions']";
+    $elements = $this->getSession()->getPage()->findAll('xpath', $xpath);
+    if (!count($elements)) {
+      throw new Exception(sprintf("%s node page does not contain the 'revisions' contextual link.", $node_title, $url));
+    }
+
+    // check to see if the proper number of revision rows show up on the revisions page
+    $this->visit($revisions_url);
+    $action_xpath = "//div[@id='content']//table/tbody/tr/td/a[text()='Revert']";
+    $revert_elements = $this->getSession()->getPage()->findAll('xpath', $action_xpath);
+    $actual_number_of_revisions = count(node_revision_list(node_load($node_row['nid']))) - 1;
+
+    if ((count($revert_elements) != $actual_number_of_revisions) || ($number_of_revisions != $actual_number_of_revisions)) {
+      throw new Exception(sprintf("%s has %d revisions instead of %d.", $node_title, $actual_number_of_revisions, $number_of_revisions));
     }
   }
 
@@ -641,6 +833,90 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I create a "([^"]*)" widget for the vsite "([^"]*)" with the following <settings>:$/
+   */
+  public function iCreateAWidgetWithTheFollowingSettingsForTheVsite($widget, $vsite, TableNode $table) {
+    $metasteps = [];
+    switch (strtolower($widget)) {
+      case "custom html":
+        $widgetType = "os_boxes_html";
+        break;
+      case "list of posts":
+        $widgetType = "os_sv_list_box";
+        break;
+      case "embed media":
+        $widgetType = "os_boxes_media";
+        break;
+      case "feed reader":
+        $widgetType = "os_boxes_feedreader";
+        break;
+    }
+    $metasteps[] = new Step\When('I visit "/' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"');
+    $hash = $table->getRows();
+
+    print "\n" . 'I visit "/' . $vsite . '#overlay=' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"' . "\n";
+
+
+    foreach ($hash as $form_elements) {
+      switch ($form_elements[2]) {
+        case 'select list':
+          $values = explode(",", $form_elements[1]);
+
+          if (count($values) > 1) {
+            foreach ($values as $value) {
+              // Select multiple values from the terms options.
+              $this->getSession()
+                ->getPage()
+                ->selectFieldOption($form_elements[0], trim($value), TRUE);
+            }
+          }
+          else {
+            $metasteps[] = new Step\When('I select "' . $form_elements[1] . '" from "' . $form_elements[0] . '"');
+          }
+          break;
+        case 'checkbox':
+          $metasteps[] = new Step\When('I ' . $form_elements[1] . ' the box "' . $form_elements[0] . '"');
+          break;
+        case 'textfield':
+          $metasteps[] = new Step\When('I fill in "' . $form_elements[0] . '" with "' . $form_elements[1] . '"');
+          break;
+        case 'radio':
+          $metasteps[] = new Step\When('I select the radio button "' . $form_elements[0] . '" with the id "' . $form_elements[1] . '"');
+          break;
+      }
+    }
+    $metasteps[] = new Step\When('I press "Save"');
+    return $metasteps;
+  }
+
+  /**
+   * @Given /^the widget "([^"]*)" is placed in the "([^"]*)" layout$/
+   */
+  public function theWidgetIsPlacedInTheLayout($widget, $page) {
+    $q = db_select('spaces_overrides', 'so')
+      ->fields('so', array('object_id', 'id'))
+      ->condition('value', '%s:5:"title";s:' . strlen($widget) . ':"' . $widget . '";%', 'LIKE')
+      ->condition('object_type', 'boxes', '=');
+    $results = $q->execute()->fetchAll();
+    $row = array_pop($results);
+
+    $page_id = FeatureHelp::GetNodeId($page);
+
+    $vsite = spaces_load('og', $row->id);
+    $blocks = $vsite->controllers->context->get('os_pages-page-' . $page_id . ":reaction:block");
+    $blocks['blocks']['boxes-' . $row->object_id] = array(
+      'module' => 'boxes',
+      'delta' => $row->object_id,
+      'title' => $widget,
+      'region' => 'sidebar_second',
+      'status' => 0,
+      'weight' => 0
+    );
+    $vsite->controllers->context->set('os_pages-page-' . $page_id . ":reaction:block", $blocks);
+
+  }
+
+  /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
    */
   public function theWidgetIsSetInThePageWithSettings($page, $widget, TableNode $table) {
@@ -850,11 +1126,11 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Then /^I should see tineMCE in "([^"]*)"$/
+   * @Then /^I should see CKEDITOR in "([^"]*)"$/
    */
   public function iShouldSeeTinemceIn($field) {
     $page = $this->getSession()->getPage();
-    $iframe = $page->find('xpath', "//label[contains(., '{$field}')]//..//iframe[@id='edit-body-und-0-value_ifr']");
+    $iframe = $page->find('xpath', "//label[contains(., '{$field}')]//..//iframe[contains(@class, 'cke')]");
 
     if (!$iframe) {
       throw new Exception("tinyMCE wysiwyg does not appear.");
@@ -1651,17 +1927,6 @@ class FeatureContext extends DrupalContext {
       print_r('An error: ' . $e->getMessage());
       print_r('page: ' . $page);
     }
-  }
-
-  /**
-   * @When /^I edit the page meta data of "([^"]*)" in "([^"]*)"$/
-   */
-  public function iEditTheMetaTags($title, $group) {
-    $nid = FeatureHelp::GetNodeId($title);
-
-    return array(
-      new Step\When('I visit "' . $group . '/os/pages/' . $nid . '/meta"'),
-    );
   }
 
   /**
@@ -3350,7 +3615,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-<<<<<<< HEAD
    * @Given /^I make sure admin panel is open$/
    */
   public function adminPanelOpen() {
@@ -3395,10 +3659,10 @@ class FeatureContext extends DrupalContext {
    */
   public function iOpenUserMenu() {
     $page = $this->getSession()->getPage();
-    while (!$page->find('css', 'div[right-menu-toggle]')) {
+    while (!$page->find('css', '.topRight_Menu')) {
       usleep(100);
     }
-    if ($elem = $page->find('css', 'div[right-menu-toggle]')) {
+    if ($elem = $page->find('css', '.topRight_Menu')) {
       $elem->click();
       sleep(1);
     }
@@ -3552,7 +3816,7 @@ JS;
    */
   public function iAmVerifyingTheDatePickerBehaviour() {
     $page = $this->getSession()->getPage();
-    $page->find('xpath', '//input[@id="edit-published"]')->click();
+    $page->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
 
     $month_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-month"]');
     $day_picker = $page->find('xpath', '//div[@id="edit-field-biblio-pub-day"]');
@@ -3577,6 +3841,7 @@ JS;
   public function iCreateANewPublicationWithADatePicker() {
     $this->randomizeMe();
     $this->getSession()->getDriver()->executeScript('CKEDITOR.instances["edit-title-field-und-0-value"].setData("' . $this->randomText . '");');
+    $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
     $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
     $this->getSession()->getPage()->pressButton('Save');
     $this->assertTextVisible("Forthcoming. “{$this->randomText},” 2010.");
@@ -3594,7 +3859,7 @@ JS;
 
     $this->getSession()->getPage()->find('xpath', '//input[@id="edit-biblio-year"]')->setValue('2010');
 
-    $page->find('xpath', '//input[@id="edit-published"]')->click();
+    $page->find('xpath', '//input[@id="edit-biblio-year-coded-0"]')->click();
     $page->find('xpath', '//div[@id="s2id_edit-field-biblio-pub-month-und"]//a[@class="select2-choice"]')->click();
     $page->find('xpath', '//ul[@class="select2-results"]//li[contains(@class, "select2-result-selectable")][3]')->click();
 

@@ -170,3 +170,15 @@ function os_pages_update_7008() {
   );
   variable_set($name, $value);
 }
+
+/**
+ * Revert strongarm variables to register enable_revisions setting
+ */
+function os_pages_update_7009() {
+  $revert = array(
+    'os_pages' => array(
+      'variable',
+    ),
+  );
+  features_revert($revert);
+}

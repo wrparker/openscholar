@@ -74,6 +74,9 @@ dependencies[] = os_mailchimp
 dependencies[] = os_slideshow
 dependencies[] = views_slideshow_cycle
 
+; misc
+dependencies[] = node_revision_restrict
+
 ; OS
 dependencies[] = citation_distribute
 dependencies[] = media_browser
@@ -95,6 +98,7 @@ dependencies[] = os_front
 dependencies[] = os_ga
 dependencies[] = os_help
 dependencies[] = os_importer
+dependencies[] = os_revisions
 dependencies[] = os_restful
 dependencies[] = os_rss
 dependencies[] = os_search_db
@@ -137,7 +141,6 @@ dependencies[] = os_taxonomy
 
 ; other
 dependencies[] = admin_panel
-dependencies[] = diff
 dependencies[] = entity_validator
 dependencies[] = metatag
 dependencies[] = metatag_opengraph
@@ -153,5 +156,3 @@ dependencies[] = views_infinite_scroll
 dependencies[] = web_widgets
 
 files[] = openscholar.profile
-
-

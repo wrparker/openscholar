@@ -1,20 +1,20 @@
 <div>
-    <div>These settings pertain to individual apps. If you are looking for visibility for your entire site, go to Global Settings > Site Visibility.</div>
+    <div class="margin_bottom-20">These settings pertain to individual apps. If you are looking for visibility for your entire site, go to Global Settings > Site Visibility.</div>
     <table class="apps-table enabled">
         <thead>
             <tr>
-                <th width="60%">Apps this website is using</th>
-                <th width="10%">&nbsp;</th>
-                <th width="20%">Who can see this?</th>
-                <th width="10%">Disable</th>
+                <th width="50%">Apps this website is using</th>
+                <th width="10%">Learn more</th>
+                <th width="15%">Who can see this?</th>
+                <th width="5%">Disable</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="a in apps | filter:{enabled: 1}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
-                <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
-                <td><span app-privacy-selector ng-model="a.private"></span></td>
-                <td><input type="checkbox" ng-model="a.disable"></td>
+                <td class="center-this"><a href="{{a.help}}" class="apps-help-link"></a></td>
+                <td><span app-privacy-selector ng-model="a.private" class="visibility-selector"></span></td>
+                <td class="center-this"><input type="checkbox" ng-model="a.disable"></td>
             </tr>
         </tbody>
     </table>
@@ -22,18 +22,18 @@
     <table class="apps-table disabled">
         <thead>
             <tr>
-                <th>Apps not currently used by this website</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>Enable</th>
+                <th width="50%">Apps not currently used by this website</th>
+                <th width="10%">Learn more</th>
+                <th width="15%">&nbsp;</th>
+                <th width="5%">Enable</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="a in apps | filter:{enabled: 0}" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
-                <td><a href="{{a.help}}" class="apps-help-link">Help Link</a></td>
+                <td class="center-this"><a href="{{a.help}}" class="apps-help-link"></a></td>
                 <td>&nbsp;</td>
-                <td><input type="checkbox" ng-model="a.enable"></td>
+                <td class="center-this"><input type="checkbox" ng-model="a.enable"></td>
             </tr>
         </tbody>
     </table>

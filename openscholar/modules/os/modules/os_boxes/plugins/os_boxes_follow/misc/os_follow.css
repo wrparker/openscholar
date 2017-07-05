@@ -1,7 +1,7 @@
 .follow-icon {
 	background-image: url('follow_icons.png');
-	width: 24px;
-	height: 28px;
+	width: 38px;
+	height: 38px;
 	text-indent: -999em;
 	display: inline-block;
 	padding: 0;
@@ -17,8 +17,8 @@
 }
 
 .block-boxes-os_boxes_follow .item-list ul li {
-  height: 32px;
-  line-height: 32px;
+  height: 38px;
+  line-height: 38px;
 }
 
 .service-name-span {

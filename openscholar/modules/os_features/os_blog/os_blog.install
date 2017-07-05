@@ -24,3 +24,10 @@ function os_blog_update_7002() {
 function os_blog_update_7003() {
   features_revert(array('os_blog' => array('field_instance')));
 }
+
+/**
+ * Change the formatter for blog teaser.
+ */
+function os_blog_update_7004() {
+  features_revert(array('os_blog' => array('field_instance')));
+}

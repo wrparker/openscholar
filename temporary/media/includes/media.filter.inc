@@ -111,6 +111,7 @@ function media_filter_parse_from_fields($entity_type, $entity) {
         preg_match_all(MEDIA_TOKEN_REGEX, $field_item['value'], $matches);
         foreach ($matches[0] as $tag) {
           $tag = str_replace(array('[[', ']]'), '', $tag);
+          $tag = str_replace('&amp;', '&', $tag);
           $tag_info = drupal_json_decode($tag);
           if (isset($tag_info['fid']) && $tag_info['type'] == 'media') {
             $file_references[] = $tag_info;
@@ -251,6 +252,7 @@ function media_token_to_markup($match, $wysiwyg = FALSE) {
   $settings = array();
   $match = str_replace("[[", "", $match);
   $match = str_replace("]]", "", $match);
+  $match = str_replace("&amp;", "&", $match);
   $tag = $match[0];
 
   try {
@@ -582,14 +584,14 @@ function media_format_form($form, $form_state, $file) {
       '#type' => 'textfield',
       '#title' => t('Alternate text'),
       '#description' => t('Appears when the image is loading or fails to load, important for accessibility.'),
-      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? $file->field_file_image_alt_text['und'][0]['safe_value'] : '',
+      '#default_value' => isset($file->field_file_image_alt_text['und'][0]['safe_value']) ? decode_entities($file->field_file_image_alt_text['und'][0]['safe_value']) : '',
     );
 
     $form['options']['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
-      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? $file->field_file_image_title_text['und'][0]['safe_value'] : '',
+      '#default_value' => isset($file->field_file_image_title_text['und'][0]['safe_value']) ? decode_entities($file->field_file_image_title_text['und'][0]['safe_value']) : '',
     );
   }
 

@@ -150,6 +150,7 @@ class os_boxes_follow extends os_boxes_default {
       $l = l($image, 'rss', array(
         'attributes' => array(
           'class' => array('rss-follow-icon'),
+          'target' => '_blank',
         ),
         'html' => TRUE,
       ));
@@ -157,7 +158,8 @@ class os_boxes_follow extends os_boxes_default {
         $service_name = '<span class="service-name-span">'.l('RSS', 'rss', array('attributes' => array(
             'class' => array(
               'follow-icon-service-name',
-            )
+            ),
+            'target' => '_blank',
           ))).'</span>';
         $links[0] = $l . $service_name;
       }
@@ -172,12 +174,14 @@ class os_boxes_follow extends os_boxes_default {
         'attributes' => array(
           'class' => 'follow-icon',
           'style' => 'background-position: -'.$domains[$n['domain']]['offset'].'px 0px',
+          'target' => '_blank',
         ))
       );
       // Build the service name link.
       $b = "<span class='service-name-span'>" . l(($this->options['display_service_name'] == 0) ? $domains[$n['domain']]['title'] : $n['title'], $n['title'], array(
         'attributes' => array(
-          'class' => 'follow-icon-service-name'
+          'class' => 'follow-icon-service-name',
+          'target' => '_blank',
         ))
       ) . "</span>";
       // If the option is selected to show the service name, concatenate the two.
@@ -308,77 +312,82 @@ function os_follow_default_networks() {
     'facebook'  => array(
       'title' => t('Facebook'),
       'domain' => 'facebook.com',
-      'offset' => 1056,
+      'offset' => 531,
     ),
     'virb'      => array(
       'title' => t('Virb'),
       'domain' => 'virb.com',
-      'offset' => 3232,
+      'offset' => 142,
     ),
     'myspace'   => array(
       'title' => t('MySpace'),
       'domain' => 'myspace.com',
-      'offset' => 2208,
+      'offset' => 290,
     ),
     'twitter'   => array(
       'title' => t('Twitter'),
       'domain' => 'twitter.com',
-      'offset' => 3104
+      'offset' => 189,
     ),
     'google_photos'    => array(
-      'title' => t('google_photos'),
+      'title' => t('Google Photos'),
       'domain' => 'photos.google.com',
-      'offset' => 2368,
+      'offset' => 676,
     ),
     'flickr'    => array(
       'title' => t('Flickr'),
       'domain' => 'flickr.com',
-      'offset' => 1152,
+      'offset' => 483,
     ),
     'youtube'   => array(
       'title' => t('YouTube'),
       'domain' => 'youtube.com',
-      'offset' => 3520,
+      'offset' => 94,
     ),
     'vimeo'     => array(
       'title' => t('Vimeo'),
       'domain' => 'vimeo.com',
-      'offset' => 3200,
+      'offset' => 47,
     ),
     'lastfm'    => array(
       'title' => t('last.fm'),
       'domain' => 'last.fm',
-      'offset' => 1920
+      'offset' => 389,
     ),
     'linkedin'  => array(
       'title' => t('LinkedIn'),
       'domain' => 'linkedin.com',
-      'offset' => 1952,
+      'offset' => 340,
     ),
     'delicious' => array(
       'title' => t('Delicious'),
       'domain' => 'del.icio.us',
-      'offset' => 704,
+      'offset' => 579,
     ),
     'tumblr'    => array(
       'title' => t('Tumblr'),
       'domain' => 'tumblr.com',
-      'offset' => 3072,
+      'offset' => 241,
     ),
     'pinterest'    => array(
       'title' => t('Pinterest'),
       'domain' => 'pinterest.com',
-      'offset' => 390,
+      'offset' => 0,
     ),
     'instagram'    => array(
       'title' => t('Instagram'),
       'domain' => 'instagram.com',
-     'offset' => 427,
+     'offset' => 630,
     ),
     'soundcloud'    => array(
       'title' => t('soundcloud'),
       'domain' => 'soundcloud.com',
-     'offset' => 1889,
+     'offset' => 436,
+    ),
+    'Google+'    => array(
+      'title' => t('Google+'),
+      'domain' => 'plus.google.com',
+      'offset' => 722,
     ),
   );
 
