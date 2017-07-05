@@ -76,6 +76,7 @@
   m.directive('appPrivacySelector', [function () {
     function mainClickHandler(e) {
       this.show = true;
+      document.body.addEventListener('click', this.cancelClickHandler, true);
       this.$digest();
     }
 
@@ -86,6 +87,12 @@
       e.stopPropagation();
       e.preventDefault();
     }
+
+    function cancelClickHandler(e) {
+      this.show = false;
+      this.$digest();
+    }
+
     return {
       template: '{{ val == "1" ? "Site Members" : "Everyone" }} <div class="privacy-popup" ng-show="show"><div class="privacy-popup-selector private" data-value="1" ng-class="{selected: val == 1}">Site Members</div><div class="privacy-popup-selector everyone" data-value="0" ng-class="{selected: val == 0}">Everyone</div></div>',
       scope: {
@@ -94,7 +101,8 @@
       link: function (scope, elem, attr) {
         scope.show = false;
         elem.bind('click', angular.bind(scope, mainClickHandler));
-        angular.element(elem[0].querySelectorAll('.privacy-popup-selector')).bind('click', angular.bind(scope, subClickHandler))
+        angular.element(elem[0].querySelectorAll('.privacy-popup-selector')).bind('click', angular.bind(scope, subClickHandler));
+        scope.cancelClickHandler = angular.bind(scope, cancelClickHandler);
       }
     }
   }]);
