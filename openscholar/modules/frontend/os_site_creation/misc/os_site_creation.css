@@ -69,12 +69,10 @@
   background-color: #EEE;
 }
 
-#site-creation-container #body-container-group-page-2,
-#site-creation-container #body-container-group-page-3{
+#site-creation-container #body-container-group-page-2 {
   margin: 130px 5px;
   overflow: hidden;
   border: 2px solid #CCC;
-  background-color: #EEE;
 }
 
 #site-creation-container .visibility{
