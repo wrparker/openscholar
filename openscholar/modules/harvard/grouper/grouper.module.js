@@ -1,24 +1,27 @@
 (function () {
 
-  var m = angular.module('grouper', ['DependencyManager']);
+  var m = angular.module('grouper', ['DependencyManager', 'os-buttonSpinner']);
 
   m.config(['DependenciesProvider', function ($depProvider) {
     $depProvider.AddDependency('formElement', 'grouper');
   }]);
 
-  m.directive('grouper', ['$http', function ($http) {
+  m.directive('grouper', ['$http', 'buttonSpinnerStatus', function ($http, bss) {
     var groups = [];
 
     var status = {
       loading: true,
     }
+    bss.SetState('grouper_AllGroups', true);
     $http.get(Drupal.settings.paths.api + '/grouper').then(function (resp) {
       console.log(resp);
       status.loading = false;
+      bss.SetState('grouper_AllGroups', false);
       Array.prototype.push.apply(groups, resp.data.data); // this adds group elements without creating a new array instance
     }, function (errorResp) {
       console.log(errorResp);
       status.loading = false;
+      bss.SetState('grouper_AllGroups', false);
     });
     return {
       scope: {

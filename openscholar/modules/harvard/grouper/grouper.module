@@ -156,7 +156,7 @@ function grouper_get_field_instance($entity_type, $bundle) {
  */
 function grouper_user_login(&$edit, $account) {
   // get the pin of the user's account
-  $huid = pinserver_authenticate_get_user_huid($account->uid);
+  //$huid = pinserver_authenticate_get_user_huid($account->uid);
 
   // call grouper service for all groups this user can see
   $grouper_url = variable_get('grouper_url', 'https://grouper-ws.stage.iam.harvard.edu/grouper-ws/servicesRest/v2_3_000/grouperPrivileges');
