@@ -4064,9 +4064,8 @@ function vsite_oembed_uri_fragments($uri) {
  */
 function vsite_redirect_load_by_source_existing_url_alter(&$source) {
   if(drupal_valid_path($source)) {
-    $vsite = vsite_get_vsite();
     //check if vsite exist.
-    if($vsite != ""){
+    if (module_exists('vsite') && $vsite = vsite_get_vsite()) {
       $provider = $vsite->purl_provider;
       // For vsite with custom domain name
       if ($provider == 'vsite_domain') {
