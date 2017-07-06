@@ -6,7 +6,7 @@
     paths = Drupal.settings.paths
   });
 
-  m.controller('siteCreationCtrl', ['$scope', '$http', '$rootScope', 'buttonSpinnerStatus', function($scope, $http, $rootScope, bss) {
+  m.controller('siteCreationCtrl', ['$scope', '$http', '$q', '$rootScope', 'buttonSpinnerStatus', function($scope, $http, $q, $rootScope, bss) {
 
   //Set default value for vsite
   $scope.vsite = {
@@ -40,7 +40,23 @@
   $scope.navigatePage = function(pagefrom, pageto) {
     $scope[pagefrom] = false;
     $scope[pageto] = true;
+    
   }
+
+  var queryArgs = {};
+  var promises = [];
+    if (Drupal.settings.spaces != undefined) {
+      if (Drupal.settings.spaces.id) {
+        queryArgs.vsite = Drupal.settings.spaces.id;
+      }
+    }
+    var config = {
+      params: queryArgs
+    };
+    $http.get(paths.api+'/themes', config).then(function (response) {
+      $scope.themes = response.data.data;
+    });
+
 
   //Set default value for Content Option
   $scope.contentOption = {

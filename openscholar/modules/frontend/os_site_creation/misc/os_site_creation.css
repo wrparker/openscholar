@@ -228,3 +228,34 @@
 #site-creation-container input[type=text]{
   border: 2px solid #CCC;
 }
+
+#site-creation-container #body-container-page3 {
+  overflow: scroll;
+}
+.onepage-themes {
+  float: left;
+}
+.onepage-themes div{
+  float: left;
+  padding: 0;
+  margin: 3px 20px 30px 3px;
+  display: inline-block;
+  vertical-align: top;
+  width: 245px;
+  height: 300px;
+  position: relative;
+  -moz-box-shadow: 0 0 7px #888;
+  -webkit-box-shadow: 0 0 7px #888;
+  box-shadow: 0 0 7px #888;
+  color: #fff;
+}
+.onepage-themes .theme-info{
+  position: absolute;
+  background: #3f74a2;
+  border-top: 1px solid #2a6598;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 12px;
+  height: 15px;
+}
