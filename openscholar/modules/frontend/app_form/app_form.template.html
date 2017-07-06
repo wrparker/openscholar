@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="a in apps | filter:{enabled: 1}" ng-class="{even: $even}">
+            <tr ng-repeat="a in apps | filter:{enabled: 1} | orderBy:'title'" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
                 <td class="center-this"><a href="{{a.help}}" class="apps-help-link"></a></td>
                 <td><span app-privacy-selector ng-model="a.private" class="visibility-selector"></span></td>
@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="a in apps | filter:{enabled: 0}" ng-class="{even: $even}">
+            <tr ng-repeat="a in apps | filter:{enabled: 0} | orderBy:'title'" ng-class="{even: $even}">
                 <td>{{a.title}}</td>
                 <td class="center-this"><a href="{{a.help}}" class="apps-help-link"></a></td>
                 <td>&nbsp;</td>
