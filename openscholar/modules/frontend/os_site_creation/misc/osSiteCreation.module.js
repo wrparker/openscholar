@@ -40,7 +40,7 @@
   $scope.navigatePage = function(pagefrom, pageto) {
     $scope[pagefrom] = false;
     $scope[pageto] = true;
-    
+
   }
 
   var queryArgs = {};
@@ -56,10 +56,12 @@
     $http.get(paths.api+'/themes', config).then(function (response) {
       $scope.themes = response.data.data;
     });
+    $scope.selected = false;
     $scope.selectedOption = {key: 'default'};
     $scope.setTheme = function(themeKey) {
       // @Todo
       console.log(themeKey);
+      $scope.selected = themeKey;
     }
 
 
@@ -112,7 +114,7 @@
     };
 
     function link(scope, elem, attrs) {
-		
+
       elem.bind('click', function (e) {
         e.preventDefault();
         e.stopPropagation();

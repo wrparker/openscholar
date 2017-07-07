@@ -76,7 +76,7 @@
         <div id="body-container-group-2">
             <div class="visibility">
               <div>
-                <span class="enlarged-text" ng-switch="vsite.value">Choose who can view your site: 
+                <span class="enlarged-text" ng-switch="vsite.value">Choose who can view your site:
                   <b ng-switch-when="0">Public on the web</b>
                   <b ng-switch-when="1">Invite only during site creation</b>
                   <b ng-switch-when="2">Anyone with a link</b>
@@ -92,10 +92,10 @@
                   Only site members can view your site. Your site will not be indexed by search engines.
                 </p>
                 <p><input type="radio" ng-model="vsite.value" value="2"><b>Anyone with a link</b><br>
-                  Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines. 
+                  Anyone who has the URL to your site can view your site. Your site will not be indexed by search engines.
                 </p>
                 <p><input type="radio" ng-model="vsite.value" value="3"><b>Harvard Community</b><br>
-                  Only the harvard community can access your site. Sign-in via HarvardKey required. 
+                  Only the harvard community can access your site. Sign-in via HarvardKey required.
                 </p>
               </div>
             </div>
@@ -139,7 +139,7 @@
               </p>
               <p><input type="radio" ng-model="contentOption.value" value="os_department">
               <span class="enlarged-text"><b>Academic Department with pre-set menu links and pages</b></span><br>
-              Academic, Research, and People links will be added to the main menu. Don't worry, you'll be able to change this later if you are't sure now. 
+              Academic, Research, and People links will be added to the main menu. Don't worry, you'll be able to change this later if you are't sure now.
               </p>
               <p><input type="radio" ng-model="contentOption.value" value="hwp_administrative">
               <span class="enlarged-text"><b>Administrative Department with pre-set menu links and pages</b></span><br>
@@ -183,11 +183,11 @@
             <div class="onepage-themes">
               <h2>One page / horizontal homepage layout themes</h2>
               <h3>Mobile-friendly themes with horizontal homepage regions. How to use these themes.</h3>
-              <div ng-repeat="theme in themes" ng-class="{even: $even, odd: $odd}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
+              <div ng-repeat="theme in themes" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
                 <img ng-src="{{theme.screenshot}}">
                 <div class="theme-info">
                   <span>{{theme.name}}</span>
-                  <div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">Flavors 
+                  <div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">Flavors
                     <div class="form-item form-type-select">
                       <select name="flavorSelect" id="flavorSelect" ng-options="option.name for option in theme.flavorOptions track by option.key" ng-model="selectedOption"></select>
                     </div>
