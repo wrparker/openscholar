@@ -968,7 +968,7 @@ function vsite_admin_paths_alter(&$paths){
 /**
  * Implements hook_vsite_og_node_type_info().
  */
-function vsite_vsite_og_node_type_info(){
+function vsite_vsite_og_node_type_info() {
   return array(
     'personal' => 'group',
     'project' => 'group',
@@ -2579,7 +2579,6 @@ function vsite_mail($key, &$message, $params){
     case 'user_mail' :
     case 'user_copy' :
       $user = $params['user'];
-      $account = $params['account'];
       $vsite = $params['vsite'];
       $message['subject'] = $params['subject'] . ' [via ' . variable_get('site_name', 'Drupal') . ']';
       $message['body'][] = $params['message'];
@@ -2615,6 +2614,7 @@ function vsite_mail($key, &$message, $params){
           'absolute' => TRUE,
           'language' => $language,
         ))));
+      $message['from'] = $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
       break;
   }
 }

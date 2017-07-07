@@ -856,7 +856,6 @@ class FeatureContext extends DrupalContext {
 
     print "\n" . 'I visit "/' . $vsite . '#overlay=' . $vsite . '/os/widget/add/' . $widgetType . '/cp-layout"' . "\n";
 
-
     foreach ($hash as $form_elements) {
       switch ($form_elements[2]) {
         case 'select list':
@@ -934,7 +933,7 @@ class FeatureContext extends DrupalContext {
 
     $metasteps = array();
     // @TODO: Don't use the hard coded address - remove john from the address.
-    $this->visit('john/os/widget/boxes/' . $delta . '/edit');
+    $this->visit(FeatureHelp::getVsitePurl($this->nid) . '/os/widget/boxes/' . $delta . '/edit');
 
     // @TODO: Use XPath to fill the form instead of giving the type of the in
     // the scenario input.
@@ -1549,7 +1548,6 @@ class FeatureContext extends DrupalContext {
    */
   public function iSearchFor($item) {
     return array(
-      new Step\When('I visit "john"'),
       new Step\When('I fill in "search_block_form" with "'. $item . '"'),
       new Step\When('I press "Search"'),
     );
@@ -3933,4 +3931,12 @@ JS;
       );
     }
   }
+
+  /**
+   * @Given /^I set the default site to "([^"]*)"$/
+   */
+  public function iSetTheDefaultSiteTo($site) {
+    $this->nid = FeatureHelp::getNodeId($site);
+  }
+
 }
