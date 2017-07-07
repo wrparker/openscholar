@@ -123,7 +123,7 @@ class OSRestfulCPMenu extends \RestfulBase implements \RestfulDataProviderInterf
         break;
       case 'directive':
         // ?????????
-        $menuItem['access'] = true; // what do we even do here?
+        $menuItem['access'] = spaces_access_admin(); // what do we even do here?
         break;
     }
 
