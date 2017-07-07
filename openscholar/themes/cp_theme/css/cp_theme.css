@@ -1886,6 +1886,10 @@ body.page-node-revisions .node {
   cursor: pointer
 }
 
+div.no-bold {
+    font-weight: normal;
+}
+
  .visibility-selector {
 
      background: url('../images/cp-sprite.png') no-repeat 100px -767px;
@@ -1897,5 +1901,4 @@ body.page-node-revisions .node {
 
      cursor:pointer;
  }
-
 
