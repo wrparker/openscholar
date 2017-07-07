@@ -22,7 +22,7 @@ class OsRestfulThemes extends \RestfulBase implements \RestfulDataProviderInterf
    * {@inheritdoc}
    */
   public function publicFieldsInfo() {
-
+     return array();
   }
 
   /**
@@ -33,7 +33,7 @@ class OsRestfulThemes extends \RestfulBase implements \RestfulDataProviderInterf
     ctools_include('themes', 'os');
     $themes = os_get_themes();
     ksort($themes);
-    $radio_options = array();
+    $flavor_options = array();
     $default_flavor = '';
 
     $themes_sorted = array();
@@ -48,9 +48,11 @@ class OsRestfulThemes extends \RestfulBase implements \RestfulDataProviderInterf
       if ((!in_array($theme->name, $featured_themes) || !count(os_theme_get_flavors($info['theme_name']))) && empty($theme->info['single'])) {
         // Only continues if this theme has flavors.
         $theme_flavors = os_theme_get_flavors($info['theme_name']);
-        $flavor_options = _cp_appearance_get_flavor_options($theme_flavors, $info, $default_flavor);
+        foreach (_cp_appearance_get_flavor_options($theme_flavors, $info, $default_flavor) as $key => $value) {
+          $flavor_options[] = array('key' => $key, 'name' => $value);
+        }
       }
-      $output[] = array('label' => $info['theme_name'], 'screenshot' => $info['screenshot'], 'flavor_name' => $info['flavor_name'], 'flavor_options' => $flavor_options);
+      $output[] = array('name' => $info['name'], 'themeKey' => $info['theme_name'], 'screenshot' => $info['screenshot'], 'flavorName' => $info['flavor_name'], 'flavorOptions' => $flavor_options);
 
     }
 

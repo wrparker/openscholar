@@ -56,6 +56,11 @@
     $http.get(paths.api+'/themes', config).then(function (response) {
       $scope.themes = response.data.data;
     });
+    $scope.selectedOption = {key: 'default'};
+    $scope.setTheme = function(themeKey) {
+      // @Todo
+      console.log(themeKey);
+    }
 
 
   //Set default value for Content Option

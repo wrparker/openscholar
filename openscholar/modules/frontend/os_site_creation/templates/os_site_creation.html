@@ -183,9 +183,16 @@
             <div class="onepage-themes">
               <h2>One page / horizontal homepage layout themes</h2>
               <h3>Mobile-friendly themes with horizontal homepage regions. How to use these themes.</h3>
-              <div ng-repeat="theme in themes" ng-class="{even: $even, odd: $odd}" class="{{theme.label}}">
+              <div ng-repeat="theme in themes" ng-class="{even: $even, odd: $odd}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
                 <img ng-src="{{theme.screenshot}}">
-                <span class="theme-info">{{theme.label}}</span>
+                <div class="theme-info">
+                  <span>{{theme.name}}</span>
+                  <div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">Flavors 
+                    <div class="form-item form-type-select">
+                      <select name="flavorSelect" id="flavorSelect" ng-options="option.name for option in theme.flavorOptions track by option.key" ng-model="selectedOption"></select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="featured-themes">
