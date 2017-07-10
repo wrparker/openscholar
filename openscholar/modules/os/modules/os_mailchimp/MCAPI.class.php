@@ -1563,14 +1563,15 @@ class MCAPI {
     function listSubscribe($id, $email_address, $merge_vars=NULL, $email_type='html', $double_optin=true, $update_existing=false, $replace_interests=true, $send_welcome=false) {
         $params = array();
         $params["id"] = $id;
+        $params["status"] = 'subscribed';
         $params["email_address"] = $email_address;
-        $params["merge_vars"] = $merge_vars;
+        $params["merge_fields"] = $merge_vars;
         $params["email_type"] = $email_type;
         $params["double_optin"] = $double_optin;
         $params["update_existing"] = $update_existing;
         $params["replace_interests"] = $replace_interests;
         $params["send_welcome"] = $send_welcome;
-        return $this->callServer("listSubscribe", $params);
+        return $this->callServer("lists/$id/members/", $params,"POST");
     }
 
     /**
@@ -2435,7 +2436,7 @@ class MCAPI {
         } else if ($action == "DELETE") {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         }
-        
+
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->ssl);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
