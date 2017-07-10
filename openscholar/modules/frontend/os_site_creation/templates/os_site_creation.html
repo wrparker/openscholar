@@ -180,10 +180,10 @@
       <div id="body-container-page3">
         <div id="body-container-group-page-3">
           <div class="visibility">
-            <div class="onepage-themes">
+            <div ng-if="themes.single.length > 0" class="os-themes onepage-themes">
               <h2>One page / horizontal homepage layout themes</h2>
-              <h3>Mobile-friendly themes with horizontal homepage regions. How to use these themes.</h3>
-              <div ng-repeat="theme in themes" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
+              <h3>Mobile-friendly themes with horizontal homepage regions. <a href="http://docs.openscholar.harvard.edu/one-page-themes">How to use these themes.</a>.</h3>
+              <div ng-repeat="theme in themes.single" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
                 <img ng-src="{{theme.screenshot}}">
                 <div class="theme-info">
                   <span>{{theme.name}}</span>
@@ -195,21 +195,34 @@
                 </div>
               </div>
             </div>
-            <div class="featured-themes">
+            <div ng-if="themes.featured.length > 0" class="os-themes featured-themes">
               <h2>Featured themes</h2>
               <h3>Mobile-friendly themes using Harvard color palettes.</h3>
-              <div class=“theme-name-one”>
-                <img src=“thumbnail-1.png”>
-                <span>Theme Name One</span>
+               <div ng-repeat="theme in themes.featured" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
+                <img ng-src="{{theme.screenshot}}">
+                <div class="theme-info">
+                  <span>{{theme.name}}</span>
+                  <div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">Flavors
+                    <div class="form-item form-type-select">
+                      <select name="flavorSelect" id="flavorSelect" ng-options="option.name for option in theme.flavorOptions track by option.key" ng-model="selectedOption"></select>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class=“theme-name-two”>
-                <img src=“thumbnail-2.png”>
-                <span>Theme Name Two</span>
+            </div>
+            <div ng-if="themes.others.length > 0" class="os-themes others-themes">
+              <h2>Other themes</h2>
+               <div ng-repeat="theme in themes.others" ng-class="{even: $even, odd: $odd, selected: selected == theme.themeKey}" class="cp-themes {{theme.themeKey}}" ng-click="setTheme(theme.themeKey)">
+                <img ng-src="{{theme.screenshot}}">
+                <div class="theme-info">
+                  <span>{{theme.name}}</span>
+                  <div ng-if="theme.flavorOptions.length > 0" class="cp-appearance-flavor-list">Flavors
+                    <div class="form-item form-type-select">
+                      <select name="flavorSelect" id="flavorSelect" ng-options="option.name for option in theme.flavorOptions track by option.key" ng-model="selectedOption"></select>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class=“theme-name-three”>
-                <img src=“thumbnail-3.png”>
-                <span>Theme Name Three</span>
-               </div>
             </div>
           </div>
         </div>

@@ -59,6 +59,7 @@
     $scope.selected = false;
     $scope.selectedOption = {key: 'default'};
     $scope.setTheme = function(themeKey) {
+      $scope.selected = themeKey;
       // @Todo
       console.log(themeKey);
       $scope.selected = themeKey;
