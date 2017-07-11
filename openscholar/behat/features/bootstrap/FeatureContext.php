@@ -2334,7 +2334,6 @@ class FeatureContext extends DrupalContext {
     );
 
     $vsite_id = FeatureHelp::getNodeId($group);
-    $features = FeatureHelp::GetNodeAlias()
 
     return array(
       new Step\When('I select "' . $status . '" from "' . $feature . '"'),
