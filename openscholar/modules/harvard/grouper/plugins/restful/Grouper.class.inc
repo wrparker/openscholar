@@ -28,11 +28,12 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
       return $cache->data;
     }
     else {
-      $grouper_url = variable_get('grouper_url', 'https://{user}:{pass}@grouper-ws.qa.iam.harvard.edu/grouper-ws-facade/v1/user/huid:{huid}/viewablegroups');
+      $grouper_url = variable_get('grouper_url', 'https://{user}:{pass}@grouper-ws.stage.iam.harvard.edu/grouper-ws-facade/v1/user/huid:{huid}/{accessLevel}');
       $replacements = array(
         '{user}' => variable_get('grouper_user', 'grouper-ws-service-account-at-open-scholar'),
         '{pass}' => variable_get('grouper_pass', 'grouper12345678'),
-        '{huid}' => $huid
+        '{huid}' => $huid,
+        '{accessLevel}' => 'viewablegroups',
       );
       $grouper_url = strtr($grouper_url, $replacements);
 
