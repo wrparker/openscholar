@@ -383,6 +383,12 @@ projects[services][download][revision] = 761e620
 projects[services_basic_auth][subdir] = "contrib"
 projects[services_basic_auth][version] = "1.3"
 
+projects[siteimprove][subdir] = "contrib"
+projects[siteimprove][type] = module
+projects[siteimprove][download][type] = git
+projects[siteimprove][download][url] = "git://git.drupal.org/project/siteimprove.git"
+projects[siteimprove][download][tag] = 7.x-1.0
+
 projects[spaces][subdir] = "contrib"
 ;projects[spaces][version] = 3.0-alpha1+9-dev
 projects[spaces][revision] = "eac3a7e"
