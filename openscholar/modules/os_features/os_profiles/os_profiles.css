@@ -2,7 +2,6 @@
     clear: both;
 
 }
-
 #content .node-person .field-name-field-person-photo,
 #content .node-person .no-default-image,
 .block-boxes-os_boxes_manual_list .node-person .field-name-field-person-photo,
@@ -12,6 +11,9 @@
 #content .node-person .field-name-og-vocabulary {
     float: left;
     margin-right: 1em;
+}
+#content .node-person .view-mode-full .field-name-field-person-photo {
+    margin-right: 3em !important;
 }
 #content .node-person .os-slider .field-name-field-email,
 #content .node-person .field-name-field-phone,

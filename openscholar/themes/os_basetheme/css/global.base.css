@@ -459,6 +459,10 @@ ol {
     margin: 0 0 1.5em 17px;
     padding: 0;
 }
+.node-person .view-mode-full ul li, ol li {
+    list-style-position: inside;
+    text-indent: -2em;
+}
 .field-name-body ol {
     margin: 0 0 1.5em 21px;
 }
