@@ -12,7 +12,7 @@
     float: left;
     margin-right: 1em;
 }
-#content .node-person .view-mode-full .field-name-field-person-photo {
+#content .node-person .full_person_photo .field-name-field-person-photo {
     margin-right: 3em !important;
 }
 #content .node-person .os-slider .field-name-field-email,

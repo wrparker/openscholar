@@ -237,6 +237,9 @@ function hwpi_basetheme_node_view_alter(&$build) {
       if ($build['#view_mode'] == 'sidebar_teaser') {
         $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix people-sidebar-teaser">';
       }
+      else if($build['#view_mode'] == 'full') {
+        $build['pic_bio']['#prefix'] = '<div class="pic-bio full_person_photo clearfix">';
+      }
       else {
         $build['pic_bio']['#prefix'] = '<div class="pic-bio clearfix">';
       }
