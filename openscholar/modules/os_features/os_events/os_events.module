@@ -2350,8 +2350,17 @@ function os_events_mail_alter(&$message) {
     }
 
     //Get the value of event creator email for broadcast.
-    if ($event_author_email == ""){
-      $event_author_email = $message['from'];
+    if ($event_author_email == "") {
+        $node = node_load($message['params']['context']['entity_id']);
+        $registration_settings = registration_entity_settings('node', $node->nid);
+
+      if($registration_settings['settings']['confirmation']) {
+        $event_author_email = $message['from'];
+      }
+      else {
+        $user = user_load($node->uid);
+        $event_author_email = $user->mail;
+      }
     }
 
     // Set default value of the "From" field to author of the event's e-mail
