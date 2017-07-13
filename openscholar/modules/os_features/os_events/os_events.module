@@ -2328,7 +2328,6 @@ function os_events_mail($key, &$message, $params) {
  * Implements hook_mail_alter().
  */
 function os_events_mail_alter(&$message) {
-  watchdog('message','<pre>'.print_r($message,TRUE).'</pre>');
   //Array for event mails
   $eventEmailArr = array("broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification","user_mail","user_copy");
 
