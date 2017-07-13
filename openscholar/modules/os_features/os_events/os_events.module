@@ -153,12 +153,26 @@ function os_events_get_access_token_with_auth_code() {
 }
 
 function os_events_gcal_create_calendar() {
-  global $is_https;
+  global $is_https, $user;
 
   // Get the API client and construct the service object.
   $client = getClient();
 
-  // Redirect URI is required to be absolute
+  # Ensure the user is a member of this group
+  $vsites_member = vsite_get_user_vsites($user->id);
+  $has_access = false;
+  foreach ($vsites_member as $vm) {
+      if ($vm->group->nid == $_GET[state]) {
+        $has_access = true;
+        break;
+      }
+  }
+
+  # If the user is not a member of the group, deny access
+  if (! $has_access) {
+    drupal_access_denied();
+  }
+
   // The vsite group ID is stored in the state parameter
   $vsite = vsite_get_vsite($_GET[state]);
   $redirectUri = url('/calendar');
