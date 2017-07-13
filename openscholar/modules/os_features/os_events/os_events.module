@@ -2328,6 +2328,7 @@ function os_events_mail($key, &$message, $params) {
  * Implements hook_mail_alter().
  */
 function os_events_mail_alter(&$message) {
+  watchdog('message','<pre>'.print_r($message,TRUE).'</pre>');
   //Array for event mails
   $eventEmailArr = array("broadcast","registration_confirmation","event_cancel_notification","event_time_updated_notification","user_mail","user_copy");
 
@@ -2343,7 +2344,7 @@ function os_events_mail_alter(&$message) {
 
     //Get the value of event creator email for all event related emails except broadcast.
     foreach($message['params'] as $param_key => $param_value){
-      if ($param_key == '@event_creator_email' || $param_key == '@event-creator-email'){
+      if ($param_key == '@event_creator_email' || $param_key == '@event-creator-email' || $param_key == '@event-creator-mail') {
        // Get event author event's author email address.
        $event_author_email = check_plain(trim($param_value));
       }
@@ -2367,7 +2368,7 @@ function os_events_mail_alter(&$message) {
     $message['headers']['From'] = $message['from'] = $event_author_email;
 
     // Set the sender and return-path headers.
-    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $message['headers']['From'];
+    $message['headers']['Sender'] = $message['headers']['Return-Path'] = $event_author_email;
   }
   else {
     // Set default value of the "From" field.
