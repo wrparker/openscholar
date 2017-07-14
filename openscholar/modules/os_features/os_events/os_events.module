@@ -162,7 +162,7 @@ function os_events_gcal_create_calendar() {
   $vsites_member = vsite_get_user_vsites($user->id);
   $has_access = false;
   foreach ($vsites_member as $vm) {
-      if ($vm->group->nid == $_GET[state]) {
+      if ($vm->group->nid == $_GET["state"]) {
         $has_access = true;
         break;
       }
@@ -174,7 +174,7 @@ function os_events_gcal_create_calendar() {
   }
 
   // The vsite group ID is stored in the state parameter
-  $vsite = vsite_get_vsite($_GET[state]);
+  $vsite = vsite_get_vsite($_GET["state"]);
   $redirectUri = url('/calendar');
   $client->setRedirectUri($redirectUri);
 
