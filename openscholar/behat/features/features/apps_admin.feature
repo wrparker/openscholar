@@ -2,7 +2,7 @@ Feature:
   Testing the managing of OpenScholar
 
 
-  @api @features_first @javascript
+  @api @features_first @javascript @single-test
   Scenario: Check that all of the apps are turned on
     Given I am logging in as "john"
       And I visit "john"

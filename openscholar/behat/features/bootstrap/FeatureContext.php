@@ -132,6 +132,11 @@ class FeatureContext extends DrupalContext {
    */
   public function iAmLoggingInAs($username) {
 
+    error_log("EAM trace " . __FILE__ . ":" . __LINE__ . ", \$this->getSession()->getCurrentUrl() = " . var_export(($this->getSession()->getCurrentUrl()), true));
+    error_log("EAM trace " . __FILE__ . ":" . __LINE__ . ", \$this->getSession()->getPage() = " . var_export(($this->getSession()->getPage()), true));
+    error_log("EAM trace " . __FILE__ . ":" . __LINE__ . ", \$this->getSession()->getPage()->getContent() = " . var_export(($this->getSession()->getPage()->getContent()), true));
+    error_log("EAM trace " . __FILE__ . ":" . __LINE__ . ", \$this->locatePath('/user') = " . $this->locatePath('/user'));
+
     try {
       $password = $this->users[$username];
     }
