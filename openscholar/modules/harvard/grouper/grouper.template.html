@@ -1,6 +1,6 @@
 <div ng-cloak>
     <div class="grouper-header-bar" ng-click="ShowPanel(true)">
-        <span ng-show="status.loading" button-spinner="grouper_AllGroups" spinning-text="Loading Groups"><span></span></span>
+        <div><span ng-show="status.loading" button-spinner="grouper_AllGroups" spinning-text="Loading Groups"><span></span></span></div>
         {{selected.length ? 'Edit Groups' : 'Add Groups'}}
         <span ng-if="!status.loading && !ShowPanel() && selected.length">{{SelectedGroupNames()}}</span>
         </div>
