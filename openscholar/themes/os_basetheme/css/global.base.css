@@ -459,7 +459,7 @@ ol {
     margin: 0 0 1.5em 17px;
     padding: 0;
 }
-.node-person .view-mode-full ul li, ol li {
+.node-content .view-mode-full ul li, ol li {
     list-style-position: inside;
     text-indent: -2em;
 }
@@ -1135,4 +1135,8 @@ ul.no-event-export {
 .content-right.content-bottom #content-column .os-sv-list.sv-list-view-slide_teaser iframe,
 .block-boxes-os_boxes_columns .os-sv-list.sv-list-view-slide_teaser iframe {
     height: auto;
+}
+.media-element-container {
+    height: auto !important;
+    margin: 0 1.5em 0 1em;
 }
