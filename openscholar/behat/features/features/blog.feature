@@ -71,16 +71,6 @@ Feature:
      Then I should see "Another day in the life of The POTUS."
       And I should see "Each day the President eats lunch."
 
- @api @features_first @delete_any_blog_content @os_blog
- Scenario: Delete blog content
-    Given I am logged in as "john"
-     When I visit "/blog/day-life-potus"
-     When I click on the element with css selector "li.link-count-node-delete a[href*='/delete']"
-     When I sleep for "4"
-     When I press "Delete"
-     When I sleep for "2"
-     Then I should see "Blog entry A day in the life of The POTUS has been deleted."
-
  @api @features_first @administer_blog_settings @os_blog
  Scenario: Administer Blog Settings
     Given I am logged in as "john"
@@ -108,3 +98,13 @@ Feature:
      When I press "Save"
      When I sleep for "10"
      Then I should not see "Add new comment"
+
+ @api @features_first @delete_any_blog_content @os_blog
+ Scenario: Delete blog content
+    Given I am logged in as "john"
+     When I visit "/blog/day-life-potus"
+     When I click on the element with css selector "li.link-count-node-delete a[href*='/delete']"
+     When I sleep for "4"
+     When I press "Delete"
+     When I sleep for "2"
+     Then I should see "Blog entry A day in the life of The POTUS has been deleted."
