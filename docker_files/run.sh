@@ -99,7 +99,7 @@ if [ $DOCKER_DEBUG -eq 1 ]; then
 else
   # Run tests
   echo -e "\n # Run tests"
-  ./bin/behat --tags="@os_blog"
+  ./bin/behat --verbose --tags="@os_blog"
 
 
   if [ $? -ne 0 ]; then
