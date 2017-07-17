@@ -48,13 +48,63 @@ Feature:
       And I sleep for "2"
      Then I should see "Please enter a valid date for 'Posted on'"
 
- # os_blog	/ content management	/ create new blog content
- @api @features_first @create_new_blog_content
-  Scenario: Create new blog content
-    Given I am logging in as "john"
+ @api @features_first @create_new_blog_content @os_blog
+ Scenario: Create new blog content
+    Given I am logged in as "john"
       And I visit "node/add/blog"
      When I fill in "Title" with "A day in the life of The POTUS."
      When I fill in "Body" with "Each day the President is briefed."
       And I press "Save"
       And I sleep for "2"
      Then I should see "A day in the life of The POTUS"
+      And I should see "Each day the President is briefed."
+
+ @api @features_first @edit_existing_blog_content @os_blog
+ Scenario: Edit existing blog content
+    Given I am logged in as "john"
+      And I visit "/blog/day-life-potus"
+      And I click on the element with css selector "link-count-node-edit first"
+     When I fill in "Title" with "Another day in the life of The POTUS."
+     When I fill in "Body" with "Each day the President eats lunch."
+      And I press "Save"
+      And I sleep for "2"
+     Then I should see "Another day in the life of The POTUS."
+      And I should see "Each day the President eats lunch."
+
+ @api @features_first @delete_any_blog_content @os_blog
+ Scenario: Delete blog content
+    Given I am logged in as "john"
+     When I visit "/blog/day-life-potus"
+     When I click on the element with css selector "li.link-count-node-delete a[href*='/delete']"
+     When I sleep for "4"
+     When I press "Delete"
+     When I sleep for "2"
+     Then I should see "Blog entry A day in the life of The POTUS has been deleted."
+
+ @api @features_first @administer_blog_settings @os_blog
+ Scenario: Administer Blog Settings
+    Given I am logged in as "john"
+     When I visit "/blog"
+     When I click on the element with css selector "span#blog_comments"
+     When I sleep for "2"
+     Then I should see "Choose which comment type you'd like to use"
+
+ @api @features_first @select_private_comments @os_blog
+ Scenario: Select "Private comments"
+    Given I am logged in as "john"
+      And I visit "/blog"
+     When I click on the element with css selector "span#blog_comments"
+     When I click on the element with css selector "input#edit-blog-comments-settings-comment"
+     When I press "Save"
+     When I sleep for "10"
+     Then I should see "Add new comment"
+
+ @api @features_first @select_no_comments @os_blog
+ Scenario: Select "No Comments"
+    Given I am logged in as "john"
+      And I visit "/blog"
+     When I click on the element with css selector "span#blog_comments"
+     When I click on the element with css selector "input#edit-blog-comments-settings-nc"
+     When I press "Save"
+     When I sleep for "10"
+     Then I should not see "Add new comment"
