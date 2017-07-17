@@ -47,3 +47,14 @@ Feature:
       And I press "Save"
       And I sleep for "2"
      Then I should see "Please enter a valid date for 'Posted on'"
+
+ # os_blog	/ content management	/ create new blog content
+ @api @features_first @create_new_blog_content
+  Scenario: Create new blog content
+    Given I am logging in as "john"
+      And I visit "node/add/blog"
+     When I fill in "Title" with "A day in the life of The POTUS."
+     When I fill in "Body" with "Each day the President is briefed."
+      And I press "Save"
+      And I sleep for "2"
+     Then I should see "A day in the life of The POTUS"
