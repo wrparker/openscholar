@@ -1,0 +1,26 @@
+diff --git a/apachesolr_search.admin.inc b/apachesolr_search.admin.inc
+index 1a8b159..80ca24e 100644
+--- a/apachesolr_search.admin.inc
++++ b/apachesolr_search.admin.inc
+@@ -824,7 +824,7 @@ function apachesolr_search_field_bias_form($fields, $env_id) {
+     'content' => '1.0',
+     'ts_comments' => '0.5',
+     'tos_content_extra' => '0.1',
+-    'label' => '5.0',
++    'label' => '8.0',
+     'tos_name' => '3.0',
+     'taxonomy_names' => '2.0',
+     'tags_h1' => '5.0',
+diff --git a/apachesolr_search.module b/apachesolr_search.module
+index 63f30d7..3f7bfee 100644
+--- a/apachesolr_search.module
++++ b/apachesolr_search.module
+@@ -1176,7 +1176,7 @@ function apachesolr_search_add_boost_params(DrupalSolrQueryInterface $query) {
+     'content' => '1.0',
+     'ts_comments' => '0.5',
+     'tos_content_extra' => '0.1',
+-    'label' => '5.0',
++    'label' => '8.0',
+     'tos_name' => '3.0',
+     'taxonomy_names' => '2.0',
+     'tags_h1' => '5.0',
