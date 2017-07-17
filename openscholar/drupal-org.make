@@ -8,6 +8,7 @@ projects[advagg][version] = 2.6
 
 projects[apachesolr][subdir] = "contrib"
 projects[apachesolr][version] = 1.6
+projects[apachesolr][patch][] = "https://raw.githubusercontent.com/openscholar/openscholar/9beb66f099d44bb4f5a5b8bc97b14f6f6913f9db/patches/apachesolr-9604-modify-search-boost.patch"
 
 projects[apachesolr_attachments][subdir] = "contrib"
 projects[apachesolr_attachments][version] = 1.2
