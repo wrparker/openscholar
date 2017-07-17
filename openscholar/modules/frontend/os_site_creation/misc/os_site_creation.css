@@ -68,13 +68,10 @@
   border: 2px solid #CCC;
   background-color: #EEE;
 }
-
-#site-creation-container #body-container-group-page-2,
-#site-creation-container #body-container-group-page-3{
+#site-creation-container #body-container-group-page-2 {
   margin: 130px 5px;
   overflow: hidden;
   border: 2px solid #CCC;
-  background-color: #EEE;
 }
 
 #site-creation-container .visibility{
@@ -103,7 +100,7 @@
   width: 30%;
 }
 
-#site-creation-container a, 
+#site-creation-container a,
 #site-creation-container a:visited{
   text-decoration: none;
 }
@@ -229,4 +226,52 @@
 
 #site-creation-container input[type=text]{
   border: 2px solid #CCC;
+}
+
+#site-creation-container #body-container-page3 {
+  overflow: scroll;
+}
+.os-themes {
+  float: left;
+}
+.os-themes .cp-themes{
+  float: left;
+  padding: 0;
+  margin: 3px 20px 30px 3px;
+  display: inline-block;
+  vertical-align: top;
+  width: 245px;
+  height: 300px;
+  position: relative;
+  -moz-box-shadow: 0 0 7px #888;
+  -webkit-box-shadow: 0 0 7px #888;
+  box-shadow: 0 0 7px #888;
+  color: #fff;
+  cursor: pointer;
+}
+.os-themes .cp-themes.selected {
+  box-shadow: 0px 0px 10px 10px #888;
+}
+.os-themes .theme-info{
+  position: absolute;
+  background: #3f74a2;
+  border-top: 1px solid #2a6598;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 12px;
+  height: 15px;
+}
+.os-themes .theme-info .cp-appearance-flavor-list {
+  text-align: right;
+  float: right;
+}
+.os-themes .theme-info .form-type-select {
+  float: right;
+  margin: -4px 0 0 10px;
+  width: 60%;
+  padding: 2px 0;
+}
+.os-themes .theme-info .form-type-select select{
+  max-width: 90px;
 }
