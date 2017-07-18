@@ -164,10 +164,10 @@ function grouper_user_login(&$edit, $account) {
   //$huid = pinserver_authenticate_get_user_huid($account->uid);
 
   // call grouper service for all groups this user can see
-  $grouper_url = variable_get('grouper_url', 'https://{user}:{pass}@grouper-ws.stage.iam.harvard.edu/grouper-ws-facade/v1/user/huid:{huid}/{accessLevel}');
+  $grouper_url = variable_get('grouper_url', 'https://{user}:{pass}@grouper-ws-prod-pub.gslb.harvard.edu/grouper-ws-facade/v1/user/huid:{huid}/{accessLevel}');
   $replacements = array(
-    '{user}' => variable_get('grouper_user', 'grouper-ws-service-account-at-open-scholar'),
-    '{pass}' => variable_get('grouper_pass', 'grouper12345678'),
+    '{user}' => variable_get('grouper_user'),
+    '{pass}' => variable_get('grouper_pass'),
     '{huid}' => $huid,
     '{accessLevel}' => 'groups',
   );
@@ -176,10 +176,6 @@ function grouper_user_login(&$edit, $account) {
   $response = drupal_http_request($grouper_url, $options);
   if ($response->code == 200) {
     $raw_data = $response->data;
-  }
-  elseif ($response->code == -1) {
-    // TODO: Remove when the service is actually working
-    $raw_data = file_get_contents(drupal_get_path('module', 'grouper').'/test_data.json');
   }
   else {
     switch ($response->code) {
