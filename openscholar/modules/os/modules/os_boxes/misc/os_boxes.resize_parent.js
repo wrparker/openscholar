@@ -2,7 +2,7 @@
   //if (typeof window.webWidgetsIframeHasRun != 'undefined') return;
   //window.webWidgetsIframeHasRun = true;
 
-  // an exception is most likely caused by the DOM  not being ready
+  // An exception is most likely caused by the DOM  not being ready.
   if (window.addEventListener) {
     window.addEventListener('message', receiveMessage, false);
   }
@@ -13,20 +13,31 @@
   function receiveMessage(e) {
     var data = JSON.parse(e.data);
 
-    if (typeof data.url == 'undefined') return;
+    if (typeof data.url == 'undefined') {
+      return;
+    }
 
-    var iframes = document.querySelectorAll('iframe[src="'+data.url+'"]');
+    // Remove any trace of http: and https: from the url. We are removing the
+    // prefix since sites with https cannot embed iframes with http source.
+    var iframes = document.querySelectorAll('iframe[src="' + data.url.replace('http:', '').replace('https:', '') + '"]');
 
-    for (i=0; i<iframes.length; i++) {
+    for (var i = 0; i < iframes.length; i++) {
       var delta = jQuery(iframes[i]).closest('.boxes-box').attr('id');
-      if (typeof Drupal.settings.widget_max_width != 'undefined' && typeof Drupal.settings.widget_max_width[delta] != 'undefined' && Drupal.settings.widget_max_width[delta] != '' && data.width > Drupal.settings.widget_max_width[delta]) {
+      if (
+        typeof Drupal.settings.widget_max_width != 'undefined' &&
+        typeof Drupal.settings.widget_max_width[delta] != 'undefined' &&
+        Drupal.settings.widget_max_width[delta] != '' &&
+        data.width > Drupal.settings.widget_max_width[delta]) {
+
         if (!iframes[i].resized) {
           iframes[i].width = Drupal.settings.widget_max_width[delta];
           jQuery(iframes[i]).attr("scrolling", "auto");
           jQuery(iframes[i]).attr("src", jQuery(iframes[i]).attr("src"));
           iframes[i].resized = true;
         }
-      } else if (typeof data.width != 'undefined') {
+
+      }
+      else if (typeof data.width != 'undefined') {
         iframes[i].width = data.width;
       }
       if (typeof data.height != 'undefined') {

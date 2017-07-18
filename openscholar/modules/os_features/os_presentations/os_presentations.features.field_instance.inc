@@ -42,7 +42,7 @@ function os_presentations_field_default_field_instances() {
         'settings' => array(
           'trim_length' => 600,
         ),
-        'type' => 'text_summary_or_trimmed',
+        'type' => 'os_text_trimmed',
         'weight' => 0,
       ),
       'title' => array(
@@ -355,7 +355,7 @@ function os_presentations_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_upload',
-    'label' => 'Attach Supplemental Presentation Files (handouts, notes, cirricula, etc.)',
+    'label' => 'Attach Supplemental Presentation Files (handouts, notes, curricula, etc.)',
     'required' => 0,
     'settings' => array(
       'description_field' => 0,
