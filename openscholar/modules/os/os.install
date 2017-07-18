@@ -996,8 +996,15 @@ function os_update_7052() {
 }
 
 /**
- * Enable the os_site_creation module for new site creation forms.
+ * Copy og:image metatag configs to twitter:image
  */
 function os_update_7053() {
+  features_revert(array('os' => array('metatag')));
+}
+
+/**
+ * Enable the os_site_creation module for new site creation forms.
+ */
+function os_update_7054() {
   module_enable(array('os_site_creation'));
 }

@@ -1785,7 +1785,7 @@ body.page-node-revisions .node {
   content: 'Attached files';
 }
 
-.node-news .photo .field-type-image:before {
+.page-node-revisions .node-news .photo .field-type-image:before {
   content:'News Photo';
 }
 
