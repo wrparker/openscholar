@@ -129,9 +129,10 @@
             scope.newRedirectPath = '';
             scope.newRedirectTarget = '';
             scope.showAddForm = false;
-            if (r.data.data.msg != '') {
-              var msg = r.data.data.msg;
-              scope.errors.push($sce.trustAsHtml(msg));
+            if (Array.isArray(r.data.data.msg)) {
+              for(var i = 0; i < r.data.data.msg.length; i++) {
+                scope.errors.push($sce.trustAsHtml(r.data.data.msg[i]));
+              }
             }
           });
         }
