@@ -50,7 +50,7 @@ Feature:
 
  @api @features_first @create_new_blog_content @os_blog
  Scenario: Create new blog content
-    Given I am logged in as "john"
+    Given I am logging in as "john"
       And I visit "node/add/blog"
      When I fill in "Title" with "A day in the life of The POTUS."
      When I fill in "Body" with "Each day the President is briefed."
@@ -61,7 +61,7 @@ Feature:
 
  @api @features_first @edit_existing_blog_content @os_blog
  Scenario: Edit existing blog content
-    Given I am logged in as "john"
+    Given I am logging in as "john"
       And I visit "/blog/day-life-potus"
       And I click on the element with css selector "link-count-node-edit first"
      When I fill in "Title" with "Another day in the life of The POTUS."
@@ -73,7 +73,7 @@ Feature:
 
  @api @features_first @administer_blog_settings @os_blog
  Scenario: Administer Blog Settings
-    Given I am logged in as "john"
+    Given I am logging in as "john"
      When I visit "/blog"
      When I click on the element with css selector "span#blog_comments"
      When I sleep for "2"
@@ -81,7 +81,7 @@ Feature:
 
  @api @features_first @select_private_comments @os_blog
  Scenario: Select "Private comments"
-    Given I am logged in as "john"
+    Given I am logging in as "john"
       And I visit "/blog"
      When I click on the element with css selector "span#blog_comments"
      When I click on the element with css selector "input#edit-blog-comments-settings-comment"
@@ -91,7 +91,7 @@ Feature:
 
  @api @features_first @select_no_comments @os_blog
  Scenario: Select "No Comments"
-    Given I am logged in as "john"
+    Given I am logging in as "john"
       And I visit "/blog"
      When I click on the element with css selector "span#blog_comments"
      When I click on the element with css selector "input#edit-blog-comments-settings-nc"
@@ -101,7 +101,7 @@ Feature:
 
  @api @features_first @delete_any_blog_content @os_blog
  Scenario: Delete blog content
-    Given I am logged in as "john"
+    Given I am logging in as "john"
      When I visit "/blog/day-life-potus"
      When I click on the element with css selector "li.link-count-node-delete a[href*='/delete']"
      When I sleep for "4"
