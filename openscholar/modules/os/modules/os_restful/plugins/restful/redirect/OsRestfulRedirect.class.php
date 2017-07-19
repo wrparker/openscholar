@@ -30,6 +30,14 @@ class OsRestfulRedirect extends \RestfulBase implements \RestfulDataProviderInte
         ),
       );
     }
+    // Removing leading slash or hash from the source
+    if (substr($redirect->source, 0, 1) === '/' || substr($redirect->source, 0, 1) === '#') {
+      $remove_character = substr($redirect->source, 0, 1);
+      $redirect->source = ltrim($redirect->source, $remove_character);
+      $redirect->msg = t("Leading ' %character ' is not allowed, it has been removed and saved.", array('%character' => $remove_character));
+      redirect_save($redirect);
+      return $this->renderRedirect($redirect);
+    }
 
     // check that there there are no redirect loops
     if (url($redirect->source) == url($redirect->redirect)) {
