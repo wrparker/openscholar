@@ -3736,7 +3736,9 @@ function os_field_formatter_view($entity_type, $entity, $field, $instance, $lang
             $text = str_replace('…', ' ', $text);
           }
           // Only display read more link if there is a content after break tag.
-          if (!empty(drupal_strlen($text_after_break))) {
+	  //php < 5.5 compatibility
+          $temp = drupal_strlen($text_after_break);
+          if (!empty($temp)) {
             $read_more($entity_type, $entity, $text);
           }
         }
