@@ -153,12 +153,12 @@
       <div class="clear"></div>
       <div id="footer-container">
         <div id="pre"><input type="button" class="preNxt" value="Back" ng-disabled="btnDisable == true"  ng-click="navigatePage('page2','page1');"></div>
-        <div id="nxt"><button type="button" class="preNxt" ng-disabled="btnDisable == true" ng-click="saveAllValues();" button-spinner="site_creation_form" spinning-text="Saving">Next</button></div>
+        <div id="nxt"><button type="button" class="preNxt" ng-disabled="btnDisable == true"  ng-click="navigatePage('page2','page3');">Next</button></div>
       </div>
     </div>
     <div class="clear"></div>
     <!-- Screen 3 Start -->
-    <div id="page-3">
+    <div id="page-3" ng-show="page3">
       <div id="header-container-page3">
         <div id="header-container-group-1-page3">
           <div class="step center"><span class="stepDisable">1</span></div>
@@ -230,7 +230,7 @@
       <div class="clear"></div>
       <div id="footer-container">
         <div id="pre"><input type="button" class="preNxt" value="Back" ng-disabled="btnDisable == true"  ng-click="navigatePage('page3','page2');"></div>
-        <div id="nxt"><input type="button" class="preNxt" value="Next"  ng-disabled="btnDisable == true" ng-click="navigatePage('page3','page3'); saveAllValues();"></div>
+        <div id="nxt"><button type="button" class="preNxt" ng-disabled="btnDisable == true" ng-show="siteCreated == false" ng-click="saveAllValues();">Create</button><input type="button" class="preNxt" value="Take me to my site" ng-show="siteCreated == true"  ng-click="navigateToSite();"></div>
       </div>
     </div>
   <form>

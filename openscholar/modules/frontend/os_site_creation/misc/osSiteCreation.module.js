@@ -13,6 +13,9 @@
     value: '0'
   };
 
+  // Set site creation status
+  $scope.siteCreated = false;
+
   //Toggle open/close for 'who can view your site'
   $scope.showAll = false;
   $scope.toggleFunc = function() {
@@ -64,6 +67,10 @@
       $scope.selected = themeKey;
     }
 
+    $scope.navigateToSite = function(themeKey) {
+      window.location.href = $scope.vsiteUrl;
+    }
+
   //Set default value for Content Option
   $scope.contentOption = {
     value: 'os_department_minimal',
@@ -91,12 +98,18 @@
       }
     }
 
+    // Send the theme key
+    if (typeof $scope.selected !== 'undefined') {
+      formdata['themeKey'] = $scope.selected;
+    }
+
     $scope.btnDisable = true;
     bss.SetState('site_creation_form', true);
     //Ajax call to save formdata
     $http.post(paths.api + '/purl', formdata).then(function (response) {
       $scope.successData = response.data.data.data;
-      $scope.navigatePage('page2','page3');
+      $scope.vsiteUrl = response.data.data.data;
+      $scope.siteCreated = true;
     });
   }
 }]);

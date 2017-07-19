@@ -268,30 +268,11 @@ function vsite_register_message($form, $domain) {
   // Prepares an array of messages to display to the user,
   // to be rendered each as individual paragraph elements.
   $paragraphs = array();
-  $paragraphs[] = t('Success! @whose new site has been created.', array('@whose' => ucfirst($whose_site)));
-  if ($user_is_anonymous) {
-    $paragraphs[] = t('Check your email account for further details on how to login in to start adding features and content.');
-  }
-  $paragraphs[] = t('The url of @whose site is @base_url/@domain '. $link, array('@whose' => $whose_site, '@base_url' => $base_url, '@domain' => $domain));
-
-  // Prepares the build array for other modules to modify.
-  $build = array(
-    'container' => array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'id' => 'success-message',
-        'class' => array('status'),
-      ),
-      'message_text' => array(
-        '#type' => 'markup',
-        '#markup' => '<p>' . implode('</p><p>', $paragraphs) . '</p>',
-      ),
-    ),
-  );
+  $paragraphs[] = $href;
 
   // Gives other modules a chance to alter message
-  module_invoke_all('vsite_register_message', $build, $form, $domain);
-  $message = drupal_render($build);
+  module_invoke_all('vsite_register_message', $paragraphs, $form, $domain);
+  $message = $href;
 
   return $message;
 }

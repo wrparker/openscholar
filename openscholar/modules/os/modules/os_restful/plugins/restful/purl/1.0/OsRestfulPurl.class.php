@@ -145,6 +145,19 @@ class OsRestfulPurl extends \RestfulBase implements \RestfulDataProviderInterfac
       }
       // If we have gotten to this point, then the vsite registration was success.
       // Clears the errors.
+
+      // Applying the theme
+      if($this->request['themeKey']){
+        $theme_key = $this->request['themeKey'];
+        if (strpos($theme_key, '-os_featured_flavor-') !== FALSE) {
+          list($theme_default, $theme_flavor) = explode('-os_featured_flavor-', $theme_key);
+          $vsite->controllers->variable->set('theme_default', $theme_default);
+          $vsite->controllers->variable->set('os_appearance_'.$theme_default.'_flavor', $theme_flavor);
+        } else {
+          $vsite->controllers->variable->set('theme_default', $theme_key);
+          $vsite->controllers->variable->set('os_appearance_'.$theme_key.'_flavor', 'default');
+        }
+      }
     }
     else {
       $commands[] = _vsite_register_form_error();
