@@ -50,6 +50,8 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
           case 403:
             throw new RestfulForbiddenException("Cannot access Grouper restful interface.");
             break;
+          default:
+            throw new RestfulException("Error fetching grouper response: $response->code");
         }
       }
 

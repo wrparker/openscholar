@@ -182,6 +182,8 @@ function grouper_user_login(&$edit, $account) {
       case 403:
         throw new RestfulForbiddenException("Cannot access Grouper restful interface.");
         break;
+      default:
+        throw new RestfulException("Error fetching grouper response: $response->code");
     }
   }
 
