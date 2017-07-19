@@ -51,7 +51,7 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
             throw new RestfulForbiddenException("Cannot access Grouper restful interface.");
             break;
           default:
-            throw new RestfulException("Error fetching grouper response: $response->code");
+            throw new RestfulException("Error fetching grouper response: $response->code: $response->error");
         }
       }
 
