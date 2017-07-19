@@ -58,14 +58,9 @@ class Grouper extends \RestfulBase implements \RestfulDataProviderInterface {
     }
   }
 
-  public function saveGroupToSite() {
-    if (!isset($_GET['vsite'])) {
-      return;
-    }
-  }
-
   private function getHUIDForUser() {
     // TODO: Replace this with actual function
-    return 70855038;
+    $account = $this->getAccount();
+    return pinserver_authenticate_get_user_huid($account->uid);
   }
 }
